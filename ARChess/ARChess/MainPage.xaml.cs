@@ -19,7 +19,6 @@ namespace ARChess
         public MainPage()
         {
             InitializeComponent();
-            MessageBoxResult result = MessageBox.Show("Well...", "Sorry, according to the rules that move is not legal.  Please move onto a highlighed space.  (It would have been a pretty awesome move though.)", MessageBoxButton.OKCancel);
         }
     }
 }
