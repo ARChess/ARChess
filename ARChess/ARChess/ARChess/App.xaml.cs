@@ -12,6 +12,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace ARChess
 {
@@ -22,6 +25,21 @@ namespace ARChess
         /// </summary>
         /// <returns>The root frame of the Phone Application.</returns>
         public PhoneApplicationFrame RootFrame { get; private set; }
+
+        /// <summary>
+        /// Provides access to a ContentManager for the application.
+        /// </summary>
+        public ContentManager Content { get; private set; }
+
+        /// <summary>
+        /// Provides access to a GameTimer that is set up to pump the FrameworkDispatcher.
+        /// </summary>
+        public GameTimer FrameworkDispatcherTimer { get; private set; }
+
+        /// <summary>
+        /// Provides access to the AppServiceProvider for the application.
+        /// </summary>
+        public AppServiceProvider Services { get; private set; }
 
         /// <summary>
         /// Constructor for the Application object.
@@ -36,6 +54,9 @@ namespace ARChess
 
             // Phone-specific initialization
             InitializePhoneApplication();
+
+            // XNA initialization
+            InitializeXnaApplication();
 
             // Show graphics profiling information while debugging.
             if (System.Diagnostics.Debugger.IsAttached)
@@ -56,7 +77,6 @@ namespace ARChess
                 // and consume battery power when the user is not using the phone.
                 PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
-
         }
 
         // Code to execute when the application is launching (eg, from Start)
@@ -135,6 +155,40 @@ namespace ARChess
 
             // Remove this handler since it is no longer needed
             RootFrame.Navigated -= CompleteInitializePhoneApplication;
+        }
+
+        #endregion
+
+        #region XNA application initialization
+
+        // Performs initialization of the XNA types required for the application.
+        private void InitializeXnaApplication()
+        {
+            // Create the service provider
+            Services = new AppServiceProvider();
+
+            // Add the SharedGraphicsDeviceManager to the Services as the IGraphicsDeviceService for the app
+            foreach (object obj in ApplicationLifetimeObjects)
+            {
+                if (obj is IGraphicsDeviceService)
+                    Services.AddService(typeof(IGraphicsDeviceService), obj);
+            }
+
+            // Create the ContentManager so the application can load precompiled assets
+            Content = new ContentManager(Services, "Content");
+
+            // Create a GameTimer to pump the XNA FrameworkDispatcher
+            FrameworkDispatcherTimer = new GameTimer();
+            FrameworkDispatcherTimer.FrameAction += FrameworkDispatcherFrameAction;
+            FrameworkDispatcherTimer.Start();
+        }
+
+        // An event handler that pumps the FrameworkDispatcher each frame.
+        // FrameworkDispatcher is required for a lot of the XNA events and
+        // for certain functionality such as SoundEffect playback.
+        private void FrameworkDispatcherFrameAction(object sender, EventArgs e)
+        {
+            FrameworkDispatcher.Update();
         }
 
         #endregion

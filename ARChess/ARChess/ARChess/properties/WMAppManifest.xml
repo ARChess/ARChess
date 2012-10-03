@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2009/deployment" AppPlatformVersion="7.1">
-  <App xmlns="" ProductID="{484979b4-32b6-4b07-80b3-9d624b80efd5}" Title="ARChess" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal"  Author="ARChess author" Description="Sample description" Publisher="ARChess">
+  <App xmlns="" ProductID="{d18d194f-e82a-4c9a-89ea-8c54bec4d417}" Title="ARChess" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal"  Author="ARChess author" Description="Sample description" Publisher="ARChess">
     <IconPath IsRelative="true" IsResource="false">ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_GAMERSERVICES"/>
