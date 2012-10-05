@@ -19,6 +19,10 @@ namespace ARChess
         public MainPage()
         {
             InitializeComponent();
+            //on initialize game, ping the central server application to determine if the phone
+            //has a currently active game.  if there is one, display continue game instead of
+            //start game
+            StartButton.Content = "Start Game";
         }
 
         // Simple button Click event handler to take us to the second page

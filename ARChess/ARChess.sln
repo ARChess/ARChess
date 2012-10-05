@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ARChess", "ARChess\ARChess\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ARChessLib", "ARChess\ARChessLib\ARChessLib.csproj", "{EE992FEA-8415-499E-9E8A-8FA2F3003FC4}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "ARChessLibContent", "ARChess\ARChessLibContent\ARChessLibContent.contentproj", "{8A683650-5452-40C4-8C1C-BB73D59568E1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ARChessLibContent", "ARChess\ARChessLibContent\ARChessLibContent.contentproj", "{8A683650-5452-40C4-8C1C-BB73D59568E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,11 +32,13 @@ Global
 		{2DD7AB91-FD27-4F39-9729-8A1EEBE50B10}.Release|Mixed Platforms.Deploy.0 = Release|Any CPU
 		{2DD7AB91-FD27-4F39-9729-8A1EEBE50B10}.Release|Windows Phone.ActiveCfg = Release|Any CPU
 		{EE992FEA-8415-499E-9E8A-8FA2F3003FC4}.Debug|Any CPU.ActiveCfg = Debug|Windows Phone
+		{EE992FEA-8415-499E-9E8A-8FA2F3003FC4}.Debug|Any CPU.Build.0 = Debug|Windows Phone
 		{EE992FEA-8415-499E-9E8A-8FA2F3003FC4}.Debug|Mixed Platforms.ActiveCfg = Debug|Windows Phone
 		{EE992FEA-8415-499E-9E8A-8FA2F3003FC4}.Debug|Mixed Platforms.Build.0 = Debug|Windows Phone
 		{EE992FEA-8415-499E-9E8A-8FA2F3003FC4}.Debug|Windows Phone.ActiveCfg = Debug|Windows Phone
 		{EE992FEA-8415-499E-9E8A-8FA2F3003FC4}.Debug|Windows Phone.Build.0 = Debug|Windows Phone
 		{EE992FEA-8415-499E-9E8A-8FA2F3003FC4}.Release|Any CPU.ActiveCfg = Release|Windows Phone
+		{EE992FEA-8415-499E-9E8A-8FA2F3003FC4}.Release|Any CPU.Build.0 = Release|Windows Phone
 		{EE992FEA-8415-499E-9E8A-8FA2F3003FC4}.Release|Mixed Platforms.ActiveCfg = Release|Windows Phone
 		{EE992FEA-8415-499E-9E8A-8FA2F3003FC4}.Release|Mixed Platforms.Build.0 = Release|Windows Phone
 		{EE992FEA-8415-499E-9E8A-8FA2F3003FC4}.Release|Windows Phone.ActiveCfg = Release|Windows Phone

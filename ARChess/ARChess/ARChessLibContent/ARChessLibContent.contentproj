@@ -36,13 +36,59 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="saucer.fbx">
-      <Name>saucer</Name>
+    <Compile Include="light_cube.fbx">
+      <Name>light_cube</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
-    <Compile Include="saucer_texture.tga">
-      <Name>saucer_texture</Name>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="wood_light.png">
+      <Name>wood_light</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="blue_cube.fbx">
+      <Name>blue_cube</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="dark_cube.fbx">
+      <Name>dark_cube</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="green_cube.fbx">
+      <Name>green_cube</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="red_cube.fbx">
+      <Name>red_cube</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="wood_blue.png">
+      <Name>wood_blue</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="wood_dark.png">
+      <Name>wood_dark</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="wood_green.png">
+      <Name>wood_green</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="wood_red.png">
+      <Name>wood_red</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
