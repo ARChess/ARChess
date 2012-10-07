@@ -16,7 +16,7 @@ namespace ARChess
 {
     public class ChessBoard
     {
-        private int spacing_between_squares = 40;
+        private int spacing_between_squares = 39;
 
         public ChessBoard() 
         {

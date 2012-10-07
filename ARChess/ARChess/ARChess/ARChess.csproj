@@ -55,8 +55,35 @@
     <Reference Include="Microsoft.Xna.Framework.Graphics" />
     <Reference Include="Microsoft.Xna.Framework.Input.Touch" />
     <Reference Include="microsoft.xna.framework.interop" />
+    <Reference Include="nmsp_audioplayback">
+      <HintPath>.\nmsp_audioplayback.dll</HintPath>
+    </Reference>
+    <Reference Include="nmsp_audiorecord">
+      <HintPath>.\nmsp_audiorecord.dll</HintPath>
+    </Reference>
+    <Reference Include="nmsp_core">
+      <HintPath>.\nmsp_core.dll</HintPath>
+    </Reference>
+    <Reference Include="nmsp_dictationresult">
+      <HintPath>.\nmsp_dictationresult.dll</HintPath>
+    </Reference>
+    <Reference Include="nmsp_oem">
+      <HintPath>.\nmsp_oem.dll</HintPath>
+    </Reference>
+    <Reference Include="nmsp_resource_common">
+      <HintPath>.\nmsp_resource_common.dll</HintPath>
+    </Reference>
+    <Reference Include="nmsp_resource_nmas">
+      <HintPath>.\nmsp_resource_nmas.dll</HintPath>
+    </Reference>
+    <Reference Include="nmsp_vocoder_speex">
+      <HintPath>.\nmsp_vocoder_speex.dll</HintPath>
+    </Reference>
     <Reference Include="SLARToolKitWinPhone">
       <HintPath>.\SLARToolKitWinPhone.dll</HintPath>
+    </Reference>
+    <Reference Include="SpeechKit">
+      <HintPath>.\SpeechKit.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="system" />
@@ -74,6 +101,8 @@
     </Compile>
     <Compile Include="helpers\AppSettings.cs" />
     <Compile Include="helpers\ChessBoard.cs" />
+    <Compile Include="helpers\NuanceAPIKey.cs" />
+    <Compile Include="helpers\NuanceTextToSpeech.cs" />
     <Compile Include="helpers\Matrix3dExtensions.cs" />
     <Compile Include="helpers\TellMe.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -113,7 +142,7 @@
   <ItemGroup>
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml" />
-    <None Include="resources\marker.pat" />
+    <Resource Include="resources\marker.pat" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ARChessLib\ARChessLib.csproj">
