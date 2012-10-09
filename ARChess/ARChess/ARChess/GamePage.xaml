@@ -23,8 +23,8 @@
 
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="False">
-            <shell:ApplicationBarIconButton IconUri="images/resign_icon.png" Text="Resign"/>
-            <shell:ApplicationBarIconButton IconUri="images/command_icon.png" Text="Command"/>
+            <shell:ApplicationBarIconButton IconUri="images/resign_icon.png" Text="Resign" Click="ResignButton_Click" />
+            <shell:ApplicationBarIconButton IconUri="images/command_icon.png" Text="Command" Click="VoiceCommandButton_Click" />
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 </phone:PhoneApplicationPage>

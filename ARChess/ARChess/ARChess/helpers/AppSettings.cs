@@ -12,16 +12,25 @@ namespace ARChess
 
         // The isolated storage key names of our settings
         const string AdvancedModeSettingKeyName = "AdvancedMode";
+        const string GridAxisMarkersSettingKeyName = "AxisMarkers";
         
         // The default value of our settings
         const bool AdvancedModeSettingsDefault = false;
+        const bool GridAxisMarkersDefault = true;
         /// <summary>
         /// Constructor that gets the application settings.
         /// </summary>
         public AppSettings()
         {
-            // Get the settings for this application.
-            settings = IsolatedStorageSettings.ApplicationSettings;
+            try
+            {
+                // Get the settings for this application.
+                settings = IsolatedStorageSettings.ApplicationSettings;
+            }
+            catch (System.IO.IsolatedStorage.IsolatedStorageException e)
+            {
+                // handle exception
+            }
         }
 
         /// <summary>
@@ -101,6 +110,24 @@ namespace ARChess
             set
             {
                 if (AddOrUpdateValue(AdvancedModeSettingKeyName, value))
+                {
+                    Save();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Property to get and set a Advanced Mode Setting Key.
+        /// </summary>
+        public bool GridAxisMarkersSettings
+        {
+            get
+            {
+                return GetValueOrDefault<bool>(GridAxisMarkersSettingKeyName, GridAxisMarkersDefault);
+            }
+            set
+            {
+                if (AddOrUpdateValue(GridAxisMarkersSettingKeyName, value))
                 {
                     Save();
                 }

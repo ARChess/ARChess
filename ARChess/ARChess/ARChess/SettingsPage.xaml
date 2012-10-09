@@ -11,7 +11,7 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
-    mc:Ignorable="d" d:DesignHeight="696" d:DesignWidth="480"
+    mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
     shell:SystemTray.IsVisible="True">
 
     <phone:PhoneApplicationPage.Resources>
@@ -33,25 +33,14 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <CheckBox Content="Advanced Play Mode" Height="Auto" HorizontalAlignment="Left" Margin="60,20,0,0" Name="checkBoxSetting" VerticalAlignment="Top" IsChecked="{Binding Source={StaticResource appSettings}, Path=AdvancedModeSetting, Mode=TwoWay}" />
-            <TextBlock Margin="60,80,0,0">
-                To play without highlighting, enable  
+            <CheckBox Content="Advanced Play Mode" Height="Auto" HorizontalAlignment="Left" Margin="60,20,0,0" Name="checkBoxSetting1" VerticalAlignment="Top" IsChecked="{Binding Source={StaticResource appSettings}, Path=AdvancedModeSetting, Mode=TwoWay}" />
+            <TextBlock TextWrapping="Wrap" Height="Auto" HorizontalAlignment="Left" Margin="60,80,0,0">
+                Playing with this mode enabled will cause move highlighting to become disabled during play.
             </TextBlock>
-            <TextBlock Margin="60,100,0,0">
-                this option.  Basic checks such as 
-            </TextBlock>
-            <TextBlock Margin="60,120,0,0">
-                illegal move and end game detection
-            </TextBlock>
-            <TextBlock Margin="60,140,0,0">
-                will still be performed even if enabled.
+            <CheckBox Content="Grid Axis Markers Enabled" Height="Auto" HorizontalAlignment="Left" Margin="60,180,0,0" Name="checkBoxSetting2" VerticalAlignment="Top" IsChecked="{Binding Source={StaticResource appSettings}, Path=GridAxisMarkersSettings, Mode=TwoWay}" />
+            <TextBlock TextWrapping="Wrap" Height="Auto" HorizontalAlignment="Left" Margin="60,240,0,0">
+                This option controls whether the axis labels are displayed to the left and bottom of the board.
             </TextBlock>
         </Grid>
     </Grid>
-
-    <phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="False">
-            <shell:ApplicationBarIconButton IconUri="images/home_icon.png" Text="Home"/>
-        </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>
 </phone:PhoneApplicationPage>

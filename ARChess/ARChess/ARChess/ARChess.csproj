@@ -104,7 +104,6 @@
     <Compile Include="helpers\NuanceAPIKey.cs" />
     <Compile Include="helpers\NuanceTextToSpeech.cs" />
     <Compile Include="helpers\Matrix3dExtensions.cs" />
-    <Compile Include="helpers\TellMe.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -152,8 +151,12 @@
   <ItemGroup>
     <Content Include="images\about_icon.png" />
     <Content Include="images\command_icon.png" />
+    <Resource Include="images\silverlight.jpg" />
+    <Resource Include="images\xna.png" />
+    <Resource Include="images\nuance.png" />
     <Content Include="images\resign_icon.png" />
     <Content Include="images\settings_icon.png" />
+    <Resource Include="images\slartoolkit.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ApplicationIcon.png" />

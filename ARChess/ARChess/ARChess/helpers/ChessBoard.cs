@@ -17,17 +17,26 @@ namespace ARChess
     public class ChessBoard
     {
         private int spacing_between_squares = 39;
+        private ContentManager content;
 
-        public ChessBoard() 
+        public ChessBoard(ContentManager _content) 
         {
+            content = _content;
+        }
 
+        private Model selectModel(int cur_x, int cur_y)
+        {
+            Model lightCube = content.Load<Model>("light_cube");
+            Model darkCube = content.Load<Model>("dark_cube");
+
+            return null;
         }
 
         /// <summary>
         /// Method the draws out model
         /// </summary>
         /// <param name="graphics"></param>
-        public void Draw(SharedGraphicsDeviceManager graphics, DetectionResult markerResult, ContentManager content)
+        public void Draw(SharedGraphicsDeviceManager graphics, DetectionResult markerResult)
         {
             float aspectRatio = (float)graphics.GraphicsDevice.Viewport.AspectRatio;
 
@@ -36,10 +45,7 @@ namespace ARChess
                 SharedGraphicsDeviceManager.Current.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
                 SharedGraphicsDeviceManager.Current.GraphicsDevice.BlendState = BlendState.Opaque;
                 SharedGraphicsDeviceManager.Current.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
-
-                //Load out 3d Model
-                Model lightSquare = content.Load<Model>("light_cube");
-                Model darkSquare = content.Load<Model>("dark_cube");
+                
                 Vector3 cameraPosition = new Vector3(0, 0, 150);
 
                 for (int i = 0; i < 8; ++i)
@@ -47,7 +53,7 @@ namespace ARChess
                     for (int j = 0; j < 8; ++j)
                     {
                         //generate alternating squares
-                        Model myModel = (i % 2 == 0 ? (j % 2 == 0 ? darkSquare : lightSquare) : (j % 2 == 0 ? lightSquare : darkSquare));
+                        Model myModel = selectModel(j, i);
 
                         Microsoft.Xna.Framework.Matrix[] transforms = new Microsoft.Xna.Framework.Matrix[myModel.Bones.Count];
                         myModel.CopyBoneTransformsTo(transforms);

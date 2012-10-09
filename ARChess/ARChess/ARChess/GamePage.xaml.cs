@@ -178,7 +178,17 @@ namespace ARChess
             spriteBatch.End();
 
             //Draw our model
-            new ChessBoard().Draw(SharedGraphicsDeviceManager.Current, markerResult, content);
+            new ChessBoard(content).Draw(SharedGraphicsDeviceManager.Current, markerResult);
+
+        }
+
+        private void ResignButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void VoiceCommandButton_Click(object sender, EventArgs e)
+        {
 
         }
     }

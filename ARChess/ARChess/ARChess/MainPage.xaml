@@ -30,8 +30,8 @@
 
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="False">
-            <shell:ApplicationBarIconButton IconUri="images/settings_icon.png" Text="Settings"/>
-            <shell:ApplicationBarIconButton IconUri="images/about_icon.png" Text="About"/>
+            <shell:ApplicationBarIconButton IconUri="images/settings_icon.png" Text="Settings" Click="SettingsButton_Click" />
+            <shell:ApplicationBarIconButton IconUri="images/about_icon.png" Text="About" Click="AboutButton_Click" />
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 </phone:PhoneApplicationPage>
