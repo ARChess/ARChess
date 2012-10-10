@@ -29,7 +29,8 @@ namespace ARChess
             Model lightCube = content.Load<Model>("light_cube");
             Model darkCube = content.Load<Model>("dark_cube");
 
-            return null;
+            //return null;
+            return lightCube;
         }
 
         /// <summary>
