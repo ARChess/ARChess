@@ -1,30 +1,57 @@
 ﻿using System;
-using System.Windows;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Windows.Threading;
+using Microsoft.Devices;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Devices;
+
+//Silverlight Augmented Reality Includes
 using SLARToolKit;
-using System.Windows.Threading;
-using System.Windows.Media.Media3D;
+
+//Nuance Voice Includes
+using com.nuance.nmdp.speechkit;
+using com.nuance.nmdp.speechkit.oem;
+using com.nuance.nmdp.speechkit.util;
+using com.nuance.nmdp.speechkit.util.audio;
 
 namespace ARChess
 {
-    public partial class GamePage : PhoneApplicationPage
+    public delegate void CancelSpeechKitEventHandler();
+
+    public partial class GamePage : PhoneApplicationPage, RecognizerListener
     {
-        private GrayBufferMarkerDetector arDetector;
+        private GrayBufferMarkerDetector arDetector = null;
         private byte[] buffer = null;
-        private DispatcherTimer dispatcherTimer;
-        private bool isDetecting;
-        private bool isInitialized;
-        private PhotoCamera photoCamera;
-        private DetectionResult markerResult;
-        private GameTimer timer;
-        private ContentManager content;
-        private SpriteBatch spriteBatch;
+        private DispatcherTimer dispatcherTimer = null;
+        private bool isDetecting = false;
+        private bool isInitialized = false;
+        private PhotoCamera photoCamera = null;
+        private DetectionResult markerResult = null;
+        private GameTimer timer = null;
+        private ContentManager content = null;
+        private SpriteBatch spriteBatch = null;
+        private SpeechKit speechKit = null;
+        private Recognizer recognizer = null;
+        private Prompt beep = null;
+        private OemConfig oemconfig = new OemConfig();
+        private object handler = null;
+        Popup popup = new Popup();
 
         //This is the secret sauce, this will render the Silverlight content
         private UIElementRenderer uiRenderer;
@@ -40,6 +67,26 @@ namespace ARChess
             timer = new GameTimer { UpdateInterval = TimeSpan.FromTicks(333333) };
             timer.Update += OnUpdate;
             timer.Draw += OnDraw;
+
+            speechkitInitialize();
+
+            App.CancelSpeechKit += new CancelSpeechKitEventHandler(App_CancelSpeechKit);
+        }
+
+        ~GamePage()
+        {
+            speechKit.release();
+
+            App.CancelSpeechKit -= new CancelSpeechKitEventHandler(App_CancelSpeechKit);
+        }
+
+        void App_CancelSpeechKit()
+        {
+            Logger.info(this, "App_CancelSpeechKit()");
+            if (speechKit != null)
+            {
+                speechKit.cancelCurrent();
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -189,7 +236,96 @@ namespace ARChess
 
         private void VoiceCommandButton_Click(object sender, EventArgs e)
         {
+            dictationStart(RecognizerRecognizerType.Search);
+        }
 
+        private bool speechkitInitialize()
+        {
+            try
+            {
+                speechKit = SpeechKit.initialize(NuanceAPIKey.SpeechKitAppId, NuanceAPIKey.SpeechKitServer, NuanceAPIKey.SpeechKitPort, NuanceAPIKey.SpeechKitSsl, NuanceAPIKey.SpeechKitApplicationKey);
+            }
+            catch
+            { 
+                ; //we don't care
+            }
+
+            beep = speechKit.defineAudioPrompt("resources/beep.wav");
+            speechKit.setDefaultRecognizerPrompts(beep, null, null, null);
+            speechKit.connect();
+            Thread.Sleep(10); // to guarantee the time to load prompt resource
+
+            return true;
+        }
+
+        private void dictationStart(string type)
+        {
+            Thread thread = new Thread(() =>
+            {
+                recognizer = speechKit.createRecognizer(type, RecognizerEndOfSpeechDetection.Long, oemconfig.defaultLanguage(), this, handler);
+                recognizer.start();
+            });
+            thread.Start();
+        }
+
+        void dictationStop(object sender, RoutedEventArgs e)
+        {
+            string content = (sender as Button).Content as string;
+
+            Thread thread = new Thread(() =>
+            {
+                switch (content)
+                {
+                    case "Stop":
+                        recognizer.stopRecording();
+                        
+                        break;
+                    case "Cancel":
+                        if (recognizer != null)
+                        {
+                            recognizer.cancel();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            });
+            thread.Start();
+        }
+
+
+        public void onRecordingBegin(Recognizer recognizer)
+        {
+            popup = new Popup();
+            popup.VerticalOffset = 100;
+            SayACommandPopupControl control = new SayACommandPopupControl();
+            popup.Child = control;
+            popup.IsOpen = true;
+        }
+
+        public void onRecordingDone(Recognizer recognizer)
+        {
+            popup.IsOpen = false;
+        }
+
+        public void onResults(Recognizer recognizer, Recognition results)
+        {
+            Deployment.Current.Dispatcher.BeginInvoke(() =>
+            {
+                
+            });
+            recognizer.cancel();
+            recognizer = null;
+        }
+
+        public void onError(Recognizer recognizer, SpeechError error)
+        {
+            Deployment.Current.Dispatcher.BeginInvoke(() =>
+            {
+                MessageBox.Show(error.getErrorDetail());
+            });
+            recognizer.cancel();
+            recognizer = null;
         }
     }
 }

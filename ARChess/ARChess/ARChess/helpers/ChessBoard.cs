@@ -16,7 +16,7 @@ namespace ARChess
 {
     public class ChessBoard
     {
-        private int spacing_between_squares = 39;
+        private int spacingBetweenSquares = 39;
         private ContentManager content;
 
         public ChessBoard(ContentManager _content) 
@@ -24,10 +24,33 @@ namespace ARChess
             content = _content;
         }
 
-        private Model selectModel(int cur_x, int cur_y)
+        private Model selectModel(int curX, int curY)
         {
             Model lightCube = content.Load<Model>("light_cube");
             Model darkCube = content.Load<Model>("dark_cube");
+
+            if (curX % 2 == 0)
+            {
+                if (curY % 2 == 0)
+                {
+                    return lightCube;
+                }
+                else
+                {
+                    return darkCube;
+                }
+            }
+            else
+            {
+                if (curY % 2 == 0)
+                {
+                    return darkCube;
+                }
+                else
+                {
+                    return lightCube;
+                }
+            }
 
             return null;
         }
@@ -62,7 +85,7 @@ namespace ARChess
                         {
                             foreach (BasicEffect effect in mesh.Effects)
                             {
-                                Vector3 modelPosition = new Vector3((i < 5 ? (4 - i) * -1 : i - 4) * spacing_between_squares, (j < 5 ? (4 - j) * -1 : j - 4) * spacing_between_squares, 0);
+                                Vector3 modelPosition = new Vector3((i < 5 ? (4 - i) * -1 : i - 4) * spacingBetweenSquares, (j < 5 ? (4 - j) * -1 : j - 4) * spacingBetweenSquares, 0);
 
                                 effect.EnableDefaultLighting();
                                 effect.World = Microsoft.Xna.Framework.Matrix.CreateScale(0.1f) *
