@@ -103,6 +103,7 @@
     <Compile Include="helpers\ChessBoard.cs" />
     <Compile Include="helpers\NuanceAPIKey.cs" />
     <Compile Include="helpers\Matrix3dExtensions.cs" />
+    <Compile Include="helpers\VoiceRecognition.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

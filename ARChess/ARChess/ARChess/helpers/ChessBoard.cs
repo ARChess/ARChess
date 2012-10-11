@@ -16,7 +16,7 @@ namespace ARChess
 {
     public class ChessBoard
     {
-        private int spacingBetweenSquares = 39;
+        private int scale = 31;
         private ContentManager content;
 
         public ChessBoard(ContentManager _content) 
@@ -85,10 +85,10 @@ namespace ARChess
                         {
                             foreach (BasicEffect effect in mesh.Effects)
                             {
-                                Vector3 modelPosition = new Vector3((i < 5 ? (4 - i) * -1 : i - 4) * spacingBetweenSquares, (j < 5 ? (4 - j) * -1 : j - 4) * spacingBetweenSquares, 0);
+                                Vector3 modelPosition = new Vector3((i < 5 ? (4 - i) * -1 : i - 4) * scale, (j < 5 ? (4 - j) * -1 : j - 4) * scale, 0);
 
                                 effect.EnableDefaultLighting();
-                                effect.World = Microsoft.Xna.Framework.Matrix.CreateScale(0.1f) *
+                                effect.World = Microsoft.Xna.Framework.Matrix.CreateScale(7) *
                                     (transforms[mesh.ParentBone.Index]
                                     * mesh.ParentBone.Transform
                                     * Microsoft.Xna.Framework.Matrix.CreateTranslation(modelPosition)
