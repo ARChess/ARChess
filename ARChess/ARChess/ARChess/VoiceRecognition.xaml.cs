@@ -16,6 +16,10 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using Microsoft.Devices;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 //Nuance Voice Includes
 using com.nuance.nmdp.speechkit;
@@ -25,45 +29,66 @@ using com.nuance.nmdp.speechkit.util.audio;
 
 namespace ARChess
 {
-    public partial class VoiceRecognition : RecognizerListener
+    public partial class VoiceRecognition : PhoneApplicationPage, RecognizerListener
     {
         private SpeechKit speechKit = null;
         private Recognizer recognizer = null;
         private Prompt beep = null;
         private OemConfig oemconfig = new OemConfig();
         private object handler = null;
-        private Popup popup = new Popup();
         private PhoneApplicationPage page;
-        private bool haveResults = false;
-        private String results;
-
-        public VoiceRecognition(PhoneApplicationPage _page)
+       
+        public VoiceRecognition()
         {
-            page = _page;
-            speechkitInitialize();
+            InitializeComponent();
+
+            //speechkitInitialize();
+
+            //App.CancelSpeechKit += new CancelSpeechKitEventHandler(App_CancelSpeechKit);
         }
 
-        public void release() 
+        ~VoiceRecognition()
         {
-            speechKit.release();
+            //speechKit.release();
+
+            //App.CancelSpeechKit -= new CancelSpeechKitEventHandler(App_CancelSpeechKit);
         }
 
-        public void cancelCurrent()
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            CustomMessageBox messageBox = new CustomMessageBox()
+            {
+                ContentTemplate = (DataTemplate)this.Resources["PivotContentTemplate"],
+                LeftButtonContent = "speak",
+                RightButtonContent = "read it",
+                IsFullScreen = true // Pivots should always be full-screen.
+            };
+
+            messageBox.Dismissed += (s1, e1) =>
+            {
+                switch (e1.Result)
+                {
+                    case CustomMessageBoxResult.LeftButton:
+                        //dictationStart(RecognizerRecognizerType.Search);
+                        break;
+                    case CustomMessageBoxResult.RightButton:
+                        break;
+                    case CustomMessageBoxResult.None:
+                        break;
+                    default:
+                        break;
+                }
+            };
+
+            messageBox.Show();
+        }
+
+        void App_CancelSpeechKit()
         {
             if (speechKit != null)
             {
                 speechKit.cancelCurrent();
             }
-        }
-
-        public bool doesHaveResults()
-        {
-            return haveResults;
-        }
-
-        public string getResults()
-        {
-            return results;
         }
 
         private bool speechkitInitialize()
@@ -87,7 +112,6 @@ namespace ARChess
 
         public void dictationStart(string type)
         {
-            haveResults = false;
             Thread thread = new Thread(() =>
             {
                 recognizer = speechKit.createRecognizer(type, RecognizerEndOfSpeechDetection.Long, oemconfig.defaultLanguage(), this, handler);
@@ -124,28 +148,26 @@ namespace ARChess
 
         public void onRecordingBegin(Recognizer recognizer)
         {
-            popup = new Popup();
-            popup.VerticalOffset = 100;
-            SayACommandPopupControl control = new SayACommandPopupControl();
-            popup.Child = control;
-            popup.IsOpen = true;
+
         }
 
         public void onRecordingDone(Recognizer recognizer)
         {
-            popup.IsOpen = false;
+
         }
 
         public void onResults(Recognizer recognizer, Recognition _results)
         {
-            haveResults = true;
-            results = _results.getResult(0).getText();
+            NavigationService.Navigate(new Uri("/GamePage.xaml", UriKind.Relative));
+            
             recognizer.cancel();
             recognizer = null;
         }
 
         public void onError(Recognizer recognizer, SpeechError error)
         {
+            NavigationService.Navigate(new Uri("/GamePage.xaml", UriKind.Relative));
+
             recognizer.cancel();
             recognizer = null;
         }

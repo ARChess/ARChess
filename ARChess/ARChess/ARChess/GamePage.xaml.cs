@@ -24,12 +24,6 @@ using Microsoft.Xna.Framework.Graphics;
 //Silverlight Augmented Reality Includes
 using SLARToolKit;
 
-//Nuance Voice Includes
-using com.nuance.nmdp.speechkit;
-using com.nuance.nmdp.speechkit.oem;
-using com.nuance.nmdp.speechkit.util;
-using com.nuance.nmdp.speechkit.util.audio;
-
 namespace ARChess
 {
     public delegate void CancelSpeechKitEventHandler();
@@ -46,7 +40,7 @@ namespace ARChess
         private GameTimer timer = null;
         private ContentManager content = null;
         private SpriteBatch spriteBatch = null;
-        public VoiceRecognition voiceRecognition;
+        private VoiceRecognition voiceRecognition;
 
         //This is the secret sauce, this will render the Silverlight content
         private UIElementRenderer uiRenderer;
@@ -62,22 +56,6 @@ namespace ARChess
             timer = new GameTimer { UpdateInterval = TimeSpan.FromTicks(333333) };
             timer.Update += OnUpdate;
             timer.Draw += OnDraw;
-
-            voiceRecognition = new VoiceRecognition(this);
-
-            App.CancelSpeechKit += new CancelSpeechKitEventHandler(App_CancelSpeechKit);
-        }
-
-        ~GamePage()
-        {
-            voiceRecognition.release();
-
-            App.CancelSpeechKit -= new CancelSpeechKitEventHandler(App_CancelSpeechKit);
-        }
-
-        void App_CancelSpeechKit()
-        {
-            
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -141,6 +119,7 @@ namespace ARChess
         {
             // Stop the timer
             timer.Stop();
+            dispatcherTimer.Stop();
 
             // Set the sharing mode of the graphics device to turn off XNA rendering
             SharedGraphicsDeviceManager.Current.GraphicsDevice.SetSharingMode(false);
@@ -198,7 +177,6 @@ namespace ARChess
         private void OnUpdate(object sender, GameTimerEventArgs e)
         {
             //We don't need to update anything
-
         }
 
         /// <summary>
@@ -227,7 +205,7 @@ namespace ARChess
 
         private void VoiceCommandButton_Click(object sender, EventArgs e)
         {
-            voiceRecognition.dictationStart(RecognizerRecognizerType.Search);
+            NavigationService.Navigate(new Uri("/VoiceRecognition.xaml", UriKind.Relative));
         }
     }
 }
