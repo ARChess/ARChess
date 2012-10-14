@@ -246,7 +246,7 @@ namespace ARChess
 
         private void VoiceCommandButton_Click(object sender, EventArgs e)
         {
-            TeardownPage();
+            /*TeardownPage();
             AppSettings settings = new AppSettings();
 
             if (settings.SpeechCommandReminderSetting)
@@ -284,7 +284,7 @@ namespace ARChess
             else
             {
                 dictationStart(RecognizerRecognizerType.Search);
-            }
+            }*/
         }
 
         private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
