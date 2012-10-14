@@ -13,10 +13,13 @@ namespace ARChess
         // The isolated storage key names of our settings
         const string AdvancedModeSettingKeyName = "AdvancedMode";
         const string GridAxisMarkersSettingKeyName = "AxisMarkers";
+        const string SpeechCommandReminderOnSettingKeyName = "SpeechCommandReminder";
         
         // The default value of our settings
         const bool AdvancedModeSettingsDefault = false;
         const bool GridAxisMarkersDefault = true;
+        const bool SpeechCommandReminderDefault = true;
+
         /// <summary>
         /// Constructor that gets the application settings.
         /// </summary>
@@ -117,7 +120,7 @@ namespace ARChess
         }
 
         /// <summary>
-        /// Property to get and set a Advanced Mode Setting Key.
+        /// Property to get and set a Grid Axis Mode Setting Key.
         /// </summary>
         public bool GridAxisMarkersSettings
         {
@@ -128,6 +131,24 @@ namespace ARChess
             set
             {
                 if (AddOrUpdateValue(GridAxisMarkersSettingKeyName, value))
+                {
+                    Save();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Property to get and set a Speech Mode Setting Key.
+        /// </summary>
+        public bool SpeechCommandReminderSetting
+        {
+            get
+            {
+                return GetValueOrDefault<bool>(SpeechCommandReminderOnSettingKeyName, SpeechCommandReminderDefault);
+            }
+            set
+            {
+                if (AddOrUpdateValue(SpeechCommandReminderOnSettingKeyName, value))
                 {
                     Save();
                 }

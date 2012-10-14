@@ -24,11 +24,17 @@ using Microsoft.Xna.Framework.Graphics;
 //Silverlight Augmented Reality Includes
 using SLARToolKit;
 
+//Nuance Voice Includes
+using com.nuance.nmdp.speechkit;
+using com.nuance.nmdp.speechkit.oem;
+using com.nuance.nmdp.speechkit.util;
+using com.nuance.nmdp.speechkit.util.audio;
+
 namespace ARChess
 {
     public delegate void CancelSpeechKitEventHandler();
 
-    public partial class GamePage : PhoneApplicationPage
+    public partial class GamePage : PhoneApplicationPage, RecognizerListener
     {
         private GrayBufferMarkerDetector arDetector = null;
         private byte[] buffer = null;
@@ -40,7 +46,15 @@ namespace ARChess
         private GameTimer timer = null;
         private ContentManager content = null;
         private SpriteBatch spriteBatch = null;
-        private VoiceRecognition voiceRecognition;
+
+        private SpeechKit speechKit = null;
+        private Recognizer recognizer = null;
+        private Prompt beep = null;
+        private OemConfig oemconfig = new OemConfig();
+        private object handler = null;
+        private string ttsText = string.Empty;
+        private string ttsVoice = string.Empty;
+        private CustomMessageBox messageBox;
 
         //This is the secret sauce, this will render the Silverlight content
         private UIElementRenderer uiRenderer;
@@ -52,10 +66,43 @@ namespace ARChess
             // Get the application's ContentManager
             content = (Application.Current as App).Content;
 
-            // Create a timer for this page
             timer = new GameTimer { UpdateInterval = TimeSpan.FromTicks(333333) };
             timer.Update += OnUpdate;
             timer.Draw += OnDraw;
+
+            dispatcherTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
+            dispatcherTimer.Tick += (sender, e1) => Detect();
+            
+            speechkitInitialize();
+
+            App.CancelSpeechKit += new CancelSpeechKitEventHandler(App_CancelSpeechKit);
+        }
+
+        ~GamePage()
+        {
+            speechKit.release();
+
+            App.CancelSpeechKit -= new CancelSpeechKitEventHandler(App_CancelSpeechKit);
+        }
+
+        public void SetupPage()
+        {
+            SharedGraphicsDeviceManager.Current.GraphicsDevice.SetSharingMode(true);
+
+            //Run the detection separate from the update
+            dispatcherTimer.Start();
+
+            // Create a timer for this page
+            timer.Start();
+        }
+
+        public void TeardownPage()
+        {
+            // Stop the timer
+            timer.Stop();
+
+            // Set the sharing mode of the graphics device to turn off XNA rendering
+            SharedGraphicsDeviceManager.Current.GraphicsDevice.SetSharingMode(false);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -64,26 +111,25 @@ namespace ARChess
             isDetecting = false;
             SetupTheUIRenderer();
 
-            // Set the sharing mode of the graphics device to turn on XNA rendering
-            SharedGraphicsDeviceManager.Current.GraphicsDevice.SetSharingMode(true);
+            SetupPage();
 
-            //We need the Spritebatch to render the camera stream
             spriteBatch = new SpriteBatch(SharedGraphicsDeviceManager.Current.GraphicsDevice);
 
             //Initialize the camera
             photoCamera = new PhotoCamera();
             photoCamera.Initialized += new EventHandler<CameraOperationCompletedEventArgs>(photoCamera_Initialized);
             ViewFinderBrush.SetSource(photoCamera);
-            // Start the timer
-            timer.Start();
-
-            //Runt the detection separate from the update
-            dispatcherTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
-            dispatcherTimer.Tick += (sender, e1) => Detect();
-            dispatcherTimer.Start();
-
-
+           
             base.OnNavigatedTo(e);
+        }
+
+        void App_CancelSpeechKit()
+        {
+            if (speechKit != null)
+            {
+                speechKit.cancelCurrent();
+                hidePopup();
+            }
         }
 
         private void SetupTheUIRenderer()
@@ -117,12 +163,7 @@ namespace ARChess
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            // Stop the timer
-            timer.Stop();
-            dispatcherTimer.Stop();
-
-            // Set the sharing mode of the graphics device to turn off XNA rendering
-            SharedGraphicsDeviceManager.Current.GraphicsDevice.SetSharingMode(false);
+            TeardownPage();
 
             base.OnNavigatedFrom(e);
         }
@@ -205,7 +246,186 @@ namespace ARChess
 
         private void VoiceCommandButton_Click(object sender, EventArgs e)
         {
-            NavigationService.Navigate(new Uri("/VoiceRecognition.xaml", UriKind.Relative));
+            TeardownPage();
+            AppSettings settings = new AppSettings();
+
+            if (settings.SpeechCommandReminderSetting)
+            {
+                messageBox = new CustomMessageBox()
+                {
+                    ContentTemplate = (DataTemplate)this.Resources["PivotContentTemplate"],
+                    LeftButtonContent = "Speak",
+                    RightButtonContent = "Don't Show",
+                    IsFullScreen = true // Pivots should always be full-screen.
+                };
+
+                messageBox.Dismissed += (s1, e1) =>
+                {
+                    switch (e1.Result)
+                    {
+                        case CustomMessageBoxResult.LeftButton:
+                            dictationStart(RecognizerRecognizerType.Search);
+                            break;
+                        case CustomMessageBoxResult.RightButton:
+                            AppSettings settingsUpdate = new AppSettings();
+                            settingsUpdate.SpeechCommandReminderSetting = false;
+                            settingsUpdate.Save();
+                            dictationStart(RecognizerRecognizerType.Search);
+                            break;
+                        case CustomMessageBoxResult.None:
+                            break;
+                        default:
+                            break;
+                    }
+                };
+
+                messageBox.Show();
+            }
+            else
+            {
+                dictationStart(RecognizerRecognizerType.Search);
+            }
+        }
+
+        private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            App_CancelSpeechKit();
+            e.Cancel = true;
+            base.OnBackKeyPress(e);
+        }
+
+
+        private bool speechkitInitialize()
+        {
+            try
+            {
+                speechKit = SpeechKit.initialize(NuanceAPIKey.SpeechKitAppId, NuanceAPIKey.SpeechKitServer, NuanceAPIKey.SpeechKitPort, NuanceAPIKey.SpeechKitSsl, NuanceAPIKey.SpeechKitApplicationKey);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+
+                return false;
+            }
+
+            beep = speechKit.defineAudioPrompt("resources/beep.wav");
+            speechKit.setDefaultRecognizerPrompts(beep, null, null, null);
+            speechKit.connect();
+            Thread.Sleep(10); // to guarantee the time to load prompt resource
+
+            return true;
+        }
+
+        private void dictationStart(string type)
+        {
+            Thread thread = new Thread(() =>
+            {
+                recognizer = speechKit.createRecognizer(type, RecognizerEndOfSpeechDetection.Long, oemconfig.defaultLanguage(), this, handler);
+                recognizer.start();
+                showPopup("Please wait");
+            });
+            thread.Start();
+        }
+
+        private void showPopup(string text)
+        {
+            Deployment.Current.Dispatcher.BeginInvoke(() =>
+            {
+                switch (text)
+                {
+                    case "Processing Dictation":
+                        messageBox = new CustomMessageBox()
+                        {
+                            Caption = "Processing",
+                            Message = "We're processing your command.  Please wait.",
+                            IsLeftButtonEnabled = false,
+                            IsRightButtonEnabled = false,
+                            IsFullScreen = false
+                        };
+                        break;
+                    case "Listening":
+                        messageBox = new CustomMessageBox()
+                        {
+                            Caption = "Say a Command",
+                            Message = "We're listening.",
+                            LeftButtonContent = "Stop",
+                            RightButtonContent = "Cancel",
+                            IsFullScreen = false
+                        };
+
+                        messageBox.Dismissed += (s1, e1) =>
+                        {
+                            switch (e1.Result)
+                            {
+                                case CustomMessageBoxResult.LeftButton:
+                                    recognizer.stopRecording();
+                                    showPopup("Processing Dictation");
+                                    break;
+                                case CustomMessageBoxResult.RightButton:
+                                    if (recognizer != null)
+                                    {
+                                        recognizer.cancel();
+                                    }
+                                    hidePopup();
+                                    break;
+                                case CustomMessageBoxResult.None:
+                                    break;
+                                default:
+                                    break;
+                            }
+                        };
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+            Deployment.Current.Dispatcher.BeginInvoke(() =>
+            {
+                messageBox.Show();
+            });
+        }
+
+        private void hidePopup()
+        {
+            Deployment.Current.Dispatcher.BeginInvoke(() =>
+            {
+                messageBox.Dismiss();
+            });
+        }
+
+        public void onRecordingBegin(Recognizer recognizer)
+        {
+            showPopup("Listening");
+        }
+
+        public void onRecordingDone(Recognizer recognizer)
+        {
+            showPopup("Processing Dictation");
+        }
+
+        public void onResults(Recognizer recognizer, Recognition results)
+        {
+            hidePopup();
+            recognizer.cancel();
+            recognizer = null;
+
+            Deployment.Current.Dispatcher.BeginInvoke(() =>
+            {
+                SetupPage();
+            });
+        }
+
+        public void onError(Recognizer recognizer, SpeechError error)
+        {
+            hidePopup();
+            recognizer.cancel();
+            recognizer = null;
+
+            Deployment.Current.Dispatcher.BeginInvoke(() =>
+            {
+                SetupPage();
+            });
         }
     }
 }

@@ -27,23 +27,25 @@
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <TextBlock Margin="60,20,0,0" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}">
-                ARChess is an application developed by Jordan Gestring and Ethan McGee in partial fulfillments of the requirements of Clemson University CPSC 611: Virtual Reality Systems Fall 2012.
-            </TextBlock>
-            <Image Margin="-200,-175,0,0" Source="images/nuance.png" Height="100" Width="100" />
-            <TextBlock Margin="200,180,0,0" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}">
-               Voice Recognition provided by Nuance from Dragon.
-            </TextBlock>
-            <Image Margin="-200,60,0,0" Source="images/slartoolkit.jpg" Height="100" Width="100" />
-            <TextBlock Margin="200,277,0,0" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}">
-                Augmented Reality and Marker Detection provided by the SliverLight Augmented Reality Toolkit.
-            </TextBlock>
-            <Image Margin="-200,260,0,0" Source="images/xna.png" Height="100" Width="100" />
-            <Image Margin="-200,410,0,0" Source="images/silverlight.jpg" Height="100" Width="100" />
-            <TextBlock Margin="200,415,0,0" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}">
-                Built on the Microsoft XNA and SilverLight Frameworks for Windows Phone 7.
-            </TextBlock>
-        </Grid>
+        <ScrollViewer>
+            <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+                <TextBlock Margin="60,20,0,0" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}">
+                    ARChess is an application developed by Jordan Gestring and Ethan McGee in partial fulfillments of the requirements of Clemson University CPSC 611: Virtual Reality Systems Fall 2012.
+                </TextBlock>
+                <Image Margin="-200,-175,0,0" Source="images/nuance.png" Height="100" Width="100" />
+                <TextBlock Margin="200,180,0,0" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}">
+                   Voice Recognition provided by Nuance from Dragon.
+                </TextBlock>
+                <Image Margin="-200,60,0,0" Source="images/slartoolkit.jpg" Height="100" Width="100" />
+                <TextBlock Margin="200,277,0,0" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}">
+                    Augmented Reality and Marker Detection provided by the SliverLight Augmented Reality Toolkit.
+                </TextBlock>
+                <Image Margin="-200,260,0,0" Source="images/xna.png" Height="100" Width="100" />
+                <Image Margin="-200,410,0,0" Source="images/silverlight.jpg" Height="100" Width="100" />
+                <TextBlock Margin="200,415,0,0" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}">
+                    Built on the Microsoft XNA and SilverLight Frameworks for Windows Phone 7.
+                </TextBlock>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </phone:PhoneApplicationPage>

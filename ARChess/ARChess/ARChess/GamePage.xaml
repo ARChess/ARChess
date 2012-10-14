@@ -6,6 +6,8 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     mc:Ignorable="d" d:DesignWidth="728" d:DesignHeight="480"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -13,6 +15,60 @@
     SupportedOrientations="Landscape" Orientation="Landscape"
     shell:SystemTray.IsVisible="False">
 
+    <!--Transitions-->
+    <toolkit:TransitionService.NavigationInTransition>
+        <toolkit:NavigationInTransition>
+            <toolkit:NavigationInTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardIn"/>
+            </toolkit:NavigationInTransition.Backward>
+            <toolkit:NavigationInTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardIn"/>
+            </toolkit:NavigationInTransition.Forward>
+        </toolkit:NavigationInTransition>
+    </toolkit:TransitionService.NavigationInTransition>
+    <toolkit:TransitionService.NavigationOutTransition>
+        <toolkit:NavigationOutTransition>
+            <toolkit:NavigationOutTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardOut"/>
+            </toolkit:NavigationOutTransition.Backward>
+            <toolkit:NavigationOutTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardOut"/>
+            </toolkit:NavigationOutTransition.Forward>
+        </toolkit:NavigationOutTransition>
+    </toolkit:TransitionService.NavigationOutTransition>
+
+    <!--Resources-->
+    <phone:PhoneApplicationPage.Resources>
+        <DataTemplate x:Key="PivotContentTemplate">
+            <controls:Pivot Margin="-12,0,0,0" Title="WHAT CAN I SAY?" Height="672">
+                <controls:PivotItem Header="select" FontFamily="{StaticResource PhoneFontFamilySemiLight}" FontSize="32">
+                    <StackPanel Margin="12,0,0,0">
+                        <TextBlock Text="Select a playing piece to see available moves." 
+                                   FontSize="30" Margin="0,0,0,20" TextWrapping="Wrap"/>
+                        <TextBlock Text="Try saying" Foreground="{StaticResource PhoneSubtleBrush}" 
+                                   FontSize="{StaticResource PhoneFontSizeMedium}" Margin="0,0,0,8"/>
+                        <TextBlock FontSize="32" Margin="0,0,0,12">
+                            <Run>&quot;</Run><Run Foreground="{StaticResource PhoneAccentBrush}">Select</Run>
+                            <Run>king at space A3&quot;</Run>
+                        </TextBlock>
+                    </StackPanel>
+                </controls:PivotItem>
+                <controls:PivotItem Header="move" FontFamily="{StaticResource PhoneFontFamilySemiLight}" FontSize="32">
+                    <StackPanel Margin="12,0,0,0">
+                        <TextBlock Text="Move the selected piece." 
+                                   FontSize="30" Margin="0,0,0,20" TextWrapping="Wrap"/>
+                        <TextBlock Text="Try saying" Foreground="{StaticResource PhoneSubtleBrush}" 
+                                   FontSize="{StaticResource PhoneFontSizeMedium}" Margin="0,0,0,8"/>
+                        <TextBlock Margin="0,0,0,12">
+                            <Run>&quot;</Run><Run Foreground="{StaticResource PhoneAccentBrush}">Move</Run>
+                            <Run>piece to space D2&quot;</Run>
+                        </TextBlock>
+                    </StackPanel>
+                </controls:PivotItem>
+            </controls:Pivot>
+        </DataTemplate>
+    </phone:PhoneApplicationPage.Resources>
+    
     <Rectangle Width="800"  Height="480" Margin="12,0,0,0">
         <Rectangle.Fill>
             <VideoBrush x:Name="ViewFinderBrush" />

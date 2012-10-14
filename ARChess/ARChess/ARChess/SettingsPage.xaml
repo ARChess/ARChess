@@ -41,6 +41,7 @@
             <TextBlock TextWrapping="Wrap" Height="Auto" HorizontalAlignment="Left" Margin="60,240,0,0">
                 This option controls whether the axis labels are displayed to the left and bottom of the board.
             </TextBlock>
+            <CheckBox Content="Command Reminder Enabled" Height="Auto" HorizontalAlignment="Left" Margin="60,340,0,0" Name="checkBoxSetting3" VerticalAlignment="Top" IsChecked="{Binding Source={StaticResource appSettings}, Path=SpeechCommandReminderSetting, Mode=TwoWay}" />
         </Grid>
     </Grid>
 </phone:PhoneApplicationPage>
