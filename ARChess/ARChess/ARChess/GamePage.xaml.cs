@@ -29,6 +29,7 @@ using com.nuance.nmdp.speechkit;
 using com.nuance.nmdp.speechkit.oem;
 using com.nuance.nmdp.speechkit.util;
 using com.nuance.nmdp.speechkit.util.audio;
+using ARChess.helpers;
 
 namespace ARChess
 {
@@ -59,12 +60,17 @@ namespace ARChess
         //This is the secret sauce, this will render the Silverlight content
         private UIElementRenderer uiRenderer;
 
+        private PieceSelector selector;
+
         public GamePage()
         {
             InitializeComponent();
 
             // Get the application's ContentManager
             content = (Application.Current as App).Content;
+
+            // Piece Selector
+            selector = new PieceSelector(content);
 
             timer = new GameTimer { UpdateInterval = TimeSpan.FromTicks(333333) };
             timer.Update += OnUpdate;
@@ -156,8 +162,13 @@ namespace ARChess
             // Initialize the Detector
             //This need to be done AFTER the camera is initialized
             arDetector = new GrayBufferMarkerDetector();
-            var marker = Marker.LoadFromResource("resources/marker.pat", 16, 16, 80);
-            arDetector.Initialize(System.Convert.ToInt32(photoCamera.PreviewResolution.Width), System.Convert.ToInt32(photoCamera.PreviewResolution.Height), 1, 4000, marker);
+
+            // Setup both markers
+            // I believe the string name (final parameter), is needed to differentiate the markers during detection
+            Marker boardMarker = Marker.LoadFromResource("resources/marker.pat", 16, 16, 80, "board_marker");
+            Marker[] markers = { boardMarker, selector.getMarker() };
+            
+            arDetector.Initialize(System.Convert.ToInt32(photoCamera.PreviewResolution.Width), System.Convert.ToInt32(photoCamera.PreviewResolution.Height), 1, 4000, markers);
             isInitialized = true;
         }
 
@@ -192,16 +203,26 @@ namespace ARChess
 
                 //Detect the markers
                 arDetector.Threshold = 100;
-                var dr = arDetector.DetectAllMarkers(buffer, System.Convert.ToInt32(pixelWidth), System.Convert.ToInt32(pixelHeight));
+                DetectionResults dr = arDetector.DetectAllMarkers(buffer, System.Convert.ToInt32(pixelWidth), System.Convert.ToInt32(pixelHeight));
+                
+                // Initialize results to null
+                markerResult = null;
+                selector.setDetectionResult(null);
 
-                //Set the marker result if the marker is found
-                if (dr.HasResults)
+                // Iterate through results
+                foreach(DetectionResult result in dr)
                 {
-                    markerResult = dr[0];
-                }
-                else
-                {
-                    markerResult = null;
+                    switch (result.Marker.Name)
+                    {
+                        case "selection_marker" :
+                            selector.setDetectionResult(result);
+                            break;
+                        case "board_marker" :
+                            markerResult = result;
+                            break;
+                        default :
+                            break;
+                    }
                 }
             }
             finally
@@ -236,6 +257,8 @@ namespace ARChess
 
             //Draw our model
             new ChessBoard(content).Draw(SharedGraphicsDeviceManager.Current, markerResult);
+            // Draw selector
+            selector.Draw(SharedGraphicsDeviceManager.Current);
 
         }
 

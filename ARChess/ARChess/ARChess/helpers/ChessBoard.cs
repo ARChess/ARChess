@@ -88,7 +88,7 @@ namespace ARChess
                                 Vector3 modelPosition = new Vector3((i < 5 ? (4 - i) * -1 : i - 4) * scale, (j < 5 ? (4 - j) * -1 : j - 4) * scale, 0);
 
                                 effect.EnableDefaultLighting();
-                                effect.World = Microsoft.Xna.Framework.Matrix.CreateScale(7) *
+                                effect.World = Microsoft.Xna.Framework.Matrix.CreateScale(scale/2) *
                                     (transforms[mesh.ParentBone.Index]
                                     * mesh.ParentBone.Transform
                                     * Microsoft.Xna.Framework.Matrix.CreateTranslation(modelPosition)

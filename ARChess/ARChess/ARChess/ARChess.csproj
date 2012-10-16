@@ -109,6 +109,7 @@
     <Compile Include="helpers\GameState.cs" />
     <Compile Include="helpers\NuanceAPIKey.cs" />
     <Compile Include="helpers\Matrix3dExtensions.cs" />
+    <Compile Include="helpers\PieceSelector.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -146,6 +147,7 @@
   <ItemGroup>
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml" />
+    <Resource Include="resources\selection_marker.pat" />
     <Resource Include="resources\marker.pat" />
   </ItemGroup>
   <ItemGroup>
