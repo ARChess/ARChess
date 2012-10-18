@@ -19,21 +19,28 @@ namespace ARChess
                              BLACK_PAWN, WHITE_PAWN, BLACK_ROOK, WHITE_ROOK, BLACK_KNIGHT, WHITE_KNIGHT,
                              BLACK_BISHOP, WHITE_BISHOP, BLACK_KING, WHITE_KING, BLACK_QUEEN, WHITE_QUEEN };
 
-        public static Dictionary<Pieces, Model> models;
+        private static Dictionary<Pieces, Model> models;
 
-        public static void initializeModels()
+        private static void initializeModels()
+        {
+            models = new Dictionary<Pieces, Model>();
+            ContentManager content = (Application.Current as App).Content;
+
+            models[Pieces.LIGHT_SQUARE] = content.Load<Model>("light_cube");
+            models[Pieces.DARK_SQUARE] = content.Load<Model>("dark_cube");
+            models[Pieces.RED_SQUARE] = content.Load<Model>("red_cube");
+            models[Pieces.BLUE_SQUARE] = content.Load<Model>("blue_cube");
+            models[Pieces.GREEN_SQUARE] = content.Load<Model>("green_cube");
+        }
+
+        public static Model getModel(Pieces piece)
         {
             if (models == null)
             {
-                models = new Dictionary<Pieces, Model>();
-                ContentManager content = (Application.Current as App).Content;
-
-                models[Pieces.LIGHT_SQUARE] = content.Load<Model>("light_cube");
-                models[Pieces.DARK_SQUARE] = content.Load<Model>("dark_cube");
-                models[Pieces.RED_SQUARE] = content.Load<Model>("red_cube");
-                models[Pieces.BLUE_SQUARE] = content.Load<Model>("blue_cube");
-                models[Pieces.GREEN_SQUARE] = content.Load<Model>("green_cube");
+                initializeModels();
             }
+
+            return models[piece];
         }
     }
 }

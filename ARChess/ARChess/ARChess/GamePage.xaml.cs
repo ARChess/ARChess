@@ -102,7 +102,6 @@ namespace ARChess
             // Piece Selector
             selector = new PieceSelector(content);
             gameState = new GameState(content);
-            ModelSelector.initializeModels();
         }
 
         public void TeardownPage()

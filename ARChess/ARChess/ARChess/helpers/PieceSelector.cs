@@ -43,7 +43,7 @@ namespace ARChess.helpers
         {
             if (mDetectionResult != null )
             {
-                ModelDrawer.Draw(mDetectionResult, ModelSelector.models[ModelSelector.Pieces.RED_SQUARE], 0, 0, 0);
+                ModelDrawer.Draw(mDetectionResult, ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE), 0, 0, 0);
             }
         }
 

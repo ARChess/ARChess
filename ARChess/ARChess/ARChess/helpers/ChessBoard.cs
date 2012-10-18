@@ -26,8 +26,8 @@ namespace ARChess
 
         private Model selectModel(int curX, int curY)
         {
-            Model lightCube = ModelSelector.models[ModelSelector.Pieces.LIGHT_SQUARE];
-            Model darkCube = ModelSelector.models[ModelSelector.Pieces.DARK_SQUARE];
+            Model lightCube = ModelSelector.getModel(ModelSelector.Pieces.LIGHT_SQUARE);
+            Model darkCube = ModelSelector.getModel(ModelSelector.Pieces.DARK_SQUARE);
            
 
             if (curX % 2 == 0)
