@@ -21,14 +21,13 @@ namespace ARChess
 
         public enum Piece { PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING };
 
-        private int scale = 31;
         private Piece mType;
         private Color mPlayer;
         private Model mModel;
-        private Vector2 mPosition;
+        private Vector3 mPosition;
         private ContentManager content;
 
-        public ChessPiece(ContentManager _content, Color _player, Piece _type, Vector2 _position)
+        public ChessPiece(ContentManager _content, Color _player, Piece _type, Vector3 _position)
         {
             mType = _type;
             mPlayer = _player;
@@ -74,19 +73,19 @@ namespace ARChess
             return mModel;
         }
 
-        public Vector2 getPosition()
+        public Vector3 getPosition()
         {
             return mPosition;
         }
 
-        public void setPosition(Vector2 _position)
+        public void setPosition(Vector3 _position)
         {
             mPosition = _position;
         }
 
         public void Draw(DetectionResult markerResult)
         {
-            ModelDrawer.Draw(markerResult, mModel, (int)mPosition.X, (int)mPosition.Y, ModelDrawer.SCALE);
+            ModelDrawer.Draw(markerResult, mModel, (int)mPosition.X, (int)mPosition.Y, .5);
         }
 
         public String toString()

@@ -16,7 +16,6 @@ namespace ARChess
 {
     public class ChessBoard
     {
-        private int scale = 31;
         private ContentManager content;
 
         public ChessBoard(ContentManager _content) 

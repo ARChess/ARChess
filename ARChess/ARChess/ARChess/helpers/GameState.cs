@@ -20,15 +20,14 @@ namespace ARChess.helpers
         private List<ChessPiece> mChessPieces;
         private ContentManager content;
 
-        public GameState(ContentManager _content)
+        public GameState()
         {
-            content = _content;
             mChessPieces = new List<ChessPiece>();
 
             // Initialize all ChessPieces for ech player
             // Start with White team
             initializePlayerPieces(ChessPiece.Color.WHITE);
-            //initializePlayerPieces(ChessPiece.Color.BLACK);
+            initializePlayerPieces(ChessPiece.Color.BLACK);
         }
 
         public GameState(String _stateString)
@@ -38,19 +37,12 @@ namespace ARChess.helpers
 
         private void initializePlayerPieces(ChessPiece.Color _player)
         {
-            Vector2 position;
+            Vector3 position;
             // Initialize Pawns
             /*for (int i = 0; i < 8; i++)
             {
                 position = new Vector2(i, 1);
                 mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.PAWN, position));
-            }
-
-            // Initialize Rooks
-            for (int i = 0; i < 2; i++)
-            {
-                position = new Vector2(i * 7, 0);
-                mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.ROOK, position));
             }
 
             // Initialize Knights
@@ -59,9 +51,9 @@ namespace ARChess.helpers
                 position = new Vector2((i == 0 ? 1 : 6), 0);
                 mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.KNIGHT, position));
             }*/
-            
-            /*position = new Vector2(0, 4);
-            mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.KING, position));*/
+
+            position = new Vector3((_player == ChessPiece.Color.BLACK ? 7 : 0), (_player == ChessPiece.Color.BLACK ? 4 : 3), 1);
+            mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.Piece.KING, position));
         }
 
         public void loadState(String _stateString)

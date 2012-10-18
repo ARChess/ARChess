@@ -31,6 +31,8 @@ namespace ARChess
             models[Pieces.RED_SQUARE] = content.Load<Model>("red_cube");
             models[Pieces.BLUE_SQUARE] = content.Load<Model>("blue_cube");
             models[Pieces.GREEN_SQUARE] = content.Load<Model>("green_cube");
+            models[Pieces.WHITE_KING] = content.Load<Model>("king_white");
+            models[Pieces.BLACK_KING] = content.Load<Model>("king_black");
         }
 
         public static Model getModel(Pieces piece)

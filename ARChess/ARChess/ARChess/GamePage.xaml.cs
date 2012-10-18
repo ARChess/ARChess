@@ -100,8 +100,8 @@ namespace ARChess
             timer.Start();
 
             // Piece Selector
-            selector = new PieceSelector(content);
-            gameState = new GameState(content);
+            selector = new PieceSelector();
+            gameState = new GameState();
         }
 
         public void TeardownPage()
@@ -262,7 +262,7 @@ namespace ARChess
             //Draw Pieces
             gameState.Draw(markerResult);
             // Draw selector
-            selector.Draw();
+            //selector.Draw();
         }
 
         private void ResignButton_Click(object sender, EventArgs e)

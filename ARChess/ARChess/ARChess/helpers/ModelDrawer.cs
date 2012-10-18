@@ -17,38 +17,41 @@ namespace ARChess
     {
         public static int SCALE = 31;
 
-        public static void Draw(DetectionResult markerResult, Model model, int x, int y, int z)
+        public static void Draw(DetectionResult markerResult, Model model, double x, double y, double z)
         {
-            float aspectRatio = (float)SharedGraphicsDeviceManager.Current.GraphicsDevice.Viewport.AspectRatio;
-
-            SharedGraphicsDeviceManager.Current.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            SharedGraphicsDeviceManager.Current.GraphicsDevice.BlendState = BlendState.Opaque;
-            SharedGraphicsDeviceManager.Current.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
-
-            Vector3 cameraPosition = new Vector3(0, 0, 150);
-
-            Microsoft.Xna.Framework.Matrix[] transforms = new Microsoft.Xna.Framework.Matrix[model.Bones.Count];
-            model.CopyBoneTransformsTo(transforms);
-            // Draw the model. A model can have multiple meshes, so loop.
-            foreach (ModelMesh mesh in model.Meshes)
+            if (markerResult != null)
             {
-                foreach (BasicEffect effect in mesh.Effects)
+                float aspectRatio = (float)SharedGraphicsDeviceManager.Current.GraphicsDevice.Viewport.AspectRatio;
+
+                SharedGraphicsDeviceManager.Current.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                SharedGraphicsDeviceManager.Current.GraphicsDevice.BlendState = BlendState.Opaque;
+                SharedGraphicsDeviceManager.Current.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+
+                Vector3 cameraPosition = new Vector3(0, 0, 150);
+
+                Microsoft.Xna.Framework.Matrix[] transforms = new Microsoft.Xna.Framework.Matrix[model.Bones.Count];
+                model.CopyBoneTransformsTo(transforms);
+                // Draw the model. A model can have multiple meshes, so loop.
+                foreach (ModelMesh mesh in model.Meshes)
                 {
-                    Vector3 modelPosition = new Vector3((x < 5 ? (4 - x) * -1 : x - 4) * SCALE, (y < 5 ? (4 - y) * -1 : y - 4) * SCALE, z * SCALE);
+                    foreach (BasicEffect effect in mesh.Effects)
+                    {
+                        Vector3 modelPosition = new Vector3((int)((x < 5 ? (4 - x) * -1 : x - 4) * SCALE), (int)((y < 5 ? (4 - y) * -1 : y - 4) * SCALE), (int)(z * SCALE));
 
-                    effect.EnableDefaultLighting();
-                    effect.World = Microsoft.Xna.Framework.Matrix.CreateScale(SCALE / 2) *
-                        (transforms[mesh.ParentBone.Index]
-                        * mesh.ParentBone.Transform
-                        * Microsoft.Xna.Framework.Matrix.CreateTranslation(modelPosition)
-                        * markerResult.Transformation.ToXnaMatrix()
-                    );
+                        effect.EnableDefaultLighting();
+                        effect.World = Microsoft.Xna.Framework.Matrix.CreateScale(SCALE / 2) *
+                            (transforms[mesh.ParentBone.Index]
+                            * mesh.ParentBone.Transform
+                            * Microsoft.Xna.Framework.Matrix.CreateTranslation(modelPosition)
+                            * markerResult.Transformation.ToXnaMatrix()
+                        );
 
-                    effect.View = Microsoft.Xna.Framework.Matrix.CreateLookAt(cameraPosition, Vector3.Zero, Vector3.Up);
-                    effect.Projection = Microsoft.Xna.Framework.Matrix.CreatePerspectiveFieldOfView(Microsoft.Xna.Framework.MathHelper.ToRadians(45.0f), aspectRatio, 1.0f, 10000.0f);
+                        effect.View = Microsoft.Xna.Framework.Matrix.CreateLookAt(cameraPosition, Vector3.Zero, Vector3.Up);
+                        effect.Projection = Microsoft.Xna.Framework.Matrix.CreatePerspectiveFieldOfView(Microsoft.Xna.Framework.MathHelper.ToRadians(45.0f), aspectRatio, 1.0f, 10000.0f);
+                    }
+                    // Draw the mesh, using the effects set above.
+                    mesh.Draw();
                 }
-                // Draw the mesh, using the effects set above.
-                mesh.Draw();
             }
         }
     }

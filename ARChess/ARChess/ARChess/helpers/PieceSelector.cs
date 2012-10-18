@@ -18,15 +18,11 @@ namespace ARChess.helpers
     public class PieceSelector
     {
         private ContentManager content;
-        private Marker mMarker;
-        private Model mModel;
         private DetectionResult mDetectionResult;
 
-        public PieceSelector(ContentManager _content)
+        public PieceSelector()
         {
-            content = _content;
-            //mMarker = Marker.LoadFromResource("resources/marker.pat", 16, 16, 80);
-            //mModel = _content.Load<Model>("red_cube");
+
         }
 
         public Marker getMarker()
