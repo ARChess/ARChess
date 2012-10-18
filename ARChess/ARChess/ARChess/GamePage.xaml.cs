@@ -61,6 +61,7 @@ namespace ARChess
         private UIElementRenderer uiRenderer;
 
         private PieceSelector selector;
+        private GameState gameState;
 
         public GamePage()
         {
@@ -68,9 +69,6 @@ namespace ARChess
 
             // Get the application's ContentManager
             content = (Application.Current as App).Content;
-
-            // Piece Selector
-            selector = new PieceSelector(content);
 
             timer = new GameTimer { UpdateInterval = TimeSpan.FromTicks(333333) };
             timer.Update += OnUpdate;
@@ -100,6 +98,11 @@ namespace ARChess
 
             // Create a timer for this page
             timer.Start();
+
+            // Piece Selector
+            selector = new PieceSelector(content);
+            gameState = new GameState(content);
+            ModelSelector.initializeModels();
         }
 
         public void TeardownPage()
@@ -207,7 +210,7 @@ namespace ARChess
                 
                 // Initialize results to null
                 markerResult = null;
-                selector.setDetectionResult(null);
+                //selector.setDetectionResult(null);
 
                 // Iterate through results
                 foreach(DetectionResult result in dr)
@@ -255,11 +258,12 @@ namespace ARChess
             spriteBatch.Draw(uiRenderer.Texture, Vector2.Zero, Microsoft.Xna.Framework.Color.White);
             spriteBatch.End();
 
-            //Draw our model
-            new ChessBoard(content).Draw(SharedGraphicsDeviceManager.Current, markerResult);
+            //Draw Board
+            new ChessBoard(content).Draw(markerResult);
+            //Draw Pieces
+            gameState.Draw(markerResult);
             // Draw selector
-            selector.Draw(SharedGraphicsDeviceManager.Current);
-
+            selector.Draw();
         }
 
         private void ResignButton_Click(object sender, EventArgs e)

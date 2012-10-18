@@ -17,22 +17,18 @@ namespace ARChess.helpers
 {
     public class GameState
     {
-        private int scale = 31;
-        private ContentManager content;
-        private int mSelectedPiece = -1;
         private List<ChessPiece> mChessPieces;
+        private ContentManager content;
 
-        public GameState()
+        public GameState(ContentManager _content)
         {
-            Vector2 position;
+            content = _content;
+            mChessPieces = new List<ChessPiece>();
 
-            position = new Vector2(0,1);
-            
             // Initialize all ChessPieces for ech player
             // Start with White team
-            //initializePlayerPieces(ChessPiece.WHITE);
-            //initializePlayerPieces(ChessPiece.BLACK);
-            mChessPieces.Add(new ChessPiece(content, ChessPiece.WHITE, ChessPiece.PAWN, new Vector2(0, 1)));
+            initializePlayerPieces(ChessPiece.Color.WHITE);
+            //initializePlayerPieces(ChessPiece.Color.BLACK);
         }
 
         public GameState(String _stateString)
@@ -40,11 +36,11 @@ namespace ARChess.helpers
             
         }
 
-        private void initializePlayerPieces(int _player)
+        private void initializePlayerPieces(ChessPiece.Color _player)
         {
             Vector2 position;
             // Initialize Pawns
-            for (int i = 0; i < 8; i++)
+            /*for (int i = 0; i < 8; i++)
             {
                 position = new Vector2(i, 1);
                 mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.PAWN, position));
@@ -54,16 +50,18 @@ namespace ARChess.helpers
             for (int i = 0; i < 2; i++)
             {
                 position = new Vector2(i * 7, 0);
-                mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.PAWN, position));
+                mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.ROOK, position));
             }
 
             // Initialize Knights
             for (int i = 0; i < 2; i++)
             {
-                position = new Vector2(i * 8, 0);
-                mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.PAWN, position));
-            }
+                position = new Vector2((i == 0 ? 1 : 6), 0);
+                mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.KNIGHT, position));
+            }*/
             
+            /*position = new Vector2(0, 4);
+            mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.KING, position));*/
         }
 
         public void loadState(String _stateString)
@@ -71,11 +69,11 @@ namespace ARChess.helpers
 
         }
 
-        public void Draw(SharedGraphicsDeviceManager graphics, DetectionResult markerResult)
+        public void Draw(DetectionResult markerResult)
         {
             foreach (ChessPiece chessPiece in mChessPieces)
             {
-                chessPiece.Draw(graphics ,markerResult);
+                chessPiece.Draw(markerResult);
             }
         }
 

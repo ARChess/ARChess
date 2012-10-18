@@ -13,67 +13,58 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 
-namespace ARChess.helpers
+namespace ARChess
 {
     public class ChessPiece
     {
-        public const int WHITE = 0;
-        public const int BLACK = 1;
+        public enum Color { WHITE, BLACK };
 
-        public const int PAWN   = 0;
-        public const int ROOK   = 1;
-        public const int KNIGHT = 2;
-        public const int BISHOP = 3;
-        public const int QUEEN  = 4;
-        public const int KING   = 5;
+        public enum Piece { PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING };
 
-        private int mType;
-        private int mPlayer;
+        private int scale = 31;
+        private Piece mType;
+        private Color mPlayer;
         private Model mModel;
-        Vector2 mPosition;
+        private Vector2 mPosition;
+        private ContentManager content;
 
-        public ChessPiece(ContentManager _content, int _player, int _type, Vector2 _position)
+        public ChessPiece(ContentManager _content, Color _player, Piece _type, Vector2 _position)
         {
             mType = _type;
             mPlayer = _player;
+            content = _content;
 
-            String modelName = "";
             switch(_type)
             {
-                case PAWN :
-                    modelName = "pawn_model";
+                case Piece.PAWN :
+                    mModel = ModelSelector.models[(_player == Color.WHITE ? ModelSelector.Pieces.WHITE_PAWN : ModelSelector.Pieces.BLACK_PAWN)];
                     break;
-                case ROOK :
+                case Piece.ROOK:
+                    mModel = ModelSelector.models[(_player == Color.WHITE ? ModelSelector.Pieces.WHITE_ROOK : ModelSelector.Pieces.BLACK_ROOK)];
                     break;
-                case KNIGHT :
+                case Piece.KNIGHT:
+                    mModel = ModelSelector.models[(_player == Color.WHITE ? ModelSelector.Pieces.WHITE_KNIGHT : ModelSelector.Pieces.BLACK_KNIGHT)];
                     break;
-                case BISHOP :
+                case Piece.BISHOP:
+                    mModel = ModelSelector.models[(_player == Color.WHITE ? ModelSelector.Pieces.WHITE_BISHOP : ModelSelector.Pieces.BLACK_BISHOP)];
                     break;
-                case QUEEN :
+                case Piece.QUEEN:
+                    mModel = ModelSelector.models[(_player == Color.WHITE ? ModelSelector.Pieces.WHITE_QUEEN : ModelSelector.Pieces.BLACK_QUEEN)];
                     break;
-                case KING :
+                case Piece.KING:
+                    mModel = ModelSelector.models[(_player == Color.WHITE ? ModelSelector.Pieces.WHITE_KING : ModelSelector.Pieces.BLACK_KING)];
                     break;
             }
 
-            if (mPlayer == WHITE)
-            {
-                modelName += "_white";
-            }
-            else
-            {
-                modelName += "_black";
-            }
-
-            //mModel = _content.Load<Model>(modelName);
             mPosition = _position;
         }
 
-        public int getType()
+        public Piece getType()
         {
             return mType;
         }
 
-        public int getPlayer()
+        public Color getPlayer()
         {
             return mPlayer;
         }
@@ -93,9 +84,9 @@ namespace ARChess.helpers
             mPosition = _position;
         }
 
-        public void Draw(SharedGraphicsDeviceManager graphics, DetectionResult markerResult)
+        public void Draw(DetectionResult markerResult)
         {
-
+            ModelDrawer.Draw(markerResult, mModel, (int)mPosition.X, (int)mPosition.Y, ModelDrawer.SCALE);
         }
 
         public String toString()

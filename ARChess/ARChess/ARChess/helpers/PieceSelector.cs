@@ -39,46 +39,11 @@ namespace ARChess.helpers
             mDetectionResult = result;
         }
 
-        public void Draw(SharedGraphicsDeviceManager graphics)
+        public void Draw()
         {
-            
-            float aspectRatio = (float)graphics.GraphicsDevice.Viewport.AspectRatio;
-
             if (mDetectionResult != null )
             {
-                mModel = content.Load<Model>("red_cube");
-
-                SharedGraphicsDeviceManager.Current.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-                SharedGraphicsDeviceManager.Current.GraphicsDevice.BlendState = BlendState.Opaque;
-                SharedGraphicsDeviceManager.Current.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
-
-                Vector3 cameraPosition = new Vector3(0, 0, 150);
-
-                Microsoft.Xna.Framework.Matrix[] transforms = new Microsoft.Xna.Framework.Matrix[mModel.Bones.Count];
-                mModel.CopyBoneTransformsTo(transforms);
-
-                // Draw the model. A model can have multiple meshes, so loop.
-                foreach (ModelMesh mesh in mModel.Meshes)
-                {
-                    foreach (BasicEffect effect in mesh.Effects)
-                    {
-                        Vector3 modelPosition = new Vector3(0, 0, 0);
-
-                        effect.EnableDefaultLighting();
-                        effect.World = Microsoft.Xna.Framework.Matrix.CreateScale(30) *
-                                    (transforms[mesh.ParentBone.Index]
-                                    * mesh.ParentBone.Transform
-                                    * Microsoft.Xna.Framework.Matrix.CreateTranslation(modelPosition)
-                                    * mDetectionResult.Transformation.ToXnaMatrix()
-                                );
-
-                        effect.View = Microsoft.Xna.Framework.Matrix.CreateLookAt(cameraPosition, Vector3.Zero, Vector3.Up);
-                        effect.Projection = Microsoft.Xna.Framework.Matrix.CreatePerspectiveFieldOfView(Microsoft.Xna.Framework.MathHelper.ToRadians(45.0f), aspectRatio, 1.0f, 10000.0f);
-
-                    }
-                    mesh.Draw();
-                }
-
+                ModelDrawer.Draw(mDetectionResult, ModelSelector.models[ModelSelector.Pieces.RED_SQUARE], 0, 0, 0);
             }
         }
 
