@@ -85,7 +85,7 @@ namespace ARChess
 
         public void Draw(DetectionResult markerResult)
         {
-            ModelDrawer.Draw(markerResult, mModel, (int)mPosition.X, (int)mPosition.Y, .5);
+            ModelDrawer.Draw(markerResult, mModel, (int)mPosition.X, (int)mPosition.Y, .2);
         }
 
         public String toString()

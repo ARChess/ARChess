@@ -33,6 +33,8 @@ namespace ARChess
             models[Pieces.GREEN_SQUARE] = content.Load<Model>("green_cube");
             models[Pieces.WHITE_KING] = content.Load<Model>("king_white");
             models[Pieces.BLACK_KING] = content.Load<Model>("king_black");
+            models[Pieces.WHITE_PAWN] = content.Load<Model>("pawn_white");
+            models[Pieces.BLACK_PAWN] = content.Load<Model>("pawn_black");
         }
 
         public static Model getModel(Pieces piece)

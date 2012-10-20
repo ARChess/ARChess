@@ -39,13 +39,13 @@ namespace ARChess.helpers
         {
             Vector3 position;
             // Initialize Pawns
-            /*for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 8; i++)
             {
-                position = new Vector2(i, 1);
-                mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.PAWN, position));
+                position = new Vector3((_player == ChessPiece.Color.BLACK ? 6 : 1), i, 1);
+                mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.Piece.PAWN, position));
             }
 
-            // Initialize Knights
+            /*// Initialize Knights
             for (int i = 0; i < 2; i++)
             {
                 position = new Vector2((i == 0 ? 1 : 6), 0);
