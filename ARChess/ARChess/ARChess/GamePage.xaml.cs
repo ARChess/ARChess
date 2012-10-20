@@ -209,7 +209,8 @@ namespace ARChess
                 
                 // Initialize results to null
                 markerResult = null;
-                //selector.setDetectionResult(null);
+                selector.setDetectionResult(null);
+                selector.setBoardMarker(null);
 
                 // Iterate through results
                 foreach(DetectionResult result in dr)
@@ -221,6 +222,7 @@ namespace ARChess
                             break;
                         case "board_marker" :
                             markerResult = result;
+                            selector.setBoardMarker(result);
                             break;
                         default :
                             break;
@@ -262,7 +264,7 @@ namespace ARChess
             //Draw Pieces
             gameState.Draw(markerResult);
             // Draw selector
-            //selector.Draw();
+            selector.Draw();
         }
 
         private void ResignButton_Click(object sender, EventArgs e)
