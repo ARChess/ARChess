@@ -228,6 +228,9 @@ namespace ARChess
                             break;
                     }
                 }
+
+                // Manage Selection
+                gameState.setSelected( selector.getSelected() );
             }
             finally
             {
@@ -265,6 +268,23 @@ namespace ARChess
             gameState.Draw(markerResult);
             // Draw selector
             selector.Draw();
+        }
+
+        // TODO: This is a temporary function to test hardcoded piece movement
+        private void MoveForwardButton_Click(object sender, EventArgs e)
+        {
+            ChessPiece piece = gameState.getSelectedPiece();
+            if (piece != null)
+            {
+                Vector2 currentPosition = piece.getPosition();
+                if (currentPosition != null)
+                {
+                    //currentPosition.Y = 2;
+                    currentPosition.X += 1;
+                    gameState.movePiece(currentPosition);
+                }
+            }
+            
         }
 
         private void ResignButton_Click(object sender, EventArgs e)

@@ -18,6 +18,7 @@ namespace ARChess.helpers
     public class GameState
     {
         private List<ChessPiece> mChessPieces;
+        private ChessPiece mSelectedPiece;
         private ContentManager content;
 
         public GameState()
@@ -37,11 +38,11 @@ namespace ARChess.helpers
 
         private void initializePlayerPieces(ChessPiece.Color _player)
         {
-            Vector3 position;
+            Vector2 position;
             // Initialize Pawns
             for (int i = 0; i < 8; i++)
             {
-                position = new Vector3((_player == ChessPiece.Color.BLACK ? 6 : 1), i, 1);
+                position = new Vector2((_player == ChessPiece.Color.BLACK ? 6 : 1), i);
                 mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.Piece.PAWN, position));
             }
 
@@ -52,8 +53,36 @@ namespace ARChess.helpers
                 mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.KNIGHT, position));
             }*/
 
-            position = new Vector3((_player == ChessPiece.Color.BLACK ? 7 : 0), (_player == ChessPiece.Color.BLACK ? 4 : 3), 1);
+            position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (_player == ChessPiece.Color.BLACK ? 4 : 3));
             mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.Piece.KING, position));
+        }
+
+        public void setSelected(Vector2 position)
+        {
+            foreach(ChessPiece chessPiece in mChessPieces)
+            {
+                if (position == chessPiece.getPosition())
+                {
+                    // Set Selected Piece
+                    mSelectedPiece = chessPiece;
+                    return;
+                }
+            }
+            // If selected piece not found then deselect
+            mSelectedPiece = null;
+        }
+
+        public ChessPiece getSelectedPiece()
+        {
+            return mSelectedPiece;
+        }
+
+        public void movePiece(Vector2 dest)
+        {
+            if (mSelectedPiece != null)
+            {
+                mSelectedPiece.setPosition(dest);
+            }
         }
 
         public void loadState(String _stateString)

@@ -77,6 +77,7 @@
 
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="False">
+            <shell:ApplicationBarIconButton IconUri="images/resign_icon.png" Text="Move Forward" Click="MoveForwardButton_Click" x:Name="moveForwardButton" />
             <shell:ApplicationBarIconButton IconUri="images/resign_icon.png" Text="Resign" Click="ResignButton_Click" x:Name="resignButton" />
             <shell:ApplicationBarIconButton IconUri="images/command_icon.png" Text="Command" Click="VoiceCommandButton_Click" x:Name="commandButton" />
         </shell:ApplicationBar>

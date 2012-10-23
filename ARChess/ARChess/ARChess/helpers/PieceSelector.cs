@@ -22,7 +22,8 @@ namespace ARChess.helpers
         private DetectionResult mDetectionResult;
         private DetectionResult mBoardMarker;
 
-        private Vector3 mPosition;
+        private bool mSelected = false;
+        private Vector2 mPosition;
 
         public PieceSelector()
         {
@@ -32,6 +33,19 @@ namespace ARChess.helpers
         public Marker getMarker()
         {
             return Marker.LoadFromResource("resources/selection_marker.pat", 16, 16, 80, "selection_marker");
+        }
+
+        public Vector2 getSelected()
+        {
+            if (mSelected)
+            {
+                return mPosition;
+            }
+            else
+            {
+                // This is essentially returning null because it will never match a piece position
+                return new Vector2(-1,-1);
+            }
         }
 
         public void setDetectionResult(DetectionResult result)
@@ -62,17 +76,25 @@ namespace ARChess.helpers
                     //
                     int x = (int) (position.X / 15),
                         y = (int) (position.Y / 15);
-
+                   
+                    
                     if (x < 0) { x = 0; }
                     if (x > 7) { x = 7; }
                     if (y < 0) { y = 0; }
                     if (y > 7) { y = 0; }
 
-                    ModelDrawer.Draw(mBoardMarker, ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE), x, y, 1);
+
+                    // Check if selected
+                    mPosition.X = x;
+                    mPosition.Y = y;
+                    mSelected = true;
+                    
+
+                    ModelDrawer.Draw(mBoardMarker, ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE), mPosition.X, mPosition.Y, 0.2);
                 }
                 else
                 {
-                    ModelDrawer.Draw(mDetectionResult, ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE), 0, 0, 1);
+                    ModelDrawer.Draw(mDetectionResult, ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE), 3, 3, 0);
                 }
             }
         }

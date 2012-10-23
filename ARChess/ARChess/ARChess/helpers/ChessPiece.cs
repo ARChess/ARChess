@@ -24,10 +24,10 @@ namespace ARChess
         private Piece mType;
         private Color mPlayer;
         private Model mModel;
-        private Vector3 mPosition;
+        private Vector2 mPosition;
         private ContentManager content;
 
-        public ChessPiece(ContentManager _content, Color _player, Piece _type, Vector3 _position)
+        public ChessPiece(ContentManager _content, Color _player, Piece _type, Vector2 _position)
         {
             mType = _type;
             mPlayer = _player;
@@ -73,14 +73,20 @@ namespace ARChess
             return mModel;
         }
 
-        public Vector3 getPosition()
+        public Vector2 getPosition()
         {
             return mPosition;
         }
 
-        public void setPosition(Vector3 _position)
+        public void setPosition(Vector2 _position)
         {
             mPosition = _position;
+
+            // Constrain position to board
+            if (mPosition.X < 0) { mPosition.X = 0; }
+            else if (mPosition.X > 7) { mPosition.X = 7; }
+            if (mPosition.Y < 0) { mPosition.Y = 0; }
+            else if (mPosition.Y > 7) { mPosition.Y = 7; }
         }
 
         public void Draw(DetectionResult markerResult)

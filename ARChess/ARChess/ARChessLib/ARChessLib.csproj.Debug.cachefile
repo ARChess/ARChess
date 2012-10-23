@@ -3,6 +3,8 @@ Content\wood_dark.xnb
 Content\wood_green.xnb
 Content\wood_light.xnb
 Content\wood_red.xnb
+Content\black_texture.xnb
+Content\white_texture.xnb
 Content\blue_cube.xnb
 Content\dark_cube.xnb
 Content\green_cube.xnb
@@ -17,6 +19,4 @@ Content\wood_dark_0.xnb
 Content\wood_green_0.xnb
 Content\wood_light_0.xnb
 Content\wood_red_0.xnb
-Content\black_texture.xnb
-Content\white_texture.xnb
 Content\white_texture_0.xnb
