@@ -27,14 +27,16 @@ namespace ARChess
             ContentManager content = (Application.Current as App).Content;
 
             models[Pieces.LIGHT_SQUARE] = content.Load<Model>("light_cube");
-            models[Pieces.DARK_SQUARE] = content.Load<Model>("dark_cube");
-            models[Pieces.RED_SQUARE] = content.Load<Model>("red_cube");
-            models[Pieces.BLUE_SQUARE] = content.Load<Model>("blue_cube");
+            models[Pieces.DARK_SQUARE]  = content.Load<Model>("dark_cube");
+            models[Pieces.RED_SQUARE]   = content.Load<Model>("red_cube");
+            models[Pieces.BLUE_SQUARE]  = content.Load<Model>("blue_cube");
             models[Pieces.GREEN_SQUARE] = content.Load<Model>("green_cube");
-            models[Pieces.WHITE_KING] = content.Load<Model>("king_white");
-            models[Pieces.BLACK_KING] = content.Load<Model>("king_black");
-            models[Pieces.WHITE_PAWN] = content.Load<Model>("pawn_white");
-            models[Pieces.BLACK_PAWN] = content.Load<Model>("pawn_black");
+            models[Pieces.WHITE_KING]   = content.Load<Model>("king_white");
+            models[Pieces.BLACK_KING]   = content.Load<Model>("king_black");
+            models[Pieces.WHITE_KNIGHT] = content.Load<Model>("knight_white");
+            models[Pieces.BLACK_KNIGHT] = content.Load<Model>("knight_black");
+            models[Pieces.WHITE_PAWN]   = content.Load<Model>("pawn_white");
+            models[Pieces.BLACK_PAWN]   = content.Load<Model>("pawn_black");
         }
 
         public static Model getModel(Pieces piece)

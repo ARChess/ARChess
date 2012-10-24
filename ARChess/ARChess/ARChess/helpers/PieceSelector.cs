@@ -58,11 +58,13 @@ namespace ARChess.helpers
             mBoardMarker = res;
         }
 
+
+        private DateTime selectedSince;
         public void Draw()
         {
-            if (mDetectionResult != null )
+            if (mDetectionResult != null)
             {
-                if (mBoardMarker != null)
+                if ((mBoardMarker != null) && !mSelected)
                 {
                     Microsoft.Xna.Framework.Matrix boardMat = mBoardMarker.Transformation.ToXnaMatrix(),
                         selectorMat = mDetectionResult.Transformation.ToXnaMatrix(),
@@ -85,9 +87,23 @@ namespace ARChess.helpers
 
 
                     // Check if selected
-                    mPosition.X = x;
-                    mPosition.Y = y;
-                    mSelected = true;
+                    if ( mPosition != new Vector2(x,y))
+                    {
+                        selectedSince = DateTime.Now;
+                        mPosition.X = x;
+                        mPosition.Y = y;
+                        mSelected = false;
+                    }
+                    else
+                    {
+                        DateTime time = DateTime.Now;
+                        long elapsedTicks = time.Ticks - selectedSince.Ticks;
+                        TimeSpan elapsedSpan = new TimeSpan(elapsedTicks);
+                        if (elapsedSpan.TotalSeconds > 3.0)
+                        {
+                            mSelected = true;
+                        }
+                    }
                     
 
                     ModelDrawer.Draw(mBoardMarker, ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE), mPosition.X, mPosition.Y, 0.2);
@@ -96,6 +112,10 @@ namespace ARChess.helpers
                 {
                     ModelDrawer.Draw(mDetectionResult, ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE), 3, 3, 0);
                 }
+            }
+            else
+            {
+                mSelected = false;
             }
         }
 

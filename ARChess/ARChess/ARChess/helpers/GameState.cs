@@ -46,12 +46,12 @@ namespace ARChess.helpers
                 mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.Piece.PAWN, position));
             }
 
-            /*// Initialize Knights
+            // Initialize Knights
             for (int i = 0; i < 2; i++)
             {
-                position = new Vector2((i == 0 ? 1 : 6), 0);
-                mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.KNIGHT, position));
-            }*/
+                position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (i == 0 ? 1 : 6));
+                mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.Piece.KNIGHT, position));
+            }
 
             position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (_player == ChessPiece.Color.BLACK ? 4 : 3));
             mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.Piece.KING, position));
