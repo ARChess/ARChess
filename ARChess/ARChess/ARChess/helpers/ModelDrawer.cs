@@ -17,7 +17,7 @@ namespace ARChess
     {
         public static int SCALE = 31;
 
-        public static void Draw(DetectionResult markerResult, Model model, double x, double y, double z)
+        public static void Draw(DetectionResult markerResult, Model model, double x, double y, double z, float zRotation = 0.0f)
         {
             if (markerResult != null)
             {
@@ -42,6 +42,7 @@ namespace ARChess
                         effect.World = Microsoft.Xna.Framework.Matrix.CreateScale(SCALE / 2) *
                             (transforms[mesh.ParentBone.Index]
                             * mesh.ParentBone.Transform
+                            * Matrix.CreateRotationZ(zRotation)
                             * Microsoft.Xna.Framework.Matrix.CreateTranslation(modelPosition)
                             * markerResult.Transformation.ToXnaMatrix()
                         );
