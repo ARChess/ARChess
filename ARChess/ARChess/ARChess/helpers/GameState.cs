@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using SLARToolKit;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -33,7 +34,16 @@ namespace ARChess.helpers
 
         public GameState(String _stateString)
         {
-            
+            // Clear out current State
+            mChessPieces.Clear();
+
+            // Load all pieces specified by State String
+            XElement stateElement = XElement.Parse(_stateString);
+            IEnumerable<XElement> elements = stateElement.Elements("ChessPiece");
+            foreach (XElement pieceElement in elements)
+            {
+                mChessPieces.Add(new ChessPiece(content, pieceElement));
+            }
         }
 
         private void initializePlayerPieces(ChessPiece.Color _player)
@@ -98,11 +108,19 @@ namespace ARChess.helpers
             }
         }
 
-        public String toString()
+        public XElement toXml()
         {
-            String stateString = "";
-            //stateString = mChessPieces.ToString();
-            return stateString;
+            XElement stateElement = new XElement("State");
+            foreach (ChessPiece piece in mChessPieces)
+            {
+                stateElement.Add( piece.toXml() );
+            }
+            return stateElement;
+        }
+
+        public String toXmlString()
+        {
+            return toXml().ToString();
         }
 
     }

@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Xml.Linq;
 using SLARToolKit;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,15 +28,75 @@ namespace ARChess
         private Vector2 mPosition;
         private ContentManager content;
 
+        public ChessPiece(ContentManager _content, XElement pieceElement)
+        {
+            // Player
+            XElement playerNode = pieceElement.Element("Player");
+            String playerString = playerNode.Value;
+            Color player;
+            if (playerString == "WHITE")
+            {
+                player = Color.WHITE;
+            }
+            else
+            {
+                player = Color.BLACK;
+            }
+
+            // Type
+            XElement typeNode = pieceElement.Element("Type");
+            String typeString = typeNode.Value;
+            Piece type = Piece.PAWN;
+            switch (typeString)
+            {
+                case "PAWN" :
+                    type = Piece.PAWN;
+                    break;
+                case "ROOK" :
+                    type = Piece.ROOK;
+                    break;
+                case "KNIGHT" :
+                    type = Piece.KNIGHT;
+                    break;
+                case "BISHOP" :
+                    type = Piece.BISHOP;
+                    break;
+                case "QUEEN" :
+                    type = Piece.QUEEN;
+                    break;
+                case "KING" :
+                    type = Piece.KING;
+                    break;
+            }
+
+            // Position
+            XElement positionNode = pieceElement.Element("Position");
+            String positionXString = positionNode.Attribute("X").Value;
+            String positionYString = positionNode.Attribute("Y").Value;
+
+            int x = System.Convert.ToInt32(positionXString);
+            int y = System.Convert.ToInt32(positionYString);
+
+            Vector2 position = new Vector2(x, y);
+
+            initialize(_content, player, type, position);
+        }
+
         public ChessPiece(ContentManager _content, Color _player, Piece _type, Vector2 _position)
+        {
+            initialize(_content, _player, _type, _position);
+        }
+
+        private void initialize(ContentManager _content, Color _player, Piece _type, Vector2 _position)
         {
             mType = _type;
             mPlayer = _player;
             content = _content;
 
-            switch(_type)
+
+            switch (_type)
             {
-                case Piece.PAWN :
+                case Piece.PAWN:
                     mModel = ModelSelector.getModel(_player == Color.WHITE ? ModelSelector.Pieces.WHITE_PAWN : ModelSelector.Pieces.BLACK_PAWN);
                     break;
                 case Piece.ROOK:
@@ -108,11 +169,24 @@ namespace ARChess
             }
         }
 
-        public String toString()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public XElement toXml()
         {
-            String pieceString = "";
+            XElement pieceElement = new XElement("ChessPiece");
 
-            return pieceString;
+            // Player
+            pieceElement.Add(new XElement("Player", mPlayer.ToString()));
+
+            // Type
+            pieceElement.Add(new XElement("Type", mType.ToString()));
+
+            // Position
+            pieceElement.Add(new XElement("Position", new XAttribute("X", mPosition.X), new XAttribute("Y", mPosition.Y)));
+            
+            return pieceElement;
         }
 
     }
