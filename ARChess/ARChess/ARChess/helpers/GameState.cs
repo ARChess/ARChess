@@ -22,14 +22,21 @@ namespace ARChess.helpers
         private ChessPiece mSelectedPiece;
         private ContentManager content;
 
+        private ChessBoard mBoard;
+        private PieceSelector mSelector;
+
         public GameState()
         {
             mChessPieces = new List<ChessPiece>();
 
             // Initialize all ChessPieces for ech player
-            // Start with White team
+            // White team
             initializePlayerPieces(ChessPiece.Color.WHITE);
+            // Black team
             initializePlayerPieces(ChessPiece.Color.BLACK);
+
+            mBoard = new ChessBoard(content);
+            mSelector = new PieceSelector();
         }
 
         public GameState(String _stateString)
@@ -75,11 +82,20 @@ namespace ARChess.helpers
                 {
                     // Set Selected Piece
                     mSelectedPiece = chessPiece;
+                    mSelectedPiece.setPieceList(mChessPieces);
+                    mBoard.setSelectedPiece(chessPiece);
                     return;
                 }
             }
+
             // If selected piece not found then deselect
-            mSelectedPiece = null;
+            if (mSelectedPiece != null)
+            {
+                mSelectedPiece.setPieceList(null);
+                mSelectedPiece = null;
+                mBoard.setSelectedPiece(null);
+            }
+            
         }
 
         public ChessPiece getSelectedPiece()
@@ -97,15 +113,65 @@ namespace ARChess.helpers
 
         public void loadState(String _stateString)
         {
+            // Clear out current State
+            mChessPieces.Clear();
 
+            // Load all pieces specified by State String
+            XElement stateElement = XElement.Parse(_stateString);
+            IEnumerable<XElement> elements = stateElement.Elements("ChessPiece");
+            foreach (XElement pieceElement in elements)
+            {
+                mChessPieces.Add(new ChessPiece(content, pieceElement));
+            }
         }
 
-        public void Draw(DetectionResult markerResult)
+        public Marker[] getMarkers()
         {
+            Marker[] markers = { mBoard.getMarker(), mSelector.getMarker() };
+            return markers;
+        }
+
+        public void Detect(DetectionResults detectionResults)
+        {
+            // Initialize results to null
+            mBoard.setDetectionResult(null);
+            mSelector.setDetectionResult(null);
+            mSelector.setBoardMarker(null);
+
+            // Iterate through results
+            foreach (DetectionResult result in detectionResults)
+            {
+                switch (result.Marker.Name)
+                {
+                    case "selection_marker":
+                        mSelector.setDetectionResult(result);
+                        break;
+                    case "board_marker":
+                        mBoard.setDetectionResult(result);
+                        mSelector.setBoardMarker(result);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            // Manage Selection
+            setSelected( mSelector.getSelected() );
+        }
+
+        public void Draw()
+        {
+            // Draw Board
+            mBoard.Draw();
+            DetectionResult boardMarker = mBoard.getDetectionResult();
+
             foreach (ChessPiece chessPiece in mChessPieces)
             {
-                chessPiece.Draw(markerResult);
+                chessPiece.Draw( boardMarker );
             }
+
+            // Draw Selector
+            mSelector.Draw();
         }
 
         public XElement toXml()

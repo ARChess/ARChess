@@ -43,7 +43,7 @@ namespace ARChess
         private bool isDetecting = false;
         private bool isInitialized = false;
         private PhotoCamera photoCamera = null;
-        private DetectionResult markerResult = null;
+        //private DetectionResult markerResult = null;
         private GameTimer timer = null;
         private ContentManager content = null;
         private SpriteBatch spriteBatch = null;
@@ -60,7 +60,7 @@ namespace ARChess
         //This is the secret sauce, this will render the Silverlight content
         private UIElementRenderer uiRenderer;
 
-        private PieceSelector selector;
+        //private PieceSelector selector;
         private GameState gameState;
 
         public GamePage()
@@ -100,7 +100,7 @@ namespace ARChess
             timer.Start();
 
             // Piece Selector
-            selector = new PieceSelector();
+            //selector = new PieceSelector();
             gameState = new GameState();
         }
 
@@ -167,8 +167,8 @@ namespace ARChess
 
             // Setup both markers
             // I believe the string name (final parameter), is needed to differentiate the markers during detection
-            Marker boardMarker = Marker.LoadFromResource("resources/marker.pat", 16, 16, 80, "board_marker");
-            Marker[] markers = { boardMarker, selector.getMarker() };
+            //Marker boardMarker = Marker.LoadFromResource("resources/marker.pat", 16, 16, 80, "board_marker");
+            Marker[] markers = gameState.getMarkers();//{ boardMarker, selector.getMarker() };
             
             arDetector.Initialize(System.Convert.ToInt32(photoCamera.PreviewResolution.Width), System.Convert.ToInt32(photoCamera.PreviewResolution.Height), 1, 4000, markers);
             isInitialized = true;
@@ -206,31 +206,8 @@ namespace ARChess
                 //Detect the markers
                 arDetector.Threshold = 100;
                 DetectionResults dr = arDetector.DetectAllMarkers(buffer, System.Convert.ToInt32(pixelWidth), System.Convert.ToInt32(pixelHeight));
-                
-                // Initialize results to null
-                markerResult = null;
-                selector.setDetectionResult(null);
-                selector.setBoardMarker(null);
 
-                // Iterate through results
-                foreach(DetectionResult result in dr)
-                {
-                    switch (result.Marker.Name)
-                    {
-                        case "selection_marker" :
-                            selector.setDetectionResult(result);
-                            break;
-                        case "board_marker" :
-                            markerResult = result;
-                            selector.setBoardMarker(result);
-                            break;
-                        default :
-                            break;
-                    }
-                }
-
-                // Manage Selection
-                gameState.setSelected( selector.getSelected() );
+                gameState.Detect(dr);
             }
             finally
             {
@@ -263,11 +240,11 @@ namespace ARChess
             spriteBatch.End();
 
             //Draw Board
-            new ChessBoard(content).Draw(markerResult);
+            //new ChessBoard(content).Draw(markerResult);
             //Draw Pieces
-            gameState.Draw(markerResult);
+            gameState.Draw();
             // Draw selector
-            selector.Draw();
+            //selector.Draw();
         }
 
         // TODO: This is a temporary function to test hardcoded piece movement

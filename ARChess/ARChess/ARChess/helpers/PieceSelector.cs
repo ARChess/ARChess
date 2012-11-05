@@ -18,6 +18,7 @@ namespace ARChess.helpers
 {
     public class PieceSelector
     {
+
         private ContentManager content;
         private DetectionResult mDetectionResult;
         private DetectionResult mBoardMarker;
@@ -27,7 +28,7 @@ namespace ARChess.helpers
 
         public PieceSelector()
         {
-
+            
         }
 
         public Marker getMarker()
@@ -110,7 +111,24 @@ namespace ARChess.helpers
                 }
                 else
                 {
-                    ModelDrawer.Draw(mDetectionResult, ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE), 3, 3, 0);
+                    //ModelDrawer.Draw(mDetectionResult, ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE), 3, 3, 0);
+                    VertexPositionColor[] primitiveList = new VertexPositionColor[2];
+                    primitiveList[0] = new VertexPositionColor(new Vector3(0, 0, 0), Microsoft.Xna.Framework.Color.Green);
+                    primitiveList[1] = new VertexPositionColor(new Vector3(0, 100, 0), Microsoft.Xna.Framework.Color.Green);
+                    short[] lineIndices = new short[2]{ 0, 1 };
+
+                    /*
+                    SharedGraphicsDeviceManager.Current.GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColor>(
+                        PrimitiveType.LineStrip,
+                        primitiveList,
+                        0,
+                        2,
+                        lineIndices,
+                        0,
+                        1
+                        );
+                     * */
+                    ModelDrawer.DrawLine(mDetectionResult, new Vector3(0, 0, 0), new Vector3(0, 1, 0));
                 }
             }
             else
