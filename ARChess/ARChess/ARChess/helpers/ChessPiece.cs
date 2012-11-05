@@ -245,14 +245,24 @@ namespace ARChess
             {
                 int xDelta = (int)dir.X;
                 int yDelta = (int)dir.Y;
+                //int xEdge = xDelta != 0 ? (7 - xDelta * x) % 7 : 7;
+                //int yEdge = yDelta != 0 ? (7 - yDelta * y) % 7 : 7;
+                //int closestEdge = (xEdge < yEdge ? xEdge : yEdge);
                 for (int j = 0; j < 8; ++j)
                 {
-                    if (boardSquares[x + j * xDelta, y + j * yDelta] == ChessBoard.BoardSquare.FRIEND)
+                    int boardX = x + j * xDelta;
+                    int boardY = y + j * yDelta;
+                    if ((boardX > 7) || (boardX < 0) || (boardY > 7) || (boardY < 0))
                     {
                         break;
                     }
-                    potentialMoves.Add(new Vector2(x + j * xDelta, y + j * yDelta));
-                    if (boardSquares[x + j * xDelta, y + j * yDelta] == ChessBoard.BoardSquare.ENEMY)
+
+                    if (boardSquares[boardX, boardY] == ChessBoard.BoardSquare.FRIEND)
+                    {
+                        break;
+                    }
+                    potentialMoves.Add(new Vector2(boardX, boardY));
+                    if (boardSquares[boardX, boardY] == ChessBoard.BoardSquare.ENEMY)
                     {
                         break;
                     }

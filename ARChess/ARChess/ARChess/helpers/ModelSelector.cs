@@ -35,6 +35,8 @@ namespace ARChess
             models[Pieces.BLACK_KING]   = content.Load<Model>("king_black");
             models[Pieces.WHITE_KNIGHT] = content.Load<Model>("knight_white");
             models[Pieces.BLACK_KNIGHT] = content.Load<Model>("knight_black");
+            models[Pieces.WHITE_BISHOP] = content.Load<Model>("bishop_white");
+            models[Pieces.BLACK_BISHOP] = content.Load<Model>("bishop_black");
             models[Pieces.WHITE_PAWN]   = content.Load<Model>("pawn_white");
             models[Pieces.BLACK_PAWN]   = content.Load<Model>("pawn_black");
         }
