@@ -20,13 +20,14 @@ namespace ARChess
 
         private ContentManager content;
         private DetectionResult mBoardMarker;
-        private ChessPiece mSelectedPiece;
 
         private BoardSquare[,] mBoardSquares;
 
         public ChessBoard(ContentManager _content) 
         {
             content = _content;
+            mBoardSquares = new ChessBoard.BoardSquare[8, 8];
+            clearBoardSquares();
         }
 
         public Marker getMarker()
@@ -41,52 +42,54 @@ namespace ARChess
             Model greenSquare = ModelSelector.getModel(ModelSelector.Pieces.GREEN_SQUARE);
             Model redSquare = ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE);
 
-            if (mSelectedPiece != null)
+            switch ( mBoardSquares[curX,curY] )
             {
-                if (mBoardSquares[curX,curY] == BoardSquare.CAN_TAKE)
-                {
+                case BoardSquare.CAN_TAKE :
                     return redSquare;
-                }
-                else if (mBoardSquares[curX,curY] == BoardSquare.CAN_MOVE)
-                {
+
+                case BoardSquare.CAN_MOVE :
                     return greenSquare;
-                }
+
+                default :
+                    if (curX % 2 == 0)
+                    {
+                        if (curY % 2 == 0)
+                        {
+                            return lightCube;
+                        }
+                        else
+                        {
+                            return darkCube;
+                        }
+                    }
+                    else
+                    {
+                        if (curY % 2 == 0)
+                        {
+                            return darkCube;
+                        }
+                        else
+                        {
+                            return lightCube;
+                        }
+                    }
             }
 
-            /*
-            if ( (mSelectedPiece != null) && (mSelectedPiece.isLegalMove(curX, curY)) )
-            {
-                if ( mSelectedPiece.canTake(curX, curY) )
-                {
-                    return redSquare;
-                }
-                else
-                {
-                    return greenSquare;
-                }
-            }
-             * */
+            
+        }
 
-            if (curX % 2 == 0)
+        public BoardSquare[,] getBoardSquares()
+        {
+            return mBoardSquares;
+        }
+
+        public void clearBoardSquares()
+        {
+            for (int i = 0; i < 8; ++i)
             {
-                if (curY % 2 == 0)
+                for (int j = 0; j < 8; ++j)
                 {
-                    return lightCube;
-                }
-                else
-                {
-                    return darkCube;
-                }
-            }
-            else
-            {
-                if (curY % 2 == 0)
-                {
-                    return darkCube;
-                }
-                else
-                {
-                    return lightCube;
+                    mBoardSquares[i, j] = BoardSquare.OPEN;
                 }
             }
         }
@@ -99,19 +102,6 @@ namespace ARChess
         public void setDetectionResult(DetectionResult result)
         {
             mBoardMarker = result;
-        }
-
-        public void setSelectedPiece(ChessPiece piece)
-        {
-            mSelectedPiece = piece;
-            if (mSelectedPiece != null)
-            {
-                mBoardSquares = mSelectedPiece.getBoardSquares();
-            }
-            else
-            {
-                mBoardSquares = null;
-            }
         }
 
         /// <summary>

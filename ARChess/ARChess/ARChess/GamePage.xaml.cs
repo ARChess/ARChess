@@ -101,7 +101,7 @@ namespace ARChess
 
             // Piece Selector
             //selector = new PieceSelector();
-            gameState = new GameState();
+            gameState = GameState.getInstance();//new GameState();
         }
 
         public void TeardownPage()

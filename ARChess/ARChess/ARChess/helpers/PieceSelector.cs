@@ -36,6 +36,7 @@ namespace ARChess.helpers
             return Marker.LoadFromResource("resources/selection_marker.pat", 16, 16, 80, "selection_marker");
         }
 
+        /*
         public Vector2 getSelected()
         {
             if (mSelected)
@@ -48,6 +49,7 @@ namespace ARChess.helpers
                 return new Vector2(-1,-1);
             }
         }
+         * */
 
         public void setDetectionResult(DetectionResult result)
         {
@@ -103,6 +105,8 @@ namespace ARChess.helpers
                         if (elapsedSpan.TotalSeconds > 3.0)
                         {
                             mSelected = true;
+                            GameState state = GameState.getInstance();
+                            state.setSelected(mPosition);
                         }
                     }
                     

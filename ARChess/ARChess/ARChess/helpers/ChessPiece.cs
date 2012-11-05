@@ -15,6 +15,7 @@ using SLARToolKit;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using ARChess.helpers;
 
 namespace ARChess
 {
@@ -29,8 +30,6 @@ namespace ARChess
         private Model mModel;
         private Vector2 mPosition;
         private ContentManager content;
-
-        private List<ChessPiece> mPieces;
 
         public ChessPiece(ContentManager _content, XElement pieceElement)
         {
@@ -154,144 +153,7 @@ namespace ARChess
             else if (mPosition.Y > 7) { mPosition.Y = 7; }
         }
 
-        public void setPieceList(List<ChessPiece> pieces)
-        {
-            mPieces = pieces;
-        }
-
-        public ChessBoard.BoardSquare[,] getBoardSquares()
-        {
-            // Set entire board to OPEN
-            ChessBoard.BoardSquare[,] boardSquares = new ChessBoard.BoardSquare[8,8];
-            for (int i = 0; i < 8; ++i)
-            {
-                for (int j = 0; j < 8; ++j)
-                {
-                    boardSquares[i,j] = ChessBoard.BoardSquare.OPEN;
-                }
-            }
-            // Load FRIEND and ENEMY positions onto squares
-            foreach (ChessPiece piece in mPieces)
-            {
-                Vector2 pos = piece.getPosition();
-                if (piece.getPlayer() == mPlayer)
-                {
-                    boardSquares[(int) pos.X, (int) pos.Y] = ChessBoard.BoardSquare.FRIEND;
-                }
-                else
-                {
-                    boardSquares[(int)pos.X, (int)pos.Y] = ChessBoard.BoardSquare.ENEMY;
-                }
-            }
-
-            // Based on Type, determine potential moves
-            int forward = (mPlayer == Color.WHITE ? 1 : -1);
-            int x = (int) mPosition.X;
-            int y = (int) mPosition.Y;
-            List<Vector2> potentialMoves = new List<Vector2>();
-            List<Vector2> slideDirection = new List<Vector2>();
-
-            switch (mType)
-            {
-                case Piece.PAWN :
-                    potentialMoves.Add( new Vector2(x + forward, y - 1) );
-                    potentialMoves.Add( new Vector2(x + forward, y) );
-                    potentialMoves.Add( new Vector2(x + forward, y + 1) );
-                    break;
-
-                case Piece.ROOK:
-                    slideDirection.Add( new Vector2( 0 ,  1) );
-                    slideDirection.Add( new Vector2( 0 , -1) );
-                    slideDirection.Add( new Vector2( 1 ,  0) );
-                    slideDirection.Add( new Vector2(-1 ,  0) );
-
-                    if (mType != Piece.ROOK)
-                    {
-                        // QUEEN is a Rook and Bishop combined
-                        goto case Piece.BISHOP;
-                    }
-                    break;
-
-                case Piece.KNIGHT:
-                    // TODO
-                    break;
-
-                case Piece.BISHOP:
-                    slideDirection.Add( new Vector2(1,1) );
-                    slideDirection.Add( new Vector2(-1,1) );
-                    slideDirection.Add( new Vector2(1,-1) );
-                    slideDirection.Add( new Vector2(-1,-1) );  
-                    break;
-
-                case Piece.QUEEN:
-                    // Essentially a Rook and Bishop combined
-                    goto case Piece.ROOK;
-
-                case Piece.KING:
-                    for (int i = -1; i < 1; ++i)
-                    {
-                        potentialMoves.Add( new Vector2(x + i, y - 1) );
-                        if (i != 0)
-                        {
-                            potentialMoves.Add( new Vector2(x + i, y) );
-                        }
-                        potentialMoves.Add(new Vector2(x + i, y + 1));
-                    }
-                    break;
-            }
-
-            // Move Sliding pieces
-            foreach (Vector2 dir in slideDirection)
-            {
-                int xDelta = (int)dir.X;
-                int yDelta = (int)dir.Y;
-                //int xEdge = xDelta != 0 ? (7 - xDelta * x) % 7 : 7;
-                //int yEdge = yDelta != 0 ? (7 - yDelta * y) % 7 : 7;
-                //int closestEdge = (xEdge < yEdge ? xEdge : yEdge);
-                for (int j = 0; j < 8; ++j)
-                {
-                    int boardX = x + j * xDelta;
-                    int boardY = y + j * yDelta;
-                    if ((boardX > 7) || (boardX < 0) || (boardY > 7) || (boardY < 0))
-                    {
-                        break;
-                    }
-
-                    if (boardSquares[boardX, boardY] == ChessBoard.BoardSquare.FRIEND)
-                    {
-                        break;
-                    }
-                    potentialMoves.Add(new Vector2(boardX, boardY));
-                    if (boardSquares[boardX, boardY] == ChessBoard.BoardSquare.ENEMY)
-                    {
-                        break;
-                    }
-                }
-            }
-
-            // Check potential moves
-            foreach (Vector2 pos in potentialMoves)
-            {
-                x = (int) pos.X;
-                y = (int) pos.Y;
-                if ((x < 8) && (x >=0) && (y < 8) && (y >= 0))
-                {
-                    // Potential move is inside board
-                    if (boardSquares[x, y] == ChessBoard.BoardSquare.ENEMY)
-                    {
-                        boardSquares[x, y] = ChessBoard.BoardSquare.CAN_TAKE;
-                    }
-                    else
-                    {
-                        boardSquares[x,y] = ChessBoard.BoardSquare.CAN_MOVE;
-                    }
-                }
-            }
-
-            return boardSquares;
-
-        }
-
+       
         public void Draw(DetectionResult markerResult)
         {
             if(getType() == ChessPiece.Piece.KNIGHT)
@@ -310,7 +172,7 @@ namespace ARChess
                 ModelDrawer.Draw(markerResult, mModel, (int)mPosition.X, (int)mPosition.Y, .2);
             }
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
