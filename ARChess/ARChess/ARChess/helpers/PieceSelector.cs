@@ -51,6 +51,11 @@ namespace ARChess.helpers
         }
          * */
 
+        public DetectionResult getDetectionResult()
+        {
+            return mDetectionResult;
+        }
+
         public void setDetectionResult(DetectionResult result)
         {
             mDetectionResult = result;

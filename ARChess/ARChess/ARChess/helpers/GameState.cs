@@ -314,8 +314,15 @@ namespace ARChess.helpers
 
             foreach (ChessPiece chessPiece in mChessPieces)
             {
-                
-                chessPiece.Draw( boardMarker );
+                if (chessPiece == mSelectedPiece)
+                {
+                    DetectionResult selectorMarker = mSelector.getDetectionResult();
+                    chessPiece.Draw(selectorMarker);
+                }
+                else
+                {
+                    chessPiece.Draw( boardMarker );
+                }
             }
 
             // Draw Selector
