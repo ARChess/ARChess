@@ -18,6 +18,7 @@ namespace ARChess.helpers
 {
     public class GameState
     {
+        private ChessPiece.Color mMyColor;
         private List<ChessPiece> mChessPieces;
         private ChessPiece mSelectedPiece;
         private ContentManager content;
@@ -53,7 +54,7 @@ namespace ARChess.helpers
         private GameState(String _stateString)
         {
             // Clear out current State
-            mChessPieces.Clear();
+            //mChessPieces.Clear();
 
             // Load all pieces specified by State String
             XElement stateElement = XElement.Parse(_stateString);
@@ -94,26 +95,40 @@ namespace ARChess.helpers
 
         public void setSelected(Vector2 position)
         {
-            foreach(ChessPiece chessPiece in mChessPieces)
+            if (mSelectedPiece == null)
             {
-                if (position == chessPiece.getPosition())
+                // Select Piece at position
+                foreach (ChessPiece chessPiece in mChessPieces)
                 {
-                    // Set Selected Piece
-                    mSelectedPiece = chessPiece;
+                    if (position == chessPiece.getPosition())
+                    {
+                        // Set Selected Piece
+                        mSelectedPiece = chessPiece;
 
-                    // Set board squares
-                    setBoardSquares();
+                        // Set board squares
+                        setBoardSquares();
 
-                    return;
+                        return;
+                    }
                 }
             }
-
-            // If selected piece not found then deselect
-            if (mSelectedPiece != null)
+            else
             {
-                mSelectedPiece = null;
-                // Clear board squares
-                mBoard.clearBoardSquares();
+                // Piece Selected - check if position is valid move for Piece
+                ChessBoard.BoardSquare[,] squares = mBoard.getBoardSquares();
+                int x = (int) position.X;
+                int y = (int) position.Y;
+                if ( squares[x, y] == ChessBoard.BoardSquare.CAN_MOVE )
+                {
+                    mSelectedPiece = null;
+                    mBoard.clearBoardSquares();
+                }
+                else
+                {
+                    // Give negative feedback
+                }
+                // if valid move
+
             }
             
         }
@@ -157,7 +172,7 @@ namespace ARChess.helpers
             ChessBoard.BoardSquare[,] boardSquares = mBoard.getBoardSquares();
 
             // Selected Piece Details
-            ChessPiece.Color selectedPlayer   = mSelectedPiece.getPlayer();
+            //ChessPiece.Color selectedPlayer   = mSelectedPiece.getPlayer();
             ChessPiece.Piece selectedType     = mSelectedPiece.getType();
             Vector2          selectedPosition = mSelectedPiece.getPosition();
 
@@ -165,7 +180,7 @@ namespace ARChess.helpers
             foreach (ChessPiece piece in mChessPieces)
             {
                 Vector2 pos = piece.getPosition();
-                if (piece.getPlayer() == selectedPlayer)
+                if (piece.getPlayer() == mMyColor)
                 {
                     boardSquares[(int) pos.X, (int) pos.Y] = ChessBoard.BoardSquare.FRIEND;
                 }
@@ -176,7 +191,7 @@ namespace ARChess.helpers
             }
 
             // Based on Type, determine potential moves
-            int forward = (selectedPlayer == ChessPiece.Color.WHITE ? 1 : -1);
+            int forward = (mMyColor == ChessPiece.Color.WHITE ? 1 : -1);
             int x = (int) selectedPosition.X;
             int y = (int) selectedPosition.Y;
             List<Vector2> potentialMoves = new List<Vector2>();

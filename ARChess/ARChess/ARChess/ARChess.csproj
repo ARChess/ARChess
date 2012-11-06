@@ -110,6 +110,7 @@
     <Compile Include="helpers\GameState.cs" />
     <Compile Include="helpers\ModelDrawer.cs" />
     <Compile Include="helpers\ModelSelector.cs" />
+    <Compile Include="helpers\NetworkTask.cs" />
     <Compile Include="helpers\NuanceAPIKey.cs" />
     <Compile Include="helpers\Matrix3dExtensions.cs" />
     <Compile Include="helpers\PieceSelector.cs" />
