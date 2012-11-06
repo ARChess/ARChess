@@ -104,6 +104,7 @@
     <Compile Include="GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="helpers\APIClasses.cs" />
     <Compile Include="helpers\AppSettings.cs" />
     <Compile Include="helpers\ChessBoard.cs" />
     <Compile Include="helpers\ChessPiece.cs" />

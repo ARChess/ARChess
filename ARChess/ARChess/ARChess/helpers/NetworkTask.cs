@@ -11,32 +11,33 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 
-namespace ARChess.helpers
+namespace ARChess
 {
     public class NetworkTask
     {
-        HttpWebRequest mRequest;
-        String mData;
-
         public NetworkTask()
         {
-            String uriString = "";
-            mRequest = WebRequest.CreateHttp(uriString);
-            //mRequest.;
+            
         }
 
-        public void sendString(String data)
+        private void makeHttpRequest(string path, string verb, string data)
         {
-            mData = data;
-            byte[] byteArray = Encoding.UTF8.GetBytes(data);
 
-            mRequest.Method = "POST";
-            mRequest.BeginGetRequestStream(new AsyncCallback(GetRequestStreamCallback), mRequest);
         }
 
-        private void GetRequestStreamCallback(IAsyncResult asyncResult)
+        public GameState getGameState()
         {
+            return null;
+        }
 
+        public bool sendGameState(GameState state)
+        {
+            return true;
+        }
+
+        public bool resignGame()
+        {
+            return true;
         }
     }
 }

@@ -29,7 +29,6 @@ using com.nuance.nmdp.speechkit;
 using com.nuance.nmdp.speechkit.oem;
 using com.nuance.nmdp.speechkit.util;
 using com.nuance.nmdp.speechkit.util.audio;
-using ARChess.helpers;
 
 namespace ARChess
 {

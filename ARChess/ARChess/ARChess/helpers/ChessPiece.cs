@@ -15,7 +15,6 @@ using SLARToolKit;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
-using ARChess.helpers;
 
 namespace ARChess
 {
@@ -165,6 +164,17 @@ namespace ARChess
                 else
                 {
                     ModelDrawer.Draw(markerResult, mModel, (int)mPosition.X, (int)mPosition.Y, .2, 1.5707f); //rotated by 90 degress
+                }
+            } 
+            else if(getType() == ChessPiece.Piece.BISHOP)
+            {
+                if (getPlayer() == ChessPiece.Color.BLACK)
+                {
+                    ModelDrawer.Draw(markerResult, mModel, (int)mPosition.X, (int)mPosition.Y, .2, -3.1414f); //rotated by -90 degress
+                }
+                else
+                {
+                    ModelDrawer.Draw(markerResult, mModel, (int)mPosition.X, (int)mPosition.Y, .2, 0.0f); //rotated by 90 degress
                 }
             }
             else

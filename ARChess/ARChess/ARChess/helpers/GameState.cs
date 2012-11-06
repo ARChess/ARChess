@@ -14,7 +14,7 @@ using SLARToolKit;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 
-namespace ARChess.helpers
+namespace ARChess
 {
     public class GameState
     {
@@ -39,6 +39,17 @@ namespace ARChess.helpers
 
         private GameState()
         {
+            initialize();
+        }
+
+        private GameState(GameState state)
+        {
+            initialize();
+            loadState(state);
+        }
+
+        private void initialize() 
+        {
             mChessPieces = new List<ChessPiece>();
 
             // Initialize all ChessPieces for ech player
@@ -51,18 +62,9 @@ namespace ARChess.helpers
             mSelector = new PieceSelector();
         }
 
-        private GameState(String _stateString)
+        public void loadState(GameState state)
         {
-            // Clear out current State
-            //mChessPieces.Clear();
 
-            // Load all pieces specified by State String
-            XElement stateElement = XElement.Parse(_stateString);
-            IEnumerable<XElement> elements = stateElement.Elements("ChessPiece");
-            foreach (XElement pieceElement in elements)
-            {
-                mChessPieces.Add(new ChessPiece(content, pieceElement));
-            }
         }
 
         private void initializePlayerPieces(ChessPiece.Color _player)
@@ -87,6 +89,13 @@ namespace ARChess.helpers
             {
                 position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (i == 0 ? 2 : 5));
                 mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.Piece.BISHOP, position));
+            }
+
+            // Initialize Rooks
+            for (int i = 0; i < 2; i++)
+            {
+                position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (i == 0 ? 0 : 7));
+                mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.Piece.ROOK, position));
             }
 
             position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (_player == ChessPiece.Color.BLACK ? 4 : 3));
@@ -143,20 +152,6 @@ namespace ARChess.helpers
             if (mSelectedPiece != null)
             {
                 mSelectedPiece.setPosition(dest);
-            }
-        }
-
-        public void loadState(String _stateString)
-        {
-            // Clear out current State
-            mChessPieces.Clear();
-
-            // Load all pieces specified by State String
-            XElement stateElement = XElement.Parse(_stateString);
-            IEnumerable<XElement> elements = stateElement.Elements("ChessPiece");
-            foreach (XElement pieceElement in elements)
-            {
-                mChessPieces.Add(new ChessPiece(content, pieceElement));
             }
         }
 
@@ -344,20 +339,9 @@ namespace ARChess.helpers
             mSelector.Draw();
         }
 
-        public XElement toXml()
+        public GameState toGameState()
         {
-            XElement stateElement = new XElement("State");
-            foreach (ChessPiece piece in mChessPieces)
-            {
-                stateElement.Add( piece.toXml() );
-            }
-            return stateElement;
+            return null;
         }
-
-        public String toXmlString()
-        {
-            return toXml().ToString();
-        }
-
     }
 }

@@ -140,13 +140,25 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="bishop_black.fbx">
-      <Name>bishop_black</Name>
+    <Compile Include="black_bishop.fbx">
+      <Name>black_bishop</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
-    <Compile Include="bishop_white.fbx">
-      <Name>bishop_white</Name>
+    <Compile Include="white_bishop.fbx">
+      <Name>white_bishop</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="black_rook.fbx">
+      <Name>black_rook</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="white_rook.fbx">
+      <Name>white_rook</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
