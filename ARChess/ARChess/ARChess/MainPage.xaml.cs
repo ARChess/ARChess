@@ -41,7 +41,7 @@ namespace ARChess
             bw.DoWork += (s, args) =>
             {
                 response = new NetworkTask().getGameState();
-                if (response.game_in_progress == false)
+                if (response == null || response.game_in_progress == false)
                 {
                     response = new NetworkTask().createGame();
                     isNewGame = true;

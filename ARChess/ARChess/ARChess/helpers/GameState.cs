@@ -19,8 +19,8 @@ namespace ARChess
 {
     public class GameState
     {
+        private Dictionary<string, ChessPiece> chessPieces;
         private ChessPiece.Color mMyColor;
-        private List<ChessPiece> mChessPieces;
         private ChessPiece mSelectedPiece;
         private ContentManager content;
 
@@ -43,15 +43,9 @@ namespace ARChess
             initialize();
         }
 
-        private GameState(CurrentGameState state)
-        {
-            initialize();
-            loadState(state);
-        }
-
         private void initialize() 
         {
-            mChessPieces = new List<ChessPiece>();
+            chessPieces = new Dictionary<string, ChessPiece>();
 
             // Initialize all ChessPieces for ech player
             // White team
@@ -65,7 +59,39 @@ namespace ARChess
 
         public void loadState(CurrentGameState state)
         {
+            chessPieces["black_pawn1"].setPosition(new Vector2((float)state.black.pawn1.x, (float)state.black.pawn1.y));
+            chessPieces["black_pawn2"].setPosition(new Vector2((float)state.black.pawn2.x, (float)state.black.pawn2.y));
+            chessPieces["black_pawn3"].setPosition(new Vector2((float)state.black.pawn3.x, (float)state.black.pawn3.y));
+            chessPieces["black_pawn4"].setPosition(new Vector2((float)state.black.pawn4.x, (float)state.black.pawn4.y));
+            chessPieces["black_pawn5"].setPosition(new Vector2((float)state.black.pawn5.x, (float)state.black.pawn5.y));
+            chessPieces["black_pawn6"].setPosition(new Vector2((float)state.black.pawn6.x, (float)state.black.pawn6.y));
+            chessPieces["black_pawn7"].setPosition(new Vector2((float)state.black.pawn7.x, (float)state.black.pawn7.y));
+            chessPieces["black_pawn8"].setPosition(new Vector2((float)state.black.pawn8.x, (float)state.black.pawn8.y));
+            chessPieces["black_rook1"].setPosition(new Vector2((float)state.black.rook1.x, (float)state.black.rook1.y));
+            chessPieces["black_rook2"].setPosition(new Vector2((float)state.black.rook2.x, (float)state.black.rook2.y));
+            chessPieces["black_bishop1"].setPosition(new Vector2((float)state.black.bishop1.x, (float)state.black.bishop1.y));
+            chessPieces["black_bishop2"].setPosition(new Vector2((float)state.black.bishop2.x, (float)state.black.bishop2.y));
+            chessPieces["black_knight1"].setPosition(new Vector2((float)state.black.knight1.x, (float)state.black.knight1.y));
+            chessPieces["black_knight2"].setPosition(new Vector2((float)state.black.knight2.x, (float)state.black.knight2.y));
+            //chessPieces["black_queen"].setPosition(new Vector2((float)state.black.queen.x, (float)state.black.queen.y));
+            chessPieces["black_king"].setPosition(new Vector2((float)state.black.king.x, (float)state.black.king.y));
 
+            chessPieces["white_pawn1"].setPosition(new Vector2((float)state.white.pawn1.x, (float)state.white.pawn1.y));
+            chessPieces["white_pawn2"].setPosition(new Vector2((float)state.white.pawn2.x, (float)state.white.pawn2.y));
+            chessPieces["white_pawn3"].setPosition(new Vector2((float)state.white.pawn3.x, (float)state.white.pawn3.y));
+            chessPieces["white_pawn4"].setPosition(new Vector2((float)state.white.pawn4.x, (float)state.white.pawn4.y));
+            chessPieces["white_pawn5"].setPosition(new Vector2((float)state.white.pawn5.x, (float)state.white.pawn5.y));
+            chessPieces["white_pawn6"].setPosition(new Vector2((float)state.white.pawn6.x, (float)state.white.pawn6.y));
+            chessPieces["white_pawn7"].setPosition(new Vector2((float)state.white.pawn7.x, (float)state.white.pawn7.y));
+            chessPieces["white_pawn8"].setPosition(new Vector2((float)state.white.pawn8.x, (float)state.white.pawn8.y));
+            chessPieces["white_rook1"].setPosition(new Vector2((float)state.white.rook1.x, (float)state.white.rook1.y));
+            chessPieces["white_rook2"].setPosition(new Vector2((float)state.white.rook2.x, (float)state.white.rook2.y));
+            chessPieces["white_bishop1"].setPosition(new Vector2((float)state.white.bishop1.x, (float)state.white.bishop1.y));
+            chessPieces["white_bishop2"].setPosition(new Vector2((float)state.white.bishop2.x, (float)state.white.bishop2.y));
+            chessPieces["white_knight1"].setPosition(new Vector2((float)state.white.knight1.x, (float)state.white.knight1.y));
+            chessPieces["white_knight2"].setPosition(new Vector2((float)state.white.knight2.x, (float)state.white.knight2.y));
+            //chessPieces["white_queen"].setPosition(new Vector2((float)state.white.queen.x, (float)state.white.queen.y));
+            chessPieces["white_king"].setPosition(new Vector2((float)state.white.king.x, (float)state.white.king.y));
         }
 
         private void initializePlayerPieces(ChessPiece.Color _player)
@@ -75,32 +101,32 @@ namespace ARChess
             for (int i = 0; i < 8; i++)
             {
                 position = new Vector2((_player == ChessPiece.Color.BLACK ? 6 : 1), i);
-                mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.Piece.PAWN, position));
+                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_pawn" + i.ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.PAWN, position);
             }
 
             // Initialize Knights
             for (int i = 0; i < 2; i++)
             {
                 position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (i == 0 ? 1 : 6));
-                mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.Piece.KNIGHT, position));
+                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_knight" + i.ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.KNIGHT, position);
             }
 
             // Initialize Bishops
             for (int i = 0; i < 2; i++)
             {
                 position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (i == 0 ? 2 : 5));
-                mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.Piece.BISHOP, position));
+                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_bishop" + i.ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.BISHOP, position);
             }
 
             // Initialize Rooks
             for (int i = 0; i < 2; i++)
             {
                 position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (i == 0 ? 0 : 7));
-                mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.Piece.ROOK, position));
+                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_rook" + i.ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.ROOK, position);
             }
 
             position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (_player == ChessPiece.Color.BLACK ? 4 : 3));
-            mChessPieces.Add(new ChessPiece(content, _player, ChessPiece.Piece.KING, position));
+            chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_king"] = new ChessPiece(content, _player, ChessPiece.Piece.KING, position);
         }
 
         public void setSelected(Vector2 position)
@@ -108,12 +134,12 @@ namespace ARChess
             if (mSelectedPiece == null)
             {
                 // Select Piece at position
-                foreach (ChessPiece chessPiece in mChessPieces)
+                foreach (KeyValuePair<string, ChessPiece> entry in chessPieces)
                 {
-                    if (position == chessPiece.getPosition())
+                    if (position == entry.Value.getPosition())
                     {
                         // Set Selected Piece
-                        mSelectedPiece = chessPiece;
+                        mSelectedPiece = entry.Value;
 
                         // Set board squares
                         setBoardSquares();
@@ -173,10 +199,10 @@ namespace ARChess
             Vector2          selectedPosition = mSelectedPiece.getPosition();
 
             // Load FRIEND and ENEMY positions onto squares
-            foreach (ChessPiece piece in mChessPieces)
+            foreach (KeyValuePair<string, ChessPiece> entry in chessPieces)
             {
-                Vector2 pos = piece.getPosition();
-                if (piece.getPlayer() == mMyColor)
+                Vector2 pos = entry.Value.getPosition();
+                if (entry.Value.getPlayer() == mMyColor)
                 {
                     boardSquares[(int) pos.X, (int) pos.Y] = ChessBoard.BoardSquare.FRIEND;
                 }
@@ -323,16 +349,16 @@ namespace ARChess
             mBoard.Draw();
             DetectionResult boardMarker = mBoard.getDetectionResult();
 
-            foreach (ChessPiece chessPiece in mChessPieces)
+            foreach (KeyValuePair<string, ChessPiece> entry in chessPieces)
             {
-                if (chessPiece == mSelectedPiece)
+                if (entry.Value == mSelectedPiece)
                 {
                     DetectionResult selectorMarker = mSelector.getDetectionResult();
-                    chessPiece.Draw(selectorMarker);
+                    entry.Value.Draw(selectorMarker);
                 }
                 else
                 {
-                    chessPiece.Draw( boardMarker );
+                    entry.Value.Draw(boardMarker);
                 }
             }
 
@@ -342,7 +368,175 @@ namespace ARChess
 
         public CurrentGameState toCurrentGameState()
         {
-            return null;
+            return new CurrentGameState()
+            {
+                black = new PlayerState()
+                {
+                    pawn1 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["black_pawn1"].getPosition().X,
+                        y = (int)chessPieces["black_pawn1"].getPosition().Y
+                    },
+                    pawn2 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["black_pawn2"].getPosition().X,
+                        y = (int)chessPieces["black_pawn2"].getPosition().Y
+                    },
+                    pawn3 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["black_pawn3"].getPosition().X,
+                        y = (int)chessPieces["black_pawn3"].getPosition().Y
+                    },
+                    pawn4 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["black_pawn4"].getPosition().X,
+                        y = (int)chessPieces["black_pawn4"].getPosition().Y
+                    },
+                    pawn5 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["black_pawn5"].getPosition().X,
+                        y = (int)chessPieces["black_pawn5"].getPosition().Y
+                    },
+                    pawn6 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["black_pawn6"].getPosition().X,
+                        y = (int)chessPieces["black_pawn6"].getPosition().Y
+                    },
+                    pawn7 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["black_pawn7"].getPosition().X,
+                        y = (int)chessPieces["black_pawn7"].getPosition().Y
+                    },
+                    pawn8 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["black_pawn8"].getPosition().X,
+                        y = (int)chessPieces["black_pawn8"].getPosition().Y
+                    },
+                    rook1 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["black_rook1"].getPosition().X,
+                        y = (int)chessPieces["black_rook1"].getPosition().Y
+                    },
+                    rook2 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["black_rook2"].getPosition().X,
+                        y = (int)chessPieces["black_rook2"].getPosition().Y
+                    },
+                    bishop1 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["black_bishop1"].getPosition().X,
+                        y = (int)chessPieces["black_bishop1"].getPosition().Y
+                    },
+                    bishop2 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["black_bishop2"].getPosition().X,
+                        y = (int)chessPieces["black_bishop2"].getPosition().Y
+                    },
+                    knight1 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["black_knight1"].getPosition().X,
+                        y = (int)chessPieces["black_knight1"].getPosition().Y
+                    },
+                    knight2 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["black_knight2"].getPosition().X,
+                        y = (int)chessPieces["black_knight2"].getPosition().Y
+                    },
+                    queen = new PieceLocation()
+                    {
+                        x = -1,//(int)chessPieces["black_queen"].getPosition().X,
+                        y = -1//(int)chessPieces["black_queen"].getPosition().Y
+                    },
+                    king = new PieceLocation()
+                    {
+                        x = (int)chessPieces["black_king"].getPosition().X,
+                        y = (int)chessPieces["black_king"].getPosition().Y
+                    }
+                },
+                white = new PlayerState()
+                {
+                    pawn1 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["white_pawn1"].getPosition().X,
+                        y = (int)chessPieces["white_pawn1"].getPosition().Y
+                    },
+                    pawn2 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["white_pawn2"].getPosition().X,
+                        y = (int)chessPieces["white_pawn2"].getPosition().Y
+                    },
+                    pawn3 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["white_pawn3"].getPosition().X,
+                        y = (int)chessPieces["white_pawn3"].getPosition().Y
+                    },
+                    pawn4 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["white_pawn4"].getPosition().X,
+                        y = (int)chessPieces["white_pawn4"].getPosition().Y
+                    },
+                    pawn5 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["white_pawn5"].getPosition().X,
+                        y = (int)chessPieces["white_pawn5"].getPosition().Y
+                    },
+                    pawn6 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["white_pawn6"].getPosition().X,
+                        y = (int)chessPieces["white_pawn6"].getPosition().Y
+                    },
+                    pawn7 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["white_pawn7"].getPosition().X,
+                        y = (int)chessPieces["white_pawn7"].getPosition().Y
+                    },
+                    pawn8 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["white_pawn8"].getPosition().X,
+                        y = (int)chessPieces["white_pawn8"].getPosition().Y
+                    },
+                    rook1 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["white_rook1"].getPosition().X,
+                        y = (int)chessPieces["white_rook1"].getPosition().Y
+                    },
+                    rook2 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["white_rook2"].getPosition().X,
+                        y = (int)chessPieces["white_rook2"].getPosition().Y
+                    },
+                    bishop1 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["white_bishop1"].getPosition().X,
+                        y = (int)chessPieces["white_bishop1"].getPosition().Y
+                    },
+                    bishop2 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["white_bishop2"].getPosition().X,
+                        y = (int)chessPieces["white_bishop2"].getPosition().Y
+                    },
+                    knight1 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["white_knight1"].getPosition().X,
+                        y = (int)chessPieces["white_knight1"].getPosition().Y
+                    },
+                    knight2 = new PieceLocation()
+                    {
+                        x = (int)chessPieces["white_knight2"].getPosition().X,
+                        y = (int)chessPieces["white_knight2"].getPosition().Y
+                    },
+                    queen = new PieceLocation()
+                    {
+                        x = -1,//(int)chessPieces["white_queen"].getPosition().X,
+                        y = -1//(int)chessPieces["white_queen"].getPosition().Y
+                    },
+                    king = new PieceLocation()
+                    {
+                        x = (int)chessPieces["white_king"].getPosition().X,
+                        y = (int)chessPieces["white_king"].getPosition().Y
+                    }
+                }
+            };
         }
     }
 }
