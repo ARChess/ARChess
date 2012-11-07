@@ -16,45 +16,22 @@ namespace System.Net
 {
     public static class HttpWebRequestExtensions
     {
-        private const int DefaultRequestTimeout = 5000;
-
-        public static HttpWebResponse GetResponse(this HttpWebRequest request)
+        public static WebResponse GetResponse(this WebRequest request)
         {
-            var dataReady = new AutoResetEvent(false);
-            HttpWebResponse response = null;
-            var callback = new AsyncCallback(delegate(IAsyncResult asynchronousResult)
-            {
-                response = (HttpWebResponse)request.EndGetResponse(asynchronousResult);
-                dataReady.Set();
-            });
-
-            request.BeginGetResponse(callback, request);
-
-            if (dataReady.WaitOne(DefaultRequestTimeout))
-            {
-                return response;
-            }
-
-            return null;
+            AutoResetEvent autoResetEvent = new AutoResetEvent(false);
+            IAsyncResult asyncResult = request.BeginGetResponse(r => autoResetEvent.Set(), null);
+            // Wait until the call is finished
+            autoResetEvent.WaitOne();
+            return request.EndGetResponse(asyncResult);
         }
 
-        public static Stream GetRequestStream(this HttpWebRequest request)
+        public static Stream GetRequestStream(this WebRequest request)
         {
-            var dataReady = new AutoResetEvent(false);
-            Stream stream = null;
-            var callback = new AsyncCallback(delegate(IAsyncResult asynchronousResult)
-            {
-                stream = (Stream)request.EndGetRequestStream(asynchronousResult);
-                dataReady.Set();
-            });
-
-            request.BeginGetRequestStream(callback, request);
-            if (!dataReady.WaitOne(DefaultRequestTimeout))
-            {
-                return null;
-            }
-
-            return stream;
+            AutoResetEvent autoResetEvent = new AutoResetEvent(false);
+            IAsyncResult asyncResult = request.BeginGetRequestStream(r => autoResetEvent.Set(), null);
+            // Wait until the call is finished
+            autoResetEvent.WaitOne();
+            return request.EndGetRequestStream(asyncResult);
         }
     }
 }

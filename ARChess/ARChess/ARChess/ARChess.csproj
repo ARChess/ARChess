@@ -89,6 +89,8 @@
     <Reference Include="SpeechKit">
       <HintPath>.\SpeechKit.dll</HintPath>
     </Reference>
+    <Reference Include="System.Servicemodel" />
+    <Reference Include="System.Servicemodel.Web" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
@@ -109,6 +111,7 @@
     <Compile Include="helpers\ChessBoard.cs" />
     <Compile Include="helpers\ChessPiece.cs" />
     <Compile Include="helpers\GameState.cs" />
+    <Compile Include="helpers\HttpWebExtensions.cs" />
     <Compile Include="helpers\ModelDrawer.cs" />
     <Compile Include="helpers\ModelSelector.cs" />
     <Compile Include="helpers\NetworkTask.cs" />

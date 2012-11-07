@@ -35,17 +35,20 @@ namespace ARChess
 
         private string makeHttpRequest(string verb, string data)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://synchro-archess.herokuapp.com/api");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://synchro-archess.herokuapp.com/api?identifier=" + getUniqueDeviceId());
             request.Method = verb;
-            request.ContentType = "application/json";
-            request.Headers["API_KEY"] = "";
+            request.Headers["API_KEY"] = "traprubepreyed2ebupucramunumus4ebewruyUdraga36pacrujavuKep8afref";
+
+            if (data != "")
+            {
+                request.ContentType = "application/json";
+                byte[] post_bytes = Encoding.UTF8.GetBytes(data);
+                Stream writer = request.GetRequestStream();
+                writer.Write(post_bytes, 0, post_bytes.Length);
+                writer.Close();
+            }
   
-            byte[] post_bytes = Encoding.UTF8.GetBytes(data);
-            Stream writer = request.GetRequestStream();
-            writer.Write(post_bytes, 0, post_bytes.Length);
-            writer.Close();
-  
-            HttpWebResponse response = request.GetResponse();
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             StreamReader reader = new StreamReader(response.GetResponseStream());
             String returninfo = reader.ReadToEnd();
             reader.Close();
