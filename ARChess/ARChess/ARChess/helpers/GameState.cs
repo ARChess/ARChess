@@ -340,7 +340,7 @@ namespace ARChess
             mSelector.Draw();
         }
 
-        public GameState toGameState()
+        public CurrentGameState toCurrentGameState()
         {
             return null;
         }

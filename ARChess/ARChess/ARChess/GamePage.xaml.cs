@@ -269,7 +269,7 @@ namespace ARChess
                     }
 
                     //send to central server
-                    
+                    new NetworkTask().sendGameState(GameState.getInstance().toCurrentGameState());
                 };
                 bw.RunWorkerCompleted += (s, args) =>
                 {
@@ -342,9 +342,7 @@ namespace ARChess
 
         private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            App_CancelSpeechKit();
             e.Cancel = true;
-            base.OnBackKeyPress(e);
         }
 
 

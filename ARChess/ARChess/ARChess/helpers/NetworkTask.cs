@@ -70,9 +70,22 @@ namespace ARChess
             return state;
         }
 
-        public bool sendGameState(GameState state)
+        public GameResponse createGame()
         {
-            DataContractJsonSerializer js = new DataContractJsonSerializer(typeof(GameState));
+            string response = makeHttpRequest("POST", "{}");
+
+            GameResponse state = null;
+
+            DataContractJsonSerializer js = new DataContractJsonSerializer(typeof(GameResponse));
+            MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(response));
+            state = (GameResponse)js.ReadObject(stream);
+
+            return state;
+        }
+
+        public bool sendGameState(CurrentGameState state)
+        {
+            DataContractJsonSerializer js = new DataContractJsonSerializer(typeof(CurrentGameState));
             MemoryStream stream = new MemoryStream();
             js.WriteObject(stream, state);
             stream.Position = 0;

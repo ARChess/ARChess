@@ -27,6 +27,7 @@ namespace ARChess
     public partial class MainPage : PhoneApplicationPage
     {
         private GameResponse response;
+        private bool isNewGame = false;
 
         // Constructor
         public MainPage()
@@ -40,10 +41,15 @@ namespace ARChess
             bw.DoWork += (s, args) =>
             {
                 response = new NetworkTask().getGameState();
+                if (response.game_in_progress == false)
+                {
+                    response = new NetworkTask().createGame();
+                    isNewGame = true;
+                }
             };
             bw.RunWorkerCompleted += (s, args) =>
             {
-                if (response.game_in_progress == true)
+                if (response.game_in_progress == true && !isNewGame)
                 {
                     StartButton.Content = "Continue Game";
                 }
@@ -65,17 +71,6 @@ namespace ARChess
             else if (response.game_in_progress && !response.is_current_players_turn)
             {
                 NavigationService.Navigate(new Uri("/WaitingForOpponentPage.xaml", UriKind.Relative));
-            }
-            else
-            {
-                if (response.is_game_over && response.current_player == response.winner)
-                {
-                    NavigationService.Navigate(new Uri("/WonPage.xaml", UriKind.Relative));
-                }
-                else
-                {
-                    NavigationService.Navigate(new Uri("/LostPage.xaml", UriKind.Relative));
-                }
             }
         }
 
