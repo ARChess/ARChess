@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
@@ -42,7 +43,7 @@ namespace ARChess
             initialize();
         }
 
-        private GameState(GameState state)
+        private GameState(CurrentGameState state)
         {
             initialize();
             loadState(state);
@@ -62,7 +63,7 @@ namespace ARChess
             mSelector = new PieceSelector();
         }
 
-        public void loadState(GameState state)
+        public void loadState(CurrentGameState state)
         {
 
         }

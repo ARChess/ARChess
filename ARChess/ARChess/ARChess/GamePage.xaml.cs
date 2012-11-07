@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -249,23 +250,51 @@ namespace ARChess
         // TODO: This is a temporary function to test hardcoded piece movement
         private void MoveForwardButton_Click(object sender, EventArgs e)
         {
-            ChessPiece piece = gameState.getSelectedPiece();
-            if (piece != null)
+            MessageBoxResult result = MessageBox.Show("Once done, this move cannot be undone.", "Are you sure?", MessageBoxButton.OKCancel);
+            if (result == MessageBoxResult.OK)
             {
-                Vector2 currentPosition = piece.getPosition();
-                if (currentPosition != null)
+                var bw = new BackgroundWorker();
+                bw.DoWork += (s, args) =>
                 {
-                    //currentPosition.Y = 2;
-                    currentPosition.X += 1;
-                    gameState.movePiece(currentPosition);
-                }
+                    ChessPiece piece = gameState.getSelectedPiece();
+                    if (piece != null)
+                    {
+                        Vector2 currentPosition = piece.getPosition();
+                        if (currentPosition != null)
+                        {
+                            //currentPosition.Y = 2;
+                            currentPosition.X += 1;
+                            gameState.movePiece(currentPosition);
+                        }
+                    }
+
+                    //send to central server
+                    
+                };
+                bw.RunWorkerCompleted += (s, args) =>
+                {
+                    NavigationService.Navigate(new Uri("/WaitForOpponentPage.xaml", UriKind.Relative));
+                };
+                bw.RunWorkerAsync();
             }
-            
         }
 
         private void ResignButton_Click(object sender, EventArgs e)
         {
-
+            MessageBoxResult result = MessageBox.Show("You are about to surrender to your opponent.  Once done, this cannot be undone.", "Are you sure?", MessageBoxButton.OKCancel);
+            if (result == MessageBoxResult.OK)
+            {
+                var bw = new BackgroundWorker();
+                bw.DoWork += (s, args) =>
+                {
+                    new NetworkTask().resignGame();
+                };
+                bw.RunWorkerCompleted += (s, args) =>
+                {
+                    NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
+                };
+                bw.RunWorkerAsync();
+            }
         }
 
         private void VoiceCommandButton_Click(object sender, EventArgs e)

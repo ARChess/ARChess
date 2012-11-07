@@ -58,7 +58,25 @@ namespace ARChess
         // Simple button Click event handler to take us to the second page
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(new Uri("/GamePage.xaml", UriKind.Relative));
+            if (response.game_in_progress && response.is_current_players_turn)
+            {
+                NavigationService.Navigate(new Uri("/GamePage.xaml", UriKind.Relative));
+            }
+            else if (response.game_in_progress && !response.is_current_players_turn)
+            {
+                NavigationService.Navigate(new Uri("/WaitingForOpponentPage.xaml", UriKind.Relative));
+            }
+            else
+            {
+                if (response.is_game_over && response.current_player == response.winner)
+                {
+                    NavigationService.Navigate(new Uri("/WonPage.xaml", UriKind.Relative));
+                }
+                else
+                {
+                    NavigationService.Navigate(new Uri("/LostPage.xaml", UriKind.Relative));
+                }
+            }
         }
 
         private void SettingsButton_Click(object sender, EventArgs e)
