@@ -11,6 +11,31 @@ using System.Windows.Shapes;
 
 namespace ARChess
 {
+    public class GameStateManager
+    {
+        private static GameStateManager instance = null;
+        private static CurrentGameState currentState = null;
+
+        public static GameStateManager getInstance()
+        {
+            if (instance == null)
+            {
+                instance = new GameStateManager();
+            }
+            return instance;
+        }
+
+        public void setGameState(CurrentGameState _instance)
+        {
+            currentState = _instance;
+        }
+
+        public CurrentGameState getGameState()
+        {
+            return currentState;
+        }
+    }
+
     public class PieceLocation
     {
         public int x { get; set; }

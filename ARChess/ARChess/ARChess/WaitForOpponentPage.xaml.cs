@@ -46,6 +46,7 @@ namespace ARChess
             {
                 if (response.is_game_over == false)
                 {
+                    GameStateManager.getInstance().setGameState(response.game_state);
                     NavigationService.Navigate(new Uri("/GamePage.xaml", UriKind.Relative));
                 }
                 else

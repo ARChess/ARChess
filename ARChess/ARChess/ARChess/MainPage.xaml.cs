@@ -27,12 +27,15 @@ namespace ARChess
     public partial class MainPage : PhoneApplicationPage
     {
         private GameResponse response;
+        private ContentManager content = null;
         private bool isNewGame = false;
 
         // Constructor
         public MainPage()
         {
             InitializeComponent();
+
+            content = (Application.Current as App).Content;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -66,6 +69,7 @@ namespace ARChess
         {
             if (response.game_in_progress && response.is_current_players_turn)
             {
+                GameStateManager.getInstance().setGameState(response.game_state);
                 NavigationService.Navigate(new Uri("/GamePage.xaml", UriKind.Relative));
             }
             else if (response.game_in_progress && !response.is_current_players_turn)

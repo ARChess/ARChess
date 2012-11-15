@@ -101,28 +101,28 @@ namespace ARChess
             for (int i = 0; i < 8; i++)
             {
                 position = new Vector2((_player == ChessPiece.Color.BLACK ? 6 : 1), i);
-                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_pawn" + i.ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.PAWN, position);
+                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_pawn" + (i + 1).ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.PAWN, position);
             }
 
             // Initialize Knights
             for (int i = 0; i < 2; i++)
             {
                 position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (i == 0 ? 1 : 6));
-                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_knight" + i.ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.KNIGHT, position);
+                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_knight" + (i + 1).ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.KNIGHT, position);
             }
 
             // Initialize Bishops
             for (int i = 0; i < 2; i++)
             {
                 position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (i == 0 ? 2 : 5));
-                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_bishop" + i.ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.BISHOP, position);
+                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_bishop" + (i + 1).ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.BISHOP, position);
             }
 
             // Initialize Rooks
             for (int i = 0; i < 2; i++)
             {
                 position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (i == 0 ? 0 : 7));
-                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_rook" + i.ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.ROOK, position);
+                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_rook" + (i + 1).ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.ROOK, position);
             }
 
             position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (_player == ChessPiece.Color.BLACK ? 4 : 3));

@@ -99,9 +99,8 @@ namespace ARChess
             // Create a timer for this page
             timer.Start();
 
-            // Piece Selector
-            //selector = new PieceSelector();
-            gameState = GameState.getInstance();//new GameState();
+            GameState.getInstance().loadState(GameStateManager.getInstance().getGameState());
+            gameState = GameState.getInstance();
         }
 
         public void TeardownPage()
