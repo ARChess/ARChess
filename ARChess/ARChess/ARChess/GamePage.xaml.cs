@@ -222,6 +222,7 @@ namespace ARChess
         private void OnUpdate(object sender, GameTimerEventArgs e)
         {
             //We don't need to update anything
+            gameState.Update();
         }
 
         /// <summary>

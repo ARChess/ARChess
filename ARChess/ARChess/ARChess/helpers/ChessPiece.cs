@@ -177,6 +177,10 @@ namespace ARChess
                     ModelDrawer.Draw(markerResult, mModel, (int)mPosition.X, (int)mPosition.Y, .2, 0.0f); //rotated by 90 degress
                 }
             }
+            else if (getType() == ChessPiece.Piece.QUEEN)
+            {
+                ModelDrawer.Draw(markerResult, mModel, (int)mPosition.X, (int)mPosition.Y, 0.6);
+            }
             else
             {
                 ModelDrawer.Draw(markerResult, mModel, (int)mPosition.X, (int)mPosition.Y, .2);

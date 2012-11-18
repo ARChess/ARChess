@@ -80,17 +80,28 @@ namespace ARChess
 
                     boardMat_inv = Microsoft.Xna.Framework.Matrix.Invert(boardMat);
 
-                    Vector3 position = new Vector3(0, 0, 0);
-                    Vector3 direction = new Vector3(0, 100, 0);
-                    position = Vector3.Transform(position, selectorMat * boardMat_inv);
+                    Vector3 position = new Vector3(1, 1, 1);
+                    Vector3 direction = new Vector3(0, 0, 0);
+                    position = Vector3.Transform(position, Microsoft.Xna.Framework.Matrix.CreateScale(1/31) * selectorMat * boardMat_inv);
                     direction = Vector3.Transform(direction, selectorMat * boardMat_inv);
+                    //position = position / 31;
+                    //direction = direction / 31;
+                    if (direction.Z > 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine("UP");
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("DOWN");
+                    }
                     Vector3 boardCoord = direction / direction.Z * position.Z;
                     boardCoord = boardCoord / 31;
+                    
 
                     int x = (int)(boardCoord.X),
                         y = (int)(boardCoord.Y);
 
-                    System.Diagnostics.Debug.WriteLine(boardCoord);
+                    //System.Diagnostics.Debug.WriteLine(boardCoord);
                     
                     if ((x >= 0) && (x <= 7) && (y >= 0) && (y <= 7))
                     {
@@ -122,8 +133,8 @@ namespace ARChess
                     
 
                     //ModelDrawer.DrawLine(mDetectionResult, new Vector3(0, 0, 0), position);
-                    ModelDrawer.DrawLine(mDetectionResult, new Vector3(1, 0, 0), new Vector3(1, 15, 0));
-                    //ModelDrawer.DrawLine(mBoardMarker, position, position + direction);
+                    ModelDrawer.DrawLine(mDetectionResult, new Vector3(1, 1, 1), new Vector3(0, 10, 0));
+                    ModelDrawer.DrawLine(mBoardMarker, position, position + direction);
                     //ModelDrawer.Draw(mBoardMarker, ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE), mPosition.X, mPosition.Y, 0.2);
                 }
                 else
