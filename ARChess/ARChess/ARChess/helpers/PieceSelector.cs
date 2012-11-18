@@ -33,7 +33,7 @@ namespace ARChess
 
         public Marker getMarker()
         {
-            return Marker.LoadFromResource("resources/selection_marker.pat", 16, 16, 80, "selection_marker");
+            return Marker.LoadFromResource("resources/selection_marker.pat", 16, 16, 40, "selection_marker");
         }
 
         /*
@@ -72,7 +72,7 @@ namespace ARChess
         {
             if (mDetectionResult != null)
             {
-                if ((mBoardMarker != null) && !mSelected)
+                if ((mBoardMarker != null))
                 {
                     Microsoft.Xna.Framework.Matrix boardMat = mBoardMarker.Transformation.ToXnaMatrix(),
                         selectorMat = mDetectionResult.Transformation.ToXnaMatrix(),
@@ -81,68 +81,60 @@ namespace ARChess
                     boardMat_inv = Microsoft.Xna.Framework.Matrix.Invert(boardMat);
 
                     Vector3 position = new Vector3(0, 0, 0);
+                    Vector3 direction = new Vector3(0, 100, 0);
                     position = Vector3.Transform(position, selectorMat * boardMat_inv);
+                    direction = Vector3.Transform(direction, selectorMat * boardMat_inv);
+                    Vector3 boardCoord = direction / direction.Z * position.Z;
+                    boardCoord = boardCoord / 31;
 
-                    //
-                    int x = (int) (position.X / 15),
-                        y = (int) (position.Y / 15);
-                   
+                    int x = (int)(boardCoord.X),
+                        y = (int)(boardCoord.Y);
+
+                    System.Diagnostics.Debug.WriteLine(boardCoord);
                     
-                    if (x < 0) { x = 0; }
-                    if (x > 7) { x = 7; }
-                    if (y < 0) { y = 0; }
-                    if (y > 7) { y = 0; }
-
-
-                    // Check if selected
-                    if ( mPosition != new Vector2(x,y))
+                    if ((x >= 0) && (x <= 7) && (y >= 0) && (y <= 7))
                     {
-                        selectedSince = DateTime.Now;
-                        mPosition.X = x;
-                        mPosition.Y = y;
-                        mSelected = false;
-                    }
-                    else
-                    {
-                        DateTime time = DateTime.Now;
-                        long elapsedTicks = time.Ticks - selectedSince.Ticks;
-                        TimeSpan elapsedSpan = new TimeSpan(elapsedTicks);
-                        if (elapsedSpan.TotalSeconds > 3.0)
+                        // Selection is on board
+                        if (mPosition != new Vector2(x, y))
                         {
-                            mSelected = true;
-                            GameState state = GameState.getInstance();
-                            state.setSelected(mPosition);
+                            // Selection has changed
+                            selectedSince = DateTime.Now;
+                            mPosition.X = x;
+                            mPosition.Y = y;
+                            mSelected = false;
+                        }
+                        else
+                        {
+                            // Selection has been held
+                            DateTime time = DateTime.Now;
+                            long elapsedTicks = time.Ticks - selectedSince.Ticks;
+                            TimeSpan elapsedSpan = new TimeSpan(elapsedTicks);
+                            if (elapsedSpan.TotalSeconds > 3.0)
+                            {
+                                // Selection has been held 3 seconds
+                                //mSelected = true;
+                                GameState state = GameState.getInstance();
+                                state.setSelected(mPosition);
+                            }
                         }
                     }
+
                     
 
-                    ModelDrawer.Draw(mBoardMarker, ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE), mPosition.X, mPosition.Y, 0.2);
+                    //ModelDrawer.DrawLine(mDetectionResult, new Vector3(0, 0, 0), position);
+                    ModelDrawer.DrawLine(mDetectionResult, new Vector3(1, 0, 0), new Vector3(1, 15, 0));
+                    //ModelDrawer.DrawLine(mBoardMarker, position, position + direction);
+                    //ModelDrawer.Draw(mBoardMarker, ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE), mPosition.X, mPosition.Y, 0.2);
                 }
                 else
                 {
-                    //ModelDrawer.Draw(mDetectionResult, ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE), 3, 3, 0);
-                    VertexPositionColor[] primitiveList = new VertexPositionColor[2];
-                    primitiveList[0] = new VertexPositionColor(new Vector3(0, 0, 0), Microsoft.Xna.Framework.Color.Green);
-                    primitiveList[1] = new VertexPositionColor(new Vector3(0, 100, 0), Microsoft.Xna.Framework.Color.Green);
-                    short[] lineIndices = new short[2]{ 0, 1 };
-
-                    /*
-                    SharedGraphicsDeviceManager.Current.GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColor>(
-                        PrimitiveType.LineStrip,
-                        primitiveList,
-                        0,
-                        2,
-                        lineIndices,
-                        0,
-                        1
-                        );
-                     * */
-                    ModelDrawer.DrawLine(mDetectionResult, new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+                   
+                    ModelDrawer.DrawLine(mDetectionResult, new Vector3(0, 0, 0), new Vector3(0, 20, 0));
                 }
             }
             else
             {
-                mSelected = false;
+               // mSelected = false;
             }
         }
 
