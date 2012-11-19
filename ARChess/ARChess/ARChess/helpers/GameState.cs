@@ -277,18 +277,21 @@ namespace ARChess
             {
                 case ChessPiece.Piece.PAWN :
                     // Pawns can only take diagonally
-                    if (boardSquares[x + forward, y - 1] == ChessBoard.BoardSquare.ENEMY)
+                    if ((y > 0) && (boardSquares[x + forward, y - 1] == ChessBoard.BoardSquare.ENEMY))
                     {
                         boardSquares[x + forward, y - 1] = ChessBoard.BoardSquare.CAN_TAKE;
                     }
-                    if (boardSquares[x + forward, y + 1] == ChessBoard.BoardSquare.ENEMY)
+                    if ((y > 0) && (boardSquares[x + forward, y + 1] == ChessBoard.BoardSquare.ENEMY))
                     {
                         boardSquares[x + forward, y + 1] = ChessBoard.BoardSquare.CAN_TAKE;
                     }
 
                     potentialMoves.Add( new Vector2(x + forward, y) );
                     // Special first move case
-                    //if ()
+                    if (x == (forward > 0 ? 1 : 6) )
+                    {
+                        potentialMoves.Add(new Vector2(x + 2 * forward, y));
+                    }
                     break;
 
                 case ChessPiece.Piece.ROOK:
@@ -453,10 +456,10 @@ namespace ARChess
             }
 
             // Draw Selector
-            //if (!mMoveMade)
-            //{
+            if (!mMoveMade)
+            {
                 mSelector.Draw();
-            //}
+            }
         }
 
         public CurrentGameState toCurrentGameState()

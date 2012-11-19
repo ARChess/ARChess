@@ -151,10 +151,10 @@ namespace ARChess
             mPosition = _position;
 
             // Constrain position to board
-            if (mPosition.X < 0) { mPosition.X = 0; }
-            else if (mPosition.X > 7) { mPosition.X = 7; }
-            if (mPosition.Y < 0) { mPosition.Y = 0; }
-            else if (mPosition.Y > 7) { mPosition.Y = 7; }
+            //if (mPosition.X < 0) { mPosition.X = 0; }
+            //else if (mPosition.X > 7) { mPosition.X = 7; }
+            //if (mPosition.Y < 0) { mPosition.Y = 0; }
+            //else if (mPosition.Y > 7) { mPosition.Y = 7; }
         }
 
         public bool isTaken()

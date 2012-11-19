@@ -105,6 +105,13 @@ namespace ARChess
 
         public void TeardownPage()
         {
+
+            isInitialized = false;
+            isDetecting = false;
+
+            photoCamera.Dispose();
+            photoCamera.Initialized -= photoCamera_Initialized;
+
             // Stop the timer
             timer.Stop();
 
@@ -165,9 +172,7 @@ namespace ARChess
             arDetector = new GrayBufferMarkerDetector();
 
             // Setup both markers
-            // I believe the string name (final parameter), is needed to differentiate the markers during detection
-            //Marker boardMarker = Marker.LoadFromResource("resources/marker.pat", 16, 16, 80, "board_marker");
-            Marker[] markers = gameState.getMarkers();//{ boardMarker, selector.getMarker() };
+            Marker[] markers = gameState.getMarkers();
             
             arDetector.Initialize(System.Convert.ToInt32(photoCamera.PreviewResolution.Width), System.Convert.ToInt32(photoCamera.PreviewResolution.Height), 1, 4000, markers);
             isInitialized = true;
