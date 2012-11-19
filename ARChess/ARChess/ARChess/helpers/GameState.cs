@@ -200,8 +200,8 @@ namespace ARChess
                         if ((mMyColor != entry.Value.getPlayer()) && (newPosition == entry.Value.getPosition()))
                         {
                             // Remove Enemy Piece
-                            //entry.Value.setPosition(new Vector2(-1,-1));
-                            chessPieces.Remove(entry.Key);
+                            entry.Value.remove();
+                            //chessPieces.Remove(entry.Key);
                             break;
                         }
                     }
@@ -252,14 +252,17 @@ namespace ARChess
             // Load FRIEND and ENEMY positions onto squares
             foreach (KeyValuePair<string, ChessPiece> entry in chessPieces)
             {
-                Vector2 pos = entry.Value.getPosition();
-                if (entry.Value.getPlayer() == mMyColor)
+                if (!entry.Value.isTaken())
                 {
-                    boardSquares[(int) pos.X, (int) pos.Y] = ChessBoard.BoardSquare.FRIEND;
-                }
-                else
-                {
-                    boardSquares[(int)pos.X, (int)pos.Y] = ChessBoard.BoardSquare.ENEMY;
+                    Vector2 pos = entry.Value.getPosition();
+                    if (entry.Value.getPlayer() == mMyColor)
+                    {
+                        boardSquares[(int)pos.X, (int)pos.Y] = ChessBoard.BoardSquare.FRIEND;
+                    }
+                    else
+                    {
+                        boardSquares[(int)pos.X, (int)pos.Y] = ChessBoard.BoardSquare.ENEMY;
+                    }
                 }
             }
 
@@ -273,9 +276,19 @@ namespace ARChess
             switch (selectedType)
             {
                 case ChessPiece.Piece.PAWN :
-                    potentialMoves.Add( new Vector2(x + forward, y - 1) );
+                    // Pawns can only take diagonally
+                    if (boardSquares[x + forward, y - 1] == ChessBoard.BoardSquare.ENEMY)
+                    {
+                        boardSquares[x + forward, y - 1] = ChessBoard.BoardSquare.CAN_TAKE;
+                    }
+                    if (boardSquares[x + forward, y + 1] == ChessBoard.BoardSquare.ENEMY)
+                    {
+                        boardSquares[x + forward, y + 1] = ChessBoard.BoardSquare.CAN_TAKE;
+                    }
+
                     potentialMoves.Add( new Vector2(x + forward, y) );
-                    potentialMoves.Add( new Vector2(x + forward, y + 1) );
+                    // Special first move case
+                    //if ()
                     break;
 
                 case ChessPiece.Piece.ROOK:
@@ -292,7 +305,14 @@ namespace ARChess
                     break;
 
                 case ChessPiece.Piece.KNIGHT:
-                    // TODO
+                    for (int i = -1; i <= 1; i = i + 2)
+                    {
+                        for (int j = -1; j <= 1; j = j + 2)
+                        {
+                            potentialMoves.Add(new Vector2(x + 2 * i, y + j));
+                            potentialMoves.Add(new Vector2(x + i, y + 2 * j));
+                        }
+                    }
                     break;
 
                 case ChessPiece.Piece.BISHOP:
@@ -355,7 +375,10 @@ namespace ARChess
                     // Potential move is inside board
                     if (boardSquares[x, y] == ChessBoard.BoardSquare.ENEMY)
                     {
-                        boardSquares[x, y] = ChessBoard.BoardSquare.CAN_TAKE;
+                        if (selectedType != ChessPiece.Piece.PAWN)
+                        {
+                            boardSquares[x, y] = ChessBoard.BoardSquare.CAN_TAKE;
+                        }
                     }
                     else if (boardSquares[x, y] != ChessBoard.BoardSquare.FRIEND)
                     {
@@ -430,10 +453,10 @@ namespace ARChess
             }
 
             // Draw Selector
-            if (!mMoveMade)
-            {
+            //if (!mMoveMade)
+            //{
                 mSelector.Draw();
-            }
+            //}
         }
 
         public CurrentGameState toCurrentGameState()

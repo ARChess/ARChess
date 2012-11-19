@@ -141,6 +141,11 @@ namespace ARChess
             return mPosition;
         }
 
+        public void remove()
+        {
+            mPosition = new Vector2(-1, -1);
+        }
+
         public void setPosition(Vector2 _position)
         {
             mPosition = _position;
@@ -152,6 +157,10 @@ namespace ARChess
             else if (mPosition.Y > 7) { mPosition.Y = 7; }
         }
 
+        public bool isTaken()
+        {
+            return (mPosition.X == -1) && (mPosition.Y == -1);
+        }
        
         public void Draw(DetectionResult markerResult)
         {
@@ -160,35 +169,38 @@ namespace ARChess
 
         public void Draw(DetectionResult markerResult, Vector3 position)
         {
-            if (getType() == ChessPiece.Piece.KNIGHT)
+            if (!isTaken())
             {
-                if (getPlayer() == ChessPiece.Color.BLACK)
+                if (getType() == ChessPiece.Piece.KNIGHT)
                 {
-                    ModelDrawer.Draw(markerResult, mModel, (int)position.X, (int)position.Y, .2, -1.5707f); //rotated by -90 degress
+                    if (getPlayer() == ChessPiece.Color.BLACK)
+                    {
+                        ModelDrawer.Draw(markerResult, mModel, (int)position.X, (int)position.Y, .2, -1.5707f); //rotated by -90 degress
+                    }
+                    else
+                    {
+                        ModelDrawer.Draw(markerResult, mModel, (int)position.X, (int)position.Y, .2, 1.5707f); //rotated by 90 degress
+                    }
+                }
+                else if (getType() == ChessPiece.Piece.BISHOP)
+                {
+                    if (getPlayer() == ChessPiece.Color.BLACK)
+                    {
+                        ModelDrawer.Draw(markerResult, mModel, (int)position.X, (int)position.Y, .2, -3.1414f); //rotated by -90 degress
+                    }
+                    else
+                    {
+                        ModelDrawer.Draw(markerResult, mModel, (int)position.X, (int)position.Y, .2, 0.0f); //rotated by 90 degress
+                    }
+                }
+                else if (getType() == ChessPiece.Piece.QUEEN)
+                {
+                    ModelDrawer.Draw(markerResult, mModel, (int)position.X, (int)position.Y, 0.2);
                 }
                 else
                 {
-                    ModelDrawer.Draw(markerResult, mModel, (int)position.X, (int)position.Y, .2, 1.5707f); //rotated by 90 degress
+                    ModelDrawer.Draw(markerResult, mModel, (int)position.X, (int)position.Y, .2);
                 }
-            }
-            else if (getType() == ChessPiece.Piece.BISHOP)
-            {
-                if (getPlayer() == ChessPiece.Color.BLACK)
-                {
-                    ModelDrawer.Draw(markerResult, mModel, (int)position.X, (int)position.Y, .2, -3.1414f); //rotated by -90 degress
-                }
-                else
-                {
-                    ModelDrawer.Draw(markerResult, mModel, (int)position.X, (int)position.Y, .2, 0.0f); //rotated by 90 degress
-                }
-            }
-            else if (getType() == ChessPiece.Piece.QUEEN)
-            {
-                ModelDrawer.Draw(markerResult, mModel, (int)position.X, (int)position.Y, 0.2);
-            }
-            else
-            {
-                ModelDrawer.Draw(markerResult, mModel, (int)position.X, (int)position.Y, .2);
             }
         }
         
