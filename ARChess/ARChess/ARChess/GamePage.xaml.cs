@@ -253,9 +253,12 @@ namespace ARChess
             MessageBoxResult result = MessageBox.Show("Once done, this move cannot be undone.", "Are you sure?", MessageBoxButton.OKCancel);
             if (result == MessageBoxResult.OK)
             {
+                gameState.setSelected(new Vector2(1, 0));
                 var bw = new BackgroundWorker();
                 bw.DoWork += (s, args) =>
                 {
+                    
+                    /*
                     ChessPiece piece = gameState.getSelectedPiece();
                     if (piece != null)
                     {
@@ -266,8 +269,10 @@ namespace ARChess
                             currentPosition.X += 1;
                             gameState.movePiece(currentPosition);
                         }
-                    }
+                         
 
+                    }
+                    */
                     //send to central server
                     new NetworkTask().sendGameState(GameState.getInstance().toCurrentGameState());
                 };

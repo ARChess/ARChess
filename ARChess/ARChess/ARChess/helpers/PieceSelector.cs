@@ -80,31 +80,24 @@ namespace ARChess
 
                     boardMat_inv = Microsoft.Xna.Framework.Matrix.Invert(boardMat);
 
-                    Vector3 position = new Vector3(1, 1, 1);
-                    Vector3 direction = new Vector3(0, 0, 0);
-                    position = Vector3.Transform(position, Microsoft.Xna.Framework.Matrix.CreateScale(1/31) * selectorMat * boardMat_inv);
-                    direction = Vector3.Transform(direction, selectorMat * boardMat_inv);
-                    //position = position / 31;
+                    Vector3 position = new Vector3(0, 0, 0);
+                    Vector3 direction = new Vector3(0, -1, -1);
+                    position = Vector3.Transform(position, selectorMat * boardMat_inv);
+                    //direction = Vector3.Transform(direction, selectorMat * boardMat_inv);
+                    position = position / 31;
                     //direction = direction / 31;
-                    if (direction.Z > 0)
-                    {
-                        System.Diagnostics.Debug.WriteLine("UP");
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine("DOWN");
-                    }
-                    Vector3 boardCoord = direction / direction.Z * position.Z;
-                    boardCoord = boardCoord / 31;
+                    //System.Diagnostics.Debug.WriteLine(position);
+                    Vector3 boardCoord = (position + direction * position.Z) + new Vector3(8.5f,8.5f,0);
                     
 
-                    int x = (int)(boardCoord.X),
-                        y = (int)(boardCoord.Y);
+                    int x = (int)(boardCoord.X < 5 ? (4 - boardCoord.X) * -1 : boardCoord.X - 4),
+                        y = (int)(boardCoord.Y < 5 ? (4 - boardCoord.Y) * -1 : boardCoord.Y - 4);
 
-                    //System.Diagnostics.Debug.WriteLine(boardCoord);
+                   
                     
                     if ((x >= 0) && (x <= 7) && (y >= 0) && (y <= 7))
                     {
+                        //System.Diagnostics.Debug.WriteLine(new Vector2(x, y));
                         // Selection is on board
                         if (mPosition != new Vector2(x, y))
                         {
@@ -120,22 +113,22 @@ namespace ARChess
                             DateTime time = DateTime.Now;
                             long elapsedTicks = time.Ticks - selectedSince.Ticks;
                             TimeSpan elapsedSpan = new TimeSpan(elapsedTicks);
-                            if (elapsedSpan.TotalSeconds > 3.0)
+                            if (elapsedSpan.TotalSeconds > 2.0)
                             {
-                                // Selection has been held 3 seconds
+                                // Selection has been held 1 second
                                 //mSelected = true;
+                                selectedSince = DateTime.Now;
                                 GameState state = GameState.getInstance();
                                 state.setSelected(mPosition);
                             }
                         }
                     }
 
-                    
 
-                    //ModelDrawer.DrawLine(mDetectionResult, new Vector3(0, 0, 0), position);
-                    ModelDrawer.DrawLine(mDetectionResult, new Vector3(1, 1, 1), new Vector3(0, 10, 0));
+                    direction = direction * 15;
                     ModelDrawer.DrawLine(mBoardMarker, position, position + direction);
-                    //ModelDrawer.Draw(mBoardMarker, ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE), mPosition.X, mPosition.Y, 0.2);
+                    //ModelDrawer.DrawLine(mBoardMarker, direction, new Vector3(0, 0, 0));
+                    ModelDrawer.Draw(mBoardMarker, ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE), x, y, 0.2);
                 }
                 else
                 {

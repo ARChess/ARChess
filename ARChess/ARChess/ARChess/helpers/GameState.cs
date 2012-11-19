@@ -14,6 +14,7 @@ using System.Xml.Linq;
 using SLARToolKit;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using System.Windows.Navigation;
 
 namespace ARChess
 {
@@ -76,7 +77,7 @@ namespace ARChess
             chessPieces["black_queen"].setPosition(new Vector2((float)state.black.queen.x, (float)state.black.queen.y));
             chessPieces["black_king"].setPosition(new Vector2((float)state.black.king.x, (float)state.black.king.y));
 
-            chessPieces["white_pawn1"].setPosition(new Vector2((float)state.white.pawn1.x + 1, (float)state.white.pawn1.y + 1));
+            chessPieces["white_pawn1"].setPosition(new Vector2((float)state.white.pawn1.x + 1, (float)state.white.pawn1.y));
             chessPieces["white_pawn2"].setPosition(new Vector2((float)state.white.pawn2.x + 1, (float)state.white.pawn2.y));
             chessPieces["white_pawn2"].setPosition(new Vector2((float)state.white.pawn2.x + 1, (float)state.white.pawn2.y));
             chessPieces["white_pawn3"].setPosition(new Vector2((float)state.white.pawn3.x + 1, (float)state.white.pawn3.y));
@@ -156,23 +157,29 @@ namespace ARChess
             }
             else
             {
-                // Piece Selected - check if position is valid move for Piece
+                // Piece already selected
                 ChessBoard.BoardSquare[,] squares = mBoard.getBoardSquares();
                 int x = (int) position.X;
                 int y = (int) position.Y;
                 if ( squares[x, y] == ChessBoard.BoardSquare.CAN_MOVE )
                 {
+                    // Move is valid
+                    mSelectedPiece.setPosition( new Vector2(x, y) );
                     mSelectedPiece = null;
                     mBoard.clearBoardSquares();
+                    System.Diagnostics.Debug.WriteLine("Valid Move");
+                    // TODO: Send GameState to server
+                    //new NetworkTask().sendGameState( toCurrentGameState() );
+                    //NavigationService.Navigate(new Uri("/WaitingForOpponentPage.xaml", UriKind.Relative));
                 }
                 else
                 {
+                    // Move is not valid
+                    System.Diagnostics.Debug.WriteLine("Invalid Move");
+                    System.Diagnostics.Debug.WriteLine(new Vector2(x, y));
                     // Give negative feedback
                 }
-                // if valid move
-
             }
-            
         }
 
         public ChessPiece getSelectedPiece()
@@ -200,7 +207,6 @@ namespace ARChess
             ChessBoard.BoardSquare[,] boardSquares = mBoard.getBoardSquares();
 
             // Selected Piece Details
-            //ChessPiece.Color selectedPlayer   = mSelectedPiece.getPlayer();
             ChessPiece.Piece selectedType     = mSelectedPiece.getType();
             Vector2          selectedPosition = mSelectedPiece.getPosition();
 
@@ -353,7 +359,11 @@ namespace ARChess
         {
             if (mSelectedPiece == null)
             {
-                setSelected(new Vector2(0, 0));
+                //setSelected(new Vector2(0, 0));
+            }
+            else 
+            {
+                //setSelected(new Vector2(2, 0));
             }
         }
 
