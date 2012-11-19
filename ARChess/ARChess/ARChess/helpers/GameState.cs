@@ -138,12 +138,16 @@ namespace ARChess
 
         public void setSelected(Vector2 position)
         {
+            int x = (int) position.X;
+            int y = (int) position.Y;
+            Vector2 newPosition = new Vector2(x, y);
+
             if (mSelectedPiece == null)
             {
                 // Select Piece at position
                 foreach (KeyValuePair<string, ChessPiece> entry in chessPieces)
                 {
-                    if ((mMyColor == entry.Value.getPlayer()) && (position == entry.Value.getPosition()))
+                    if ((mMyColor == entry.Value.getPlayer()) && (newPosition == entry.Value.getPosition()))
                     {
                         // Set Selected Piece
                         mSelectedPiece = entry.Value;
@@ -159,12 +163,17 @@ namespace ARChess
             {
                 // Piece already selected
                 ChessBoard.BoardSquare[,] squares = mBoard.getBoardSquares();
-                int x = (int) position.X;
-                int y = (int) position.Y;
-                if ( squares[x, y] == ChessBoard.BoardSquare.CAN_MOVE )
+                
+                if (mSelectedPiece.getPosition() == newPosition) 
+                {
+                    // Put Piece Back
+                    mSelectedPiece = null;
+                    mBoard.clearBoardSquares();
+                }
+                else if ( squares[x, y] == ChessBoard.BoardSquare.CAN_MOVE )
                 {
                     // Move is valid
-                    mSelectedPiece.setPosition( new Vector2(x, y) );
+                    mSelectedPiece.setPosition( newPosition );
                     mSelectedPiece = null;
                     mBoard.clearBoardSquares();
                     System.Diagnostics.Debug.WriteLine("Valid Move");

@@ -97,7 +97,6 @@ namespace ARChess
                     
                     if ((x >= 0) && (x <= 7) && (y >= 0) && (y <= 7))
                     {
-                        //System.Diagnostics.Debug.WriteLine(new Vector2(x, y));
                         // Selection is on board
                         if (mPosition != new Vector2(x, y))
                         {
@@ -127,13 +126,12 @@ namespace ARChess
 
                     direction = direction * 15;
                     ModelDrawer.DrawLine(mBoardMarker, position, position + direction);
-                    //ModelDrawer.DrawLine(mBoardMarker, direction, new Vector3(0, 0, 0));
                     ModelDrawer.Draw(mBoardMarker, ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE), x, y, 0.2);
                 }
                 else
                 {
                    
-                    ModelDrawer.DrawLine(mDetectionResult, new Vector3(0, 0, 0), new Vector3(0, 20, 0));
+                    //ModelDrawer.DrawLine(mDetectionResult, new Vector3(0, 0, 0), new Vector3(0, 20, 0));
                 }
             }
             else
