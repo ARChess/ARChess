@@ -28,6 +28,7 @@ namespace ARChess
         private ChessBoard mBoard;
         private PieceSelector mSelector;
         private bool mMoveMade = false;
+        private CurrentGameState mCurrentState;
 
         private static GameState mInstance = null;
 
@@ -61,6 +62,9 @@ namespace ARChess
 
         public void loadState(CurrentGameState state)
         {
+            mMoveMade = false;
+            mCurrentState = state;
+
             chessPieces["black_pawn1"].setPosition(new Vector2((float)state.black.pawn1.x, (float)state.black.pawn1.y));
             chessPieces["black_pawn2"].setPosition(new Vector2((float)state.black.pawn2.x, (float)state.black.pawn2.y));
             chessPieces["black_pawn3"].setPosition(new Vector2((float)state.black.pawn3.x, (float)state.black.pawn3.y));
@@ -137,6 +141,11 @@ namespace ARChess
             chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_king"] = new ChessPiece(content, _player, ChessPiece.Piece.KING, position);
         }
 
+        public void resetTurn()
+        {
+            loadState(mCurrentState);
+        }
+
         public void setSelected(Vector2 position)
         {
             int x = (int) position.X;
@@ -177,6 +186,7 @@ namespace ARChess
                     mSelectedPiece.setPosition( newPosition );
                     mSelectedPiece = null;
                     mBoard.clearBoardSquares();
+                    mMoveMade = true;
                     
                     // TODO: Send GameState to server
                     //new NetworkTask().sendGameState( toCurrentGameState() );
@@ -199,6 +209,7 @@ namespace ARChess
                     mSelectedPiece.setPosition(newPosition);
                     mSelectedPiece = null;
                     mBoard.clearBoardSquares();
+                    mMoveMade = true;
                 }
                 else
                 {
@@ -296,7 +307,7 @@ namespace ARChess
                     goto case ChessPiece.Piece.ROOK;
 
                 case ChessPiece.Piece.KING:
-                    for (int i = -1; i < 1; ++i)
+                    for (int i = -1; i <= 1; ++i)
                     {
                         potentialMoves.Add( new Vector2(x + i, y - 1) );
                         if (i != 0)
@@ -346,9 +357,13 @@ namespace ARChess
                     {
                         boardSquares[x, y] = ChessBoard.BoardSquare.CAN_TAKE;
                     }
+                    else if (boardSquares[x, y] != ChessBoard.BoardSquare.FRIEND)
+                    {
+                        boardSquares[x, y] = ChessBoard.BoardSquare.CAN_MOVE;
+                    }
                     else
                     {
-                        boardSquares[x,y] = ChessBoard.BoardSquare.CAN_MOVE;
+                        // Cannot move
                     }
                 }
             }
@@ -415,7 +430,10 @@ namespace ARChess
             }
 
             // Draw Selector
-            mSelector.Draw();
+            if (!mMoveMade)
+            {
+                mSelector.Draw();
+            }
         }
 
         public CurrentGameState toCurrentGameState()

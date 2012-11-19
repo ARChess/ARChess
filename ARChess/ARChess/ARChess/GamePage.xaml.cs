@@ -253,7 +253,6 @@ namespace ARChess
             MessageBoxResult result = MessageBox.Show("Once done, this move cannot be undone.", "Are you sure?", MessageBoxButton.OKCancel);
             if (result == MessageBoxResult.OK)
             {
-                gameState.setSelected(new Vector2(1, 0));
                 var bw = new BackgroundWorker();
                 bw.DoWork += (s, args) =>
                 {
@@ -281,6 +280,11 @@ namespace ARChess
                     NavigationService.Navigate(new Uri("/WaitForOpponentPage.xaml", UriKind.Relative));
                 };
                 bw.RunWorkerAsync();
+            }
+            else
+            {
+                // Reset Turn
+                gameState.resetTurn();
             }
         }
 
