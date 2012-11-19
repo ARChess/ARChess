@@ -27,6 +27,7 @@ namespace ARChess
 
         private ChessBoard mBoard;
         private PieceSelector mSelector;
+        private bool mMoveMade = false;
 
         private static GameState mInstance = null;
 
@@ -176,10 +177,28 @@ namespace ARChess
                     mSelectedPiece.setPosition( newPosition );
                     mSelectedPiece = null;
                     mBoard.clearBoardSquares();
-                    System.Diagnostics.Debug.WriteLine("Valid Move");
+                    
                     // TODO: Send GameState to server
                     //new NetworkTask().sendGameState( toCurrentGameState() );
                     //NavigationService.Navigate(new Uri("/WaitingForOpponentPage.xaml", UriKind.Relative));
+                }
+                else if (squares[x, y] == ChessBoard.BoardSquare.CAN_TAKE) 
+                {
+                    // Move is valid - Enemy Piece is taken
+                    foreach (KeyValuePair<string, ChessPiece> entry in chessPieces)
+                    {
+                        if ((mMyColor != entry.Value.getPlayer()) && (newPosition == entry.Value.getPosition()))
+                        {
+                            // Remove Enemy Piece
+                            //entry.Value.setPosition(new Vector2(-1,-1));
+                            chessPieces.Remove(entry.Key);
+                            break;
+                        }
+                    }
+
+                    mSelectedPiece.setPosition(newPosition);
+                    mSelectedPiece = null;
+                    mBoard.clearBoardSquares();
                 }
                 else
                 {
@@ -387,7 +406,7 @@ namespace ARChess
                 if (entry.Value == mSelectedPiece)
                 {
                     DetectionResult selectorMarker = mSelector.getDetectionResult();
-                    entry.Value.Draw(selectorMarker);
+                    entry.Value.Draw(selectorMarker, new Vector3(4,4,0));
                 }
                 else
                 {

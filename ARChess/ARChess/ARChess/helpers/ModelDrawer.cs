@@ -71,7 +71,6 @@ namespace ARChess
                     foreach (BasicEffect effect in mesh.Effects)
                     {
                         Vector3 modelPosition = new Vector3((int)((x < 5 ? (4 - x) * -1 : x - 4) * SCALE), (int)((y < 5 ? (4 - y) * -1 : y - 4) * SCALE), (int)(z * SCALE));
-                        //Vector3 modelPosition = new Vector3((int)(x * SCALE), (int)(y * SCALE), (int)(z * SCALE));
                         effect.EnableDefaultLighting();
                         effect.World = Microsoft.Xna.Framework.Matrix.CreateScale(SCALE / 2) *
                             (transforms[mesh.ParentBone.Index]
