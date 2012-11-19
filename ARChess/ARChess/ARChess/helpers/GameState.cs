@@ -77,15 +77,15 @@ namespace ARChess
             chessPieces["black_queen"].setPosition(new Vector2((float)state.black.queen.x, (float)state.black.queen.y));
             chessPieces["black_king"].setPosition(new Vector2((float)state.black.king.x, (float)state.black.king.y));
 
-            chessPieces["white_pawn1"].setPosition(new Vector2((float)state.white.pawn1.x + 1, (float)state.white.pawn1.y));
-            chessPieces["white_pawn2"].setPosition(new Vector2((float)state.white.pawn2.x + 1, (float)state.white.pawn2.y));
-            chessPieces["white_pawn2"].setPosition(new Vector2((float)state.white.pawn2.x + 1, (float)state.white.pawn2.y));
-            chessPieces["white_pawn3"].setPosition(new Vector2((float)state.white.pawn3.x + 1, (float)state.white.pawn3.y));
-            chessPieces["white_pawn4"].setPosition(new Vector2((float)state.white.pawn4.x + 1, (float)state.white.pawn4.y));
-            chessPieces["white_pawn5"].setPosition(new Vector2((float)state.white.pawn5.x + 1, (float)state.white.pawn5.y));
-            chessPieces["white_pawn6"].setPosition(new Vector2((float)state.white.pawn6.x + 1, (float)state.white.pawn6.y));
-            chessPieces["white_pawn7"].setPosition(new Vector2((float)state.white.pawn7.x + 1, (float)state.white.pawn7.y));
-            chessPieces["white_pawn8"].setPosition(new Vector2((float)state.white.pawn8.x + 1, (float)state.white.pawn8.y));
+            chessPieces["white_pawn1"].setPosition(new Vector2((float)state.white.pawn1.x, (float)state.white.pawn1.y));
+            chessPieces["white_pawn2"].setPosition(new Vector2((float)state.white.pawn2.x, (float)state.white.pawn2.y));
+            chessPieces["white_pawn2"].setPosition(new Vector2((float)state.white.pawn2.x, (float)state.white.pawn2.y));
+            chessPieces["white_pawn3"].setPosition(new Vector2((float)state.white.pawn3.x, (float)state.white.pawn3.y));
+            chessPieces["white_pawn4"].setPosition(new Vector2((float)state.white.pawn4.x, (float)state.white.pawn4.y));
+            chessPieces["white_pawn5"].setPosition(new Vector2((float)state.white.pawn5.x, (float)state.white.pawn5.y));
+            chessPieces["white_pawn6"].setPosition(new Vector2((float)state.white.pawn6.x, (float)state.white.pawn6.y));
+            chessPieces["white_pawn7"].setPosition(new Vector2((float)state.white.pawn7.x, (float)state.white.pawn7.y));
+            chessPieces["white_pawn8"].setPosition(new Vector2((float)state.white.pawn8.x, (float)state.white.pawn8.y));
             chessPieces["white_rook1"].setPosition(new Vector2((float)state.white.rook1.x, (float)state.white.rook1.y));
             chessPieces["white_rook2"].setPosition(new Vector2((float)state.white.rook2.x, (float)state.white.rook2.y));
             chessPieces["white_bishop1"].setPosition(new Vector2((float)state.white.bishop1.x, (float)state.white.bishop1.y));
@@ -143,7 +143,7 @@ namespace ARChess
                 // Select Piece at position
                 foreach (KeyValuePair<string, ChessPiece> entry in chessPieces)
                 {
-                    if (position == entry.Value.getPosition())
+                    if ((mMyColor == entry.Value.getPlayer()) && (position == entry.Value.getPosition()))
                     {
                         // Set Selected Piece
                         mSelectedPiece = entry.Value;
