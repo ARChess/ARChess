@@ -462,6 +462,18 @@ namespace ARChess
             }
         }
 
+        public void setPlayerColor(string player)
+        {
+            if(player == "black) 
+            {
+                mMyColor = ChessPiece.Color.black;
+            }
+            else
+            {
+                mMyColor = ChessPieceColor.white;
+            }
+        }
+
         public CurrentGameState toCurrentGameState()
         {
             return new CurrentGameState()
