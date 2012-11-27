@@ -194,6 +194,7 @@
   <ItemGroup>
     <Content Include="images\about_icon.png" />
     <Content Include="images\command_icon.png" />
+    <Content Include="images\commit_icon.png" />
     <Content Include="resources\beep.wav" />
     <Resource Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Resource Include="Toolkit.Content\ApplicationBar.Check.png" />

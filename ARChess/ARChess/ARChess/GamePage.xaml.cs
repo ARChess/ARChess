@@ -99,6 +99,11 @@ namespace ARChess
             // Create a timer for this page
             timer.Start();
 
+            //Initialize the camera
+            photoCamera = new PhotoCamera();
+            photoCamera.Initialized += new EventHandler<CameraOperationCompletedEventArgs>(photoCamera_Initialized);
+            ViewFinderBrush.SetSource(photoCamera);
+
             GameState.getInstance().loadState(GameStateManager.getInstance().getGameState());
             gameState = GameState.getInstance();
         }
@@ -128,11 +133,6 @@ namespace ARChess
             SetupPage();
 
             spriteBatch = new SpriteBatch(SharedGraphicsDeviceManager.Current.GraphicsDevice);
-
-            //Initialize the camera
-            photoCamera = new PhotoCamera();
-            photoCamera.Initialized += new EventHandler<CameraOperationCompletedEventArgs>(photoCamera_Initialized);
-            ViewFinderBrush.SetSource(photoCamera);
            
             base.OnNavigatedTo(e);
         }
@@ -226,7 +226,6 @@ namespace ARChess
         /// </summary>
         private void OnUpdate(object sender, GameTimerEventArgs e)
         {
-            //We don't need to update anything
             gameState.Update();
         }
 
@@ -252,8 +251,7 @@ namespace ARChess
             //selector.Draw();
         }
 
-        // TODO: This is a temporary function to test hardcoded piece movement
-        private void MoveForwardButton_Click(object sender, EventArgs e)
+        private void CommitButton_Click(object sender, EventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Once done, this move cannot be undone.", "Are you sure?", MessageBoxButton.OKCancel);
             if (result == MessageBoxResult.OK)
@@ -261,23 +259,6 @@ namespace ARChess
                 var bw = new BackgroundWorker();
                 bw.DoWork += (s, args) =>
                 {
-                    
-                    /*
-                    ChessPiece piece = gameState.getSelectedPiece();
-                    if (piece != null)
-                    {
-                        Vector2 currentPosition = piece.getPosition();
-                        if (currentPosition != null)
-                        {
-                            //currentPosition.Y = 2;
-                            currentPosition.X += 1;
-                            gameState.movePiece(currentPosition);
-                        }
-                         
-
-                    }
-                    */
-                    //send to central server
                     new NetworkTask().sendGameState(GameState.getInstance().toCurrentGameState());
                 };
                 bw.RunWorkerCompleted += (s, args) =>
@@ -313,7 +294,7 @@ namespace ARChess
 
         private void VoiceCommandButton_Click(object sender, EventArgs e)
         {
-            /*TeardownPage();
+            TeardownPage();
             AppSettings settings = new AppSettings();
 
             if (settings.SpeechCommandReminderSetting)
@@ -351,7 +332,7 @@ namespace ARChess
             else
             {
                 dictationStart(RecognizerRecognizerType.Search);
-            }*/
+            }
         }
 
         private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
@@ -477,6 +458,8 @@ namespace ARChess
 
             Deployment.Current.Dispatcher.BeginInvoke(() =>
             {
+                GameState.getInstance().processVoiceCommand(results.getResult(0).ToString());
+
                 SetupPage();
             });
         }

@@ -201,7 +201,6 @@ namespace ARChess
                         {
                             // Remove Enemy Piece
                             entry.Value.remove();
-                            //chessPieces.Remove(entry.Key);
                             break;
                         }
                     }
@@ -216,7 +215,7 @@ namespace ARChess
                     // Move is not valid
                     System.Diagnostics.Debug.WriteLine("Invalid Move");
                     System.Diagnostics.Debug.WriteLine(new Vector2(x, y));
-                    // Give negative feedback
+                    throw new Exception("Move is not Valid");
                 }
             }
         }
@@ -419,21 +418,11 @@ namespace ARChess
                         break;
                 }
             }
-
-            // Manage Selection
-            //setSelected( mSelector.getSelected() );
         }
 
         public void Update()
         {
-            if (mSelectedPiece == null)
-            {
-                //setSelected(new Vector2(0, 0));
-            }
-            else 
-            {
-                //setSelected(new Vector2(2, 0));
-            }
+            
         }
 
         public void Draw()
@@ -462,15 +451,15 @@ namespace ARChess
             }
         }
 
-        public void setPlayerColor(string player)
+        public void processVoiceCommand(string command)
         {
-            if(player == "black) 
+            if (command.ToLower().IndexOf("move") != -1 || command.ToLower().IndexOf("select") != -1)
             {
-                mMyColor = ChessPiece.Color.black;
+                VoiceCommandFuzzyProcessing.process(command);
             }
             else
             {
-                mMyColor = ChessPieceColor.white;
+                //not a valid command
             }
         }
 

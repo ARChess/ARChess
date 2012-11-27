@@ -18,7 +18,6 @@ namespace ARChess
 {
     public class PieceSelector
     {
-
         private ContentManager content;
         private DetectionResult mDetectionResult;
         private DetectionResult mBoardMarker;
@@ -35,21 +34,6 @@ namespace ARChess
         {
             return Marker.LoadFromResource("resources/selection_marker.pat", 16, 16, 40, "selection_marker");
         }
-
-        /*
-        public Vector2 getSelected()
-        {
-            if (mSelected)
-            {
-                return mPosition;
-            }
-            else
-            {
-                // This is essentially returning null because it will never match a piece position
-                return new Vector2(-1,-1);
-            }
-        }
-         * */
 
         public DetectionResult getDetectionResult()
         {
@@ -87,14 +71,14 @@ namespace ARChess
                     position = position / 31;
                     //direction = direction / 31;
                     //System.Diagnostics.Debug.WriteLine(position);
-                    Vector3 boardCoord = (position + direction * position.Z) + new Vector3(8.5f,8.5f,0);
-                    
+                    Vector3 boardCoord = (position + direction * position.Z) + new Vector3(8.5f, 8.5f, 0);
+
 
                     int x = (int)(boardCoord.X < 5 ? (4 - boardCoord.X) * -1 : boardCoord.X - 4),
                         y = (int)(boardCoord.Y < 5 ? (4 - boardCoord.Y) * -1 : boardCoord.Y - 4);
 
-                   
-                    
+
+
                     if ((x >= 0) && (x <= 7) && (y >= 0) && (y <= 7))
                     {
                         // Selection is on board
@@ -128,17 +112,7 @@ namespace ARChess
                     ModelDrawer.DrawLine(mBoardMarker, position, position + direction);
                     ModelDrawer.Draw(mBoardMarker, ModelSelector.getModel(ModelSelector.Pieces.RED_SQUARE), x, y, 0.2);
                 }
-                else
-                {
-                   
-                    //ModelDrawer.DrawLine(mDetectionResult, new Vector3(0, 0, 0), new Vector3(0, 20, 0));
-                }
-            }
-            else
-            {
-               // mSelected = false;
             }
         }
-
     }
 }
