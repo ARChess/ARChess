@@ -14,6 +14,7 @@ namespace ARChess
     public class GameStateManager
     {
         private static GameStateManager instance = null;
+        private static ChessPiece.Color currentPlayer = ChessPiece.Color.WHITE;
         private static CurrentGameState currentState = null;
 
         public static GameStateManager getInstance()
@@ -33,6 +34,23 @@ namespace ARChess
         public CurrentGameState getGameState()
         {
             return currentState;
+        }
+
+        public void setCurrentPlayer(string player)
+        {
+            if (player == "black")
+            {
+                currentPlayer = ChessPiece.Color.BLACK;
+            }
+            else
+            {
+                currentPlayer = ChessPiece.Color.WHITE;
+            }
+        }
+
+        public ChessPiece.Color getCurrentPlayer()
+        {
+            return currentPlayer;
         }
     }
 

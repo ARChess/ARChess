@@ -69,6 +69,7 @@ namespace ARChess
         {
             if (response.game_in_progress && response.is_current_players_turn)
             {
+                GameStateManager.getInstance().setCurrentPlayer(response.current_player);
                 GameStateManager.getInstance().setGameState(response.game_state);
                 NavigationService.Navigate(new Uri("/GamePage.xaml", UriKind.Relative));
             }

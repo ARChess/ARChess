@@ -99,6 +99,8 @@ namespace ARChess
             chessPieces["white_knight2"].setPosition(new Vector2((float)state.white.knight2.x, (float)state.white.knight2.y));
             chessPieces["white_queen"].setPosition(new Vector2((float)state.white.queen.x, (float)state.white.queen.y));
             chessPieces["white_king"].setPosition(new Vector2((float)state.white.king.x, (float)state.white.king.y));
+
+            mMyColor = GameStateManager.getInstance().getCurrentPlayer();
         }
 
         private void initializePlayerPieces(ChessPiece.Color _player)
@@ -143,6 +145,8 @@ namespace ARChess
 
         public void resetTurn()
         {
+            mSelectedPiece = null;
+            mBoard.clearBoardSquares();
             loadState(mCurrentState);
         }
 
@@ -187,10 +191,6 @@ namespace ARChess
                     mSelectedPiece = null;
                     mBoard.clearBoardSquares();
                     mMoveMade = true;
-                    
-                    // TODO: Send GameState to server
-                    //new NetworkTask().sendGameState( toCurrentGameState() );
-                    //NavigationService.Navigate(new Uri("/WaitingForOpponentPage.xaml", UriKind.Relative));
                 }
                 else if (squares[x, y] == ChessBoard.BoardSquare.CAN_TAKE) 
                 {

@@ -118,6 +118,7 @@
     <Compile Include="helpers\NuanceAPIKey.cs" />
     <Compile Include="helpers\Matrix3dExtensions.cs" />
     <Compile Include="helpers\PieceSelector.cs" />
+    <Compile Include="helpers\VoiceCommandFuzzyProcessing.cs" />
     <Compile Include="LostPage.xaml.cs">
       <DependentUpon>LostPage.xaml</DependentUpon>
     </Compile>
