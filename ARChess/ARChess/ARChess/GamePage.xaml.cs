@@ -458,7 +458,7 @@ namespace ARChess
 
             Deployment.Current.Dispatcher.BeginInvoke(() =>
             {
-                GameState.getInstance().processVoiceCommand(results.getResult(0).ToString());
+                GameState.getInstance().processVoiceCommand(results.getResult(0).getText());
 
                 SetupPage();
             });

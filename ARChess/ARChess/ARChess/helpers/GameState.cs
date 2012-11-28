@@ -150,6 +150,11 @@ namespace ARChess
             loadState(mCurrentState);
         }
 
+        public Dictionary<string, ChessPiece> getPieces()
+        {
+            return chessPieces;
+        }
+
         public void setSelected(Vector2 position)
         {
             int x = (int) position.X;
