@@ -246,7 +246,17 @@ namespace ARChess
             //Draw Board
             //new ChessBoard(content).Draw(markerResult);
             //Draw Pieces
-            gameState.Draw();
+            try
+            {
+                gameState.Draw();
+            }
+            catch (Exception ex)
+            {
+                gameState.resetTurn();
+                MessageBox.Show("Sorry this move is not a legal move.  Please make a legal move to continue", "Error", MessageBoxButton.OK);
+                VibrateController vibrate = VibrateController.Default;
+                vibrate.Start(TimeSpan.FromMilliseconds(2000));
+            }
             // Draw selector
             //selector.Draw();
         }
