@@ -164,10 +164,9 @@ namespace ARChess
             return (mPosition.X == -1) && (mPosition.Y == -1);
         }
 
-        public void determineMoves(Dictionary<string, ChessPiece> chessPieces, Color myColor)
+        public void determineMoves(Dictionary<string, ChessPiece> chessPieces)
         {
             // Set entire board to OPEN
-            //ChessBoard.BoardSquare[,] boardSquares = mBoard.getBoardSquares();
             mMoves = new ChessBoard.BoardSquare[8, 8];
             for (int i = 0; i < 8; ++i)
             {
@@ -177,15 +176,13 @@ namespace ARChess
                 }
             }
             
-            //Color myColor = GameState.getInstance().getMyColor();
-            
             // Load FRIEND and ENEMY positions onto squares
             foreach (KeyValuePair<string, ChessPiece> entry in chessPieces)
             {
                 if (!entry.Value.isTaken())
                 {
                     Vector2 pos = entry.Value.getPosition();
-                    if (entry.Value.getPlayer() == myColor)
+                    if (entry.Value.getPlayer() == mPlayer)
                     {
                         mMoves[(int)pos.X, (int)pos.Y] = ChessBoard.BoardSquare.FRIEND;
                     }
@@ -197,11 +194,10 @@ namespace ARChess
             }
 
             // Based on Type, determine potential moves
-            int forward = (myColor == ChessPiece.Color.WHITE ? 1 : -1);
+            int forward = (mPlayer == ChessPiece.Color.WHITE ? 1 : -1);
             int x = (int)mPosition.X;
             int y = (int)mPosition.Y;
             List<Vector2> potentialMoves = new List<Vector2>();
-            List<Vector2> slideDirection = new List<Vector2>();
 
             switch (mType)
             {
@@ -225,16 +221,10 @@ namespace ARChess
                     break;
 
                 case Piece.ROOK:
-                    slideDirection.Add(new Vector2(0, 1));
-                    slideDirection.Add(new Vector2(0, -1));
-                    slideDirection.Add(new Vector2(1, 0));
-                    slideDirection.Add(new Vector2(-1, 0));
-
-                    if (mType != ChessPiece.Piece.ROOK)
-                    {
-                        // QUEEN is a Rook and Bishop combined
-                        goto case ChessPiece.Piece.BISHOP;
-                    }
+                    slidePiece(new Vector2( 0,  1), 8);
+                    slidePiece(new Vector2( 0, -1), 8);
+                    slidePiece(new Vector2( 1,  0), 8);
+                    slidePiece(new Vector2(-1,  0), 8);
                     break;
 
                 case ChessPiece.Piece.KNIGHT:
@@ -249,53 +239,34 @@ namespace ARChess
                     break;
 
                 case ChessPiece.Piece.BISHOP:
-                    slideDirection.Add(new Vector2(1, 1));
-                    slideDirection.Add(new Vector2(-1, 1));
-                    slideDirection.Add(new Vector2(1, -1));
-                    slideDirection.Add(new Vector2(-1, -1));
+                    slidePiece(new Vector2( 1,  1), 8);
+                    slidePiece(new Vector2(-1,  1), 8);
+                    slidePiece(new Vector2( 1, -1), 8);
+                    slidePiece(new Vector2(-1, -1), 8);
                     break;
 
                 case ChessPiece.Piece.QUEEN:
                     // Essentially a Rook and Bishop combined
-                    goto case ChessPiece.Piece.ROOK;
+                    slidePiece(new Vector2( 0,  1), 8);
+                    slidePiece(new Vector2( 0, -1), 8);
+                    slidePiece(new Vector2( 1,  0), 8);
+                    slidePiece(new Vector2(-1,  0), 8);
+                    slidePiece(new Vector2( 1,  1), 8);
+                    slidePiece(new Vector2(-1,  1), 8);
+                    slidePiece(new Vector2( 1, -1), 8);
+                    slidePiece(new Vector2(-1, -1), 8);
+                    break;
 
                 case ChessPiece.Piece.KING:
-                    for (int i = -1; i <= 1; ++i)
-                    {
-                        potentialMoves.Add(new Vector2(x + i, y - 1));
-                        if (i != 0)
-                        {
-                            potentialMoves.Add(new Vector2(x + i, y));
-                        }
-                        potentialMoves.Add(new Vector2(x + i, y + 1));
-                    }
+                    slidePiece(new Vector2( 0,  1), 1);
+                    slidePiece(new Vector2( 0, -1), 1);
+                    slidePiece(new Vector2( 1,  0), 1);
+                    slidePiece(new Vector2(-1,  0), 1);
+                    slidePiece(new Vector2( 1,  1), 1);
+                    slidePiece(new Vector2(-1,  1), 1);
+                    slidePiece(new Vector2( 1, -1), 1);
+                    slidePiece(new Vector2(-1, -1), 1);
                     break;
-            }
-
-            // Move Sliding pieces
-            foreach (Vector2 dir in slideDirection)
-            {
-                int xDelta = (int)dir.X;
-                int yDelta = (int)dir.Y;
-                for (int j = 1; j < 8; ++j)
-                {
-                    int boardX = x + j * xDelta;
-                    int boardY = y + j * yDelta;
-                    if ((boardX > 7) || (boardX < 0) || (boardY > 7) || (boardY < 0))
-                    {
-                        break;
-                    }
-
-                    if (mMoves[boardX, boardY] == ChessBoard.BoardSquare.FRIEND)
-                    {
-                        break;
-                    }
-                    potentialMoves.Add(new Vector2(boardX, boardY));
-                    if (mMoves[boardX, boardY] == ChessBoard.BoardSquare.ENEMY)
-                    {
-                        break;
-                    }
-                }
             }
 
             // Check potential moves
@@ -322,6 +293,39 @@ namespace ARChess
                         // Cannot move
                     }
                 }
+            }
+        }
+
+        private void slidePiece(Vector2 direction, int range)
+        {
+            int x = (int)mPosition.X;
+            int y = (int)mPosition.Y;
+
+            int xDelta = (int)direction.X;
+            int yDelta = (int)direction.Y;
+
+            for (int j = 1; j <= range; ++j)
+            {
+                int boardX = x + j * xDelta;
+                int boardY = y + j * yDelta;
+                if ((boardX > 7) || (boardX < 0) || (boardY > 7) || (boardY < 0))
+                {
+                    break;
+                }
+                else if (mMoves[boardX, boardY] == ChessBoard.BoardSquare.FRIEND)
+                {
+                    //break;
+                }
+                else if (mMoves[boardX, boardY] == ChessBoard.BoardSquare.ENEMY)
+                {
+                    mMoves[boardX, boardY] = ChessBoard.BoardSquare.CAN_TAKE;
+                    break;
+                }
+                else
+                {
+                    mMoves[boardX, boardY] = ChessBoard.BoardSquare.CAN_MOVE;
+                }
+                mMoves[boardX, boardY] = ChessBoard.BoardSquare.CAN_MOVE;
             }
         }
 
