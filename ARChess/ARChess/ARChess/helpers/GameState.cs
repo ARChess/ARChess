@@ -58,6 +58,7 @@ namespace ARChess
 
             mBoard = new ChessBoard(content);
             mSelector = new PieceSelector();
+            setPieceMoves();
         }
 
         public void loadState(CurrentGameState state)
@@ -101,6 +102,7 @@ namespace ARChess
             chessPieces["white_king"].setPosition(new Vector2((float)state.white.king.x, (float)state.white.king.y));
 
             mMyColor = GameStateManager.getInstance().getCurrentPlayer();
+            setPieceMoves();
         }
 
         private void initializePlayerPieces(ChessPiece.Color _player)
@@ -143,6 +145,17 @@ namespace ARChess
             chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_king"] = new ChessPiece(content, _player, ChessPiece.Piece.KING, position);
         }
 
+        private void setPieceMoves()
+        {
+            foreach (KeyValuePair<string, ChessPiece> entry in chessPieces)
+            {
+                if (!entry.Value.isTaken())
+                {
+                    entry.Value.determineMoves(chessPieces, mMyColor);
+                }
+            }
+        }
+
         public void resetTurn()
         {
             mSelectedPiece = null;
@@ -153,6 +166,10 @@ namespace ARChess
         public Dictionary<string, ChessPiece> getPieces()
         {
             return chessPieces;
+        }
+
+        public ChessPiece.Color getMyColor() {
+            return mMyColor;
         }
 
         public void setSelected(Vector2 position)
@@ -171,8 +188,8 @@ namespace ARChess
                         // Set Selected Piece
                         mSelectedPiece = entry.Value;
 
-                        // Set board squares
-                        setBoardSquares();
+                        // Set moves to display
+                        mBoard.setMoves( entry.Value.getMoves() );
 
                         return;
                     }

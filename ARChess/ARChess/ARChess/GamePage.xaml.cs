@@ -98,14 +98,14 @@ namespace ARChess
 
             // Create a timer for this page
             timer.Start();
-
+            GameState.getInstance().loadState(GameStateManager.getInstance().getGameState());
+            gameState = GameState.getInstance();
             //Initialize the camera
             photoCamera = new PhotoCamera();
             photoCamera.Initialized += new EventHandler<CameraOperationCompletedEventArgs>(photoCamera_Initialized);
             ViewFinderBrush.SetSource(photoCamera);
 
-            GameState.getInstance().loadState(GameStateManager.getInstance().getGameState());
-            gameState = GameState.getInstance();
+            
         }
 
         public void TeardownPage()

@@ -63,7 +63,7 @@ namespace ARChess
 
     public class PlayerState
     {
-        public boolean in_check { get; set; }
+        public bool in_check { get; set; }
         public PieceLocation pawn1 { get; set; }
         public PieceLocation pawn2 { get; set; }
         public PieceLocation pawn3 { get; set; }

@@ -83,6 +83,10 @@ namespace ARChess
             return mBoardSquares;
         }
 
+        public void setMoves(BoardSquare[,] currentMoves) {
+            mBoardSquares = currentMoves;
+        }
+
         public void clearBoardSquares()
         {
             for (int i = 0; i < 8; ++i)
