@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.ServiceModel;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,24 +21,23 @@ using Microsoft.Devices;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 //Silverlight Augmented Reality Includes
 using SLARToolKit;
 
-//Nuance Voice Includes
-using com.nuance.nmdp.speechkit;
-using com.nuance.nmdp.speechkit.oem;
-using com.nuance.nmdp.speechkit.util;
-using com.nuance.nmdp.speechkit.util.audio;
+using ARChess.ARVR;
 
 namespace ARChess
 {
     public delegate void CancelSpeechKitEventHandler();
 
-    public partial class GamePage : PhoneApplicationPage, RecognizerListener
+    public partial class GamePage : PhoneApplicationPage
     {
+        private string voiceRecognitionServerIP = "http://" + "10.0.1.4" + ":62495/ARVR.svc";
+
         private GrayBufferMarkerDetector arDetector = null;
         private byte[] buffer = null;
         private DispatcherTimer dispatcherTimer = null;
@@ -48,14 +49,16 @@ namespace ARChess
         private ContentManager content = null;
         private SpriteBatch spriteBatch = null;
 
-        private SpeechKit speechKit = null;
-        private Recognizer recognizer = null;
-        private Prompt beep = null;
-        private OemConfig oemconfig = new OemConfig();
         private object handler = null;
         private string ttsText = string.Empty;
         private string ttsVoice = string.Empty;
         private CustomMessageBox messageBox;
+
+        private bool isRecording = false;
+        private Microphone microphone = Microphone.Default;
+        private MemoryStream microphoneMemoryStream;
+        private byte[] microphoneBuffer;
+        private ARVRClient speechRecognitionClient = null;
 
         //This is the secret sauce, this will render the Silverlight content
         private UIElementRenderer uiRenderer;
@@ -76,17 +79,25 @@ namespace ARChess
 
             dispatcherTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
             dispatcherTimer.Tick += (sender, e1) => Detect();
-            
-            speechkitInitialize();
 
-            App.CancelSpeechKit += new CancelSpeechKitEventHandler(App_CancelSpeechKit);
+
+            microphone.BufferDuration = TimeSpan.FromSeconds(1);
+            microphoneBuffer = new byte[microphone.GetSampleSizeInBytes(microphone.BufferDuration)];
+            microphone.BufferReady += delegate
+            {
+                microphone.GetData(microphoneBuffer);
+                microphoneMemoryStream.Write(microphoneBuffer, 0, microphoneBuffer.Length);
+            };
+
+            BasicHttpBinding binding = new BasicHttpBinding() { MaxReceivedMessageSize = int.MaxValue, MaxBufferSize = int.MaxValue };
+            EndpointAddress address = new EndpointAddress(voiceRecognitionServerIP);
+            speechRecognitionClient = new ARVRClient(binding, address);
+            speechRecognitionClient.RecognizeSpeechCompleted += new EventHandler<RecognizeSpeechCompletedEventArgs>(_client_RecognizeSpeechCompleted);
         }
 
         ~GamePage()
         {
-            speechKit.release();
-
-            App.CancelSpeechKit -= new CancelSpeechKitEventHandler(App_CancelSpeechKit);
+            speechRecognitionClient.RecognizeSpeechCompleted -= new EventHandler<RecognizeSpeechCompletedEventArgs>(_client_RecognizeSpeechCompleted);
         }
 
         public void SetupPage()
@@ -108,9 +119,15 @@ namespace ARChess
             gameState = GameState.getInstance();
         }
 
+        void _client_RecognizeSpeechCompleted(object sender, RecognizeSpeechCompletedEventArgs e)
+        {
+            VoiceCommandFuzzyProcessing.process(e.Result);
+            hidePopup();
+            SetupPage();
+        }
+
         public void TeardownPage()
         {
-
             isInitialized = false;
             isDetecting = false;
 
@@ -135,15 +152,6 @@ namespace ARChess
             spriteBatch = new SpriteBatch(SharedGraphicsDeviceManager.Current.GraphicsDevice);
            
             base.OnNavigatedTo(e);
-        }
-
-        void App_CancelSpeechKit()
-        {
-            if (speechKit != null)
-            {
-                speechKit.cancelCurrent();
-                hidePopup();
-            }
         }
 
         private void SetupTheUIRenderer()
@@ -243,22 +251,23 @@ namespace ARChess
             spriteBatch.Draw(uiRenderer.Texture, Vector2.Zero, Microsoft.Xna.Framework.Color.White);
             spriteBatch.End();
 
-            //Draw Board
-            //new ChessBoard(content).Draw(markerResult);
-            //Draw Pieces
+            //Draw game
             try
             {
                 gameState.Draw();
             }
             catch (Exception ex)
             {
-                gameState.resetTurn();
-                MessageBox.Show("Sorry this move is not a legal move.  Please make a legal move to continue", "Error", MessageBoxButton.OK);
-                VibrateController vibrate = VibrateController.Default;
-                vibrate.Start(TimeSpan.FromMilliseconds(2000));
+                handleError(ex.Message);
             }
-            // Draw selector
-            //selector.Draw();
+        }
+
+        private void handleError(string error)
+        {
+            gameState.resetTurn();
+            VibrateController vibrate = VibrateController.Default;
+            vibrate.Start(TimeSpan.FromMilliseconds(2000));
+            MessageBox.Show(error, "Error", MessageBoxButton.OK);
         }
 
         private void CommitButton_Click(object sender, EventArgs e)
@@ -322,13 +331,13 @@ namespace ARChess
                     switch (e1.Result)
                     {
                         case CustomMessageBoxResult.LeftButton:
-                            dictationStart(RecognizerRecognizerType.Search);
+                            getCommand();
                             break;
                         case CustomMessageBoxResult.RightButton:
                             AppSettings settingsUpdate = new AppSettings();
                             settingsUpdate.SpeechCommandReminderSetting = false;
                             settingsUpdate.Save();
-                            dictationStart(RecognizerRecognizerType.Search);
+                            getCommand();
                             break;
                         case CustomMessageBoxResult.None:
                             break;
@@ -337,50 +346,12 @@ namespace ARChess
                     }
                 };
 
-                messageBox.Show();
+                messageBox.Show();    
             }
             else
             {
-                dictationStart(RecognizerRecognizerType.Search);
+                getCommand();
             }
-        }
-
-        private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            e.Cancel = true;
-        }
-
-
-        private bool speechkitInitialize()
-        {
-            try
-            {
-                speechKit = SpeechKit.initialize(NuanceAPIKey.SpeechKitAppId, NuanceAPIKey.SpeechKitServer, NuanceAPIKey.SpeechKitPort, NuanceAPIKey.SpeechKitSsl, NuanceAPIKey.SpeechKitApplicationKey);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-
-                return false;
-            }
-
-            beep = speechKit.defineAudioPrompt("resources/beep.wav");
-            speechKit.setDefaultRecognizerPrompts(beep, null, null, null);
-            speechKit.connect();
-            Thread.Sleep(10); // to guarantee the time to load prompt resource
-
-            return true;
-        }
-
-        private void dictationStart(string type)
-        {
-            Thread thread = new Thread(() =>
-            {
-                recognizer = speechKit.createRecognizer(type, RecognizerEndOfSpeechDetection.Long, oemconfig.defaultLanguage(), this, handler);
-                recognizer.start();
-                showPopup("Please wait");
-            });
-            thread.Start();
         }
 
         private void showPopup(string text)
@@ -414,14 +385,9 @@ namespace ARChess
                             switch (e1.Result)
                             {
                                 case CustomMessageBoxResult.LeftButton:
-                                    recognizer.stopRecording();
                                     showPopup("Processing Dictation");
                                     break;
                                 case CustomMessageBoxResult.RightButton:
-                                    if (recognizer != null)
-                                    {
-                                        recognizer.cancel();
-                                    }
                                     hidePopup();
                                     break;
                                 case CustomMessageBoxResult.None:
@@ -450,40 +416,29 @@ namespace ARChess
             });
         }
 
-        public void onRecordingBegin(Recognizer recognizer)
+        private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+        }
+
+        private void getCommand()
         {
             showPopup("Listening");
-        }
 
-        public void onRecordingDone(Recognizer recognizer)
-        {
-            showPopup("Processing Dictation");
-        }
+            microphone.Start();
+            microphoneMemoryStream = new MemoryStream();
 
-        public void onResults(Recognizer recognizer, Recognition results)
-        {
-            hidePopup();
-            recognizer.cancel();
-            recognizer = null;
-
-            Deployment.Current.Dispatcher.BeginInvoke(() =>
+            var bw = new BackgroundWorker();
+            bw.DoWork += (s, args) =>
             {
-                GameState.getInstance().processVoiceCommand(results.getResult(0).getText());
-
-                SetupPage();
-            });
-        }
-
-        public void onError(Recognizer recognizer, SpeechError error)
-        {
-            hidePopup();
-            recognizer.cancel();
-            recognizer = null;
-
-            Deployment.Current.Dispatcher.BeginInvoke(() =>
+                Thread.Sleep(8000);
+            };
+            bw.RunWorkerCompleted += (s, args) =>
             {
-                SetupPage();
-            });
+                microphone.Stop();
+                speechRecognitionClient.RecognizeSpeechAsync(microphoneMemoryStream.ToArray(), microphone.SampleRate);
+            };
+            bw.RunWorkerAsync();
         }
     }
 }

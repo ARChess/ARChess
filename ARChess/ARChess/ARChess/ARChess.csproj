@@ -59,36 +59,13 @@
     <Reference Include="Microsoft.Xna.Framework.Graphics" />
     <Reference Include="Microsoft.Xna.Framework.Input.Touch" />
     <Reference Include="microsoft.xna.framework.interop" />
-    <Reference Include="nmsp_audioplayback">
-      <HintPath>.\nmsp_audioplayback.dll</HintPath>
-    </Reference>
-    <Reference Include="nmsp_audiorecord">
-      <HintPath>.\nmsp_audiorecord.dll</HintPath>
-    </Reference>
-    <Reference Include="nmsp_core">
-      <HintPath>.\nmsp_core.dll</HintPath>
-    </Reference>
-    <Reference Include="nmsp_dictationresult">
-      <HintPath>.\nmsp_dictationresult.dll</HintPath>
-    </Reference>
-    <Reference Include="nmsp_oem">
-      <HintPath>.\nmsp_oem.dll</HintPath>
-    </Reference>
-    <Reference Include="nmsp_resource_common">
-      <HintPath>.\nmsp_resource_common.dll</HintPath>
-    </Reference>
-    <Reference Include="nmsp_resource_nmas">
-      <HintPath>.\nmsp_resource_nmas.dll</HintPath>
-    </Reference>
-    <Reference Include="nmsp_vocoder_speex">
-      <HintPath>.\nmsp_vocoder_speex.dll</HintPath>
-    </Reference>
     <Reference Include="SLARToolKitWinPhone">
       <HintPath>.\SLARToolKitWinPhone.dll</HintPath>
     </Reference>
     <Reference Include="SpeechKit">
       <HintPath>.\SpeechKit.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Servicemodel" />
     <Reference Include="System.Servicemodel.Web" />
     <Reference Include="System.Windows" />
@@ -115,7 +92,6 @@
     <Compile Include="helpers\ModelDrawer.cs" />
     <Compile Include="helpers\ModelSelector.cs" />
     <Compile Include="helpers\NetworkTask.cs" />
-    <Compile Include="helpers\NuanceAPIKey.cs" />
     <Compile Include="helpers\Matrix3dExtensions.cs" />
     <Compile Include="helpers\PieceSelector.cs" />
     <Compile Include="helpers\VoiceCommandFuzzyProcessing.cs" />
@@ -132,6 +108,11 @@
     <Compile Include="AppServiceProvider.cs" />
     <Compile Include="ResignPage.xaml.cs">
       <DependentUpon>ResignPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ARVR\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
@@ -184,6 +165,14 @@
   <ItemGroup>
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml" />
+    <None Include="Service References\ARVR\ARVR.wsdl" />
+    <None Include="Service References\ARVR\ARVR.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ARVR\ARVR1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="ServiceReferences.ClientConfig" />
     <Resource Include="resources\selection_marker.pat" />
     <Resource Include="resources\marker.pat" />
   </ItemGroup>
@@ -197,6 +186,13 @@
     <Content Include="images\command_icon.png" />
     <Content Include="images\commit_icon.png" />
     <Content Include="resources\beep.wav" />
+    <None Include="Service References\ARVR\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ARVR\configuration.svcinfo" />
+    <None Include="Service References\ARVR\configuration91.svcinfo" />
+    <None Include="Service References\ARVR\ARVR.disco" />
     <Resource Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Resource Include="Toolkit.Content\ApplicationBar.Check.png" />
     <Resource Include="Toolkit.Content\ApplicationBar.Delete.png" />
@@ -213,6 +209,12 @@
     <Resource Include="Background.png" />
     <Resource Include="images\logo.png" />
     <Resource Include="SplashScreenImage.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\ARVR\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

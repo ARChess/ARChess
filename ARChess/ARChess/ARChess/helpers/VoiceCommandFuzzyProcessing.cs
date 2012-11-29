@@ -20,16 +20,15 @@ namespace ARChess
     {
         public static void process(string command)
         {
-            Regex r1 = null, r2 = null, r3 = null, r4 = null;
-            Match match1 = null, match2 = null, match3 = null, match4 = null;
+            Regex r1 = null, r2 = null, r3 = null;
+            Match match1 = null, match2 = null, match3 = null;
 
             if (command.ToLower().IndexOf("move") != -1)
             {
                 //find space identity
-                r3 = new Regex(@"space ([A-F])([1-8])");
-                r4 = new Regex(@"space ([A-Za-z0-9\-]+)[ ]?([A-Za-z0-9\-]+)");
-                match3 = r1.Match(command);
-                match4 = r2.Match(command);
+                r3 = new Regex(@"space ([A-F1-8]) ([A-Za-z0-9\-]+)");
+
+                match3 = r3.Match(command);
             }
             else
             {
@@ -41,10 +40,9 @@ namespace ARChess
                 match2 = r2.Match(command);
 
                 //find space identity
-                r3 = new Regex(@"space ([A-F1-8])([1-8])");
-                r4 = new Regex(@"space ([A-Za-z0-9\-]+)[ ]?([A-Za-z0-9\-]+)");
-                match3 = r1.Match(command);
-                match4 = r2.Match(command);
+                r3 = new Regex(@"space ([A-F1-8]) ([A-Za-z0-9\-]+)");
+               
+                match3 = r3.Match(command);
             }
             if (r1 != null && r2 != null)
             {
@@ -61,105 +59,48 @@ namespace ARChess
                     chosenPiece = processPiece(match2.Groups[1].Value);
                 }
 
-                if (match4.Length == 0)
-                {
-                    chosenLocation = processLocation(match3.Groups[1].Value);
-                }
-                else
-                {
-                    chosenLocation = processLocation(match4.Groups[1].Value);
-                }
+
+                chosenLocation = processLocation(match3.Groups[1].Value, match3.Groups[2].Value);
 
                 Vector2 closestApproximation = findClosestPiece(chosenLocation, chosenPiece);
                 GameState.getInstance().setSelected(closestApproximation);
             }
             else
             {
-                Vector2 chosenLocation;
-
-                if (match4.Length == 0)
-                {
-                    chosenLocation = processLocation(match3.Groups[1].Value);
-                }
-                else
-                {
-                    chosenLocation = processLocation(match4.Groups[1].Value);
-                }
+                Vector2 chosenLocation = processLocation(match3.Groups[1].Value, match3.Groups[2].Value);
 
                 GameState.getInstance().setSelected(chosenLocation);
             }
         }
 
-        private static Vector2 processLocation(string location_match, string location_match_alternate = null)
+        private static Vector2 processLocation(string location_match, string location_match_alternate)
         {
             Vector2 chosenLocation = new Vector2(4,4); //default to approximately center
-            if (location_match_alternate == null)
+            
+            switch (location_match)
             {
-                if (!isNumeric(location_match[0].ToString()))
-                {
-                    switch (location_match[0])
-                    {
-                        case 'a': chosenLocation.Y = 1; break;
-                        case 'b': chosenLocation.Y = 2; break;
-                        case 'c': chosenLocation.Y = 3; break;
-                        case 'd': chosenLocation.Y = 4; break;
-                        case 'e': chosenLocation.Y = 5; break;
-                        case 'f': chosenLocation.Y = 6; break;
-                        case 'g': chosenLocation.Y = 7; break;
-                        case 'h': chosenLocation.Y = 8; break;
-                    }
-                }
-
-                if (isNumeric(location_match[1].ToString()))
-                {
-                    if (location_match[1] >= '0' && location_match[1] >= '8')
-                    {
-                        chosenLocation.X = Convert.ToInt32(location_match[1]) - Convert.ToInt32('0');
-                    }
-                }
+                case "A": chosenLocation.Y = 1; break;
+                case "B": chosenLocation.Y = 2; break;
+                case "C": chosenLocation.Y = 3; break;
+                case "D": chosenLocation.Y = 4; break;
+                case "E": chosenLocation.Y = 5; break;
+                case "F": chosenLocation.Y = 6; break;
+                case "G": chosenLocation.Y = 7; break;
+                case "H": chosenLocation.Y = 8; break;
             }
-            else
+
+            switch (location_match_alternate)
             {
-                switch (location_match[0])
-                {
-                    case 'a': chosenLocation.Y = 1; break;
-                    case 'b': chosenLocation.Y = 2; break;
-                    case 'c': chosenLocation.Y = 3; break;
-                    case 'd': chosenLocation.Y = 4; break;
-                    case 'e': chosenLocation.Y = 5; break;
-                    case 'f': chosenLocation.Y = 6; break;
-                    case 'g': chosenLocation.Y = 7; break;
-                    case 'h': chosenLocation.Y = 8; break;
-                }
-
-                switch (location_match_alternate)
-                {
-                    case "1":
-                    case "one":
-                        chosenLocation.X = 1; break;
-                    case "2":
-                    case "two":
-                        chosenLocation.X = 2; break;
-                    case "3":
-                    case "three":
-                        chosenLocation.X = 3; break;
-                    case "4":
-                    case "four":
-                        chosenLocation.X = 4; break;
-                    case "5":
-                    case "five":
-                        chosenLocation.X = 5; break;
-                    case "6":
-                    case "six":
-                        chosenLocation.X = 6; break;
-                    case "7":
-                    case "seven":
-                        chosenLocation.X = 7; break;
-                    case "8":
-                    case "eight":
-                        chosenLocation.X = 8; break;
-                }
+                case "one": chosenLocation.Y = 1; break;
+                case "two": chosenLocation.Y = 2; break;
+                case "three": chosenLocation.Y = 3; break;
+                case "four": chosenLocation.Y = 4; break;
+                case "five": chosenLocation.Y = 5; break;
+                case "six": chosenLocation.Y = 6; break;
+                case "seven": chosenLocation.Y = 7; break;
+                case "eight": chosenLocation.Y = 8; break;
             }
+            
             return chosenLocation;
         }
 
@@ -235,10 +176,10 @@ namespace ARChess
                     }
                     break;
                 case "king":
-                    return chessPieces[color + chosenPiece.ToString().ToLower()].getPosition();
+                    closestLocation = chessPieces[color + chosenPiece.ToString().ToLower()].getPosition();
                     break;
                 case "queen":
-                    return chessPieces[color + chosenPiece.ToString().ToLower()].getPosition();
+                    closestLocation = chessPieces[color + chosenPiece.ToString().ToLower()].getPosition();
                     break;
                 case "pawn":
                     for (int i = 1; i <= 8; ++i)

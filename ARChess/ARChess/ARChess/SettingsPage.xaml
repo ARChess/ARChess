@@ -37,11 +37,11 @@
             <TextBlock TextWrapping="Wrap" Height="Auto" HorizontalAlignment="Left" Margin="60,80,0,0">
                 Playing with this mode enabled will cause move highlighting to become disabled during play.
             </TextBlock>
-            <CheckBox Content="Grid Axis Markers Enabled" Height="Auto" HorizontalAlignment="Left" Margin="60,180,0,0" Name="checkBoxSetting2" VerticalAlignment="Top" IsChecked="{Binding Source={StaticResource appSettings}, Path=GridAxisMarkersSettings, Mode=TwoWay}" />
+            <!--<CheckBox Content="Grid Axis Markers Enabled" Height="Auto" HorizontalAlignment="Left" Margin="60,180,0,0" Name="checkBoxSetting2" VerticalAlignment="Top" IsChecked="{Binding Source={StaticResource appSettings}, Path=GridAxisMarkersSettings, Mode=TwoWay}" />
             <TextBlock TextWrapping="Wrap" Height="Auto" HorizontalAlignment="Left" Margin="60,240,0,0">
                 This option controls whether the axis labels are displayed to the left and bottom of the board.
-            </TextBlock>
-            <CheckBox Content="Command Reminder Enabled" Height="Auto" HorizontalAlignment="Left" Margin="60,340,0,0" Name="checkBoxSetting3" VerticalAlignment="Top" IsChecked="{Binding Source={StaticResource appSettings}, Path=SpeechCommandReminderSetting, Mode=TwoWay}" />
+            </TextBlock>-->
+            <CheckBox Content="Command Reminder Enabled" Height="Auto" HorizontalAlignment="Left" Margin="60,180,0,0" Name="checkBoxSetting3" VerticalAlignment="Top" IsChecked="{Binding Source={StaticResource appSettings}, Path=SpeechCommandReminderSetting, Mode=TwoWay}" />
         </Grid>
     </Grid>
 </phone:PhoneApplicationPage>
