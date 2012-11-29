@@ -79,30 +79,30 @@ namespace ARChess
 
         private static Vector2 processLocation(string location_match, string location_match_alternate)
         {
-            Vector2 chosenLocation = new Vector2(4,4); //default to approximately center
+            Vector2 chosenLocation = new Vector2(0,0); //default to approximately center
             
             switch (location_match)
             {
-                case "A": chosenLocation.Y = 1; break;
-                case "B": chosenLocation.Y = 2; break;
-                case "C": chosenLocation.Y = 3; break;
-                case "D": chosenLocation.Y = 4; break;
-                case "E": chosenLocation.Y = 5; break;
-                case "F": chosenLocation.Y = 6; break;
-                case "G": chosenLocation.Y = 7; break;
-                case "H": chosenLocation.Y = 8; break;
+                case "A": chosenLocation.X = 0; break;
+                case "B": chosenLocation.X = 1; break;
+                case "C": chosenLocation.X = 2; break;
+                case "D": chosenLocation.X = 3; break;
+                case "E": chosenLocation.X = 4; break;
+                case "F": chosenLocation.X = 5; break;
+                case "G": chosenLocation.X = 6; break;
+                case "H": chosenLocation.X = 7; break;
             }
 
             switch (location_match_alternate)
             {
-                case "one": chosenLocation.Y = 1; break;
-                case "two": chosenLocation.Y = 2; break;
-                case "three": chosenLocation.Y = 3; break;
+                case "one": chosenLocation.Y = 7; break;
+                case "two": chosenLocation.Y = 6; break;
+                case "three": chosenLocation.Y = 5; break;
                 case "four": chosenLocation.Y = 4; break;
-                case "five": chosenLocation.Y = 5; break;
-                case "six": chosenLocation.Y = 6; break;
-                case "seven": chosenLocation.Y = 7; break;
-                case "eight": chosenLocation.Y = 8; break;
+                case "five": chosenLocation.Y = 3; break;
+                case "six": chosenLocation.Y = 2; break;
+                case "seven": chosenLocation.Y = 1; break;
+                case "eight": chosenLocation.Y = 0; break;
             }
             
             return chosenLocation;
@@ -113,7 +113,7 @@ namespace ARChess
             string cur_string = "";
             for (int i = 0; i < piece_name.Length; ++i)
             {
-                cur_string += piece_name;
+                cur_string += piece_name[i];
 
                 if (cur_string == "ki" || cur_string == "ke")
                 {
