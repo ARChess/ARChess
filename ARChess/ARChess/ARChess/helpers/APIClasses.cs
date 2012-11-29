@@ -58,6 +58,7 @@ namespace ARChess
     {
         public int x { get; set; }
         public int y { get; set; }
+        public string masquerading_as { get; set; }
     }
 
     public class PlayerState
