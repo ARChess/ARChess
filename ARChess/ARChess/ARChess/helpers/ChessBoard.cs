@@ -16,7 +16,7 @@ namespace ARChess
 {
     public class ChessBoard
     {
-        public enum BoardSquare { OPEN, ENEMY, FRIEND, CAN_MOVE, CAN_TAKE};
+        public enum BoardSquare { OPEN, ENEMY, FRIEND, CAN_MOVE, CAN_TAKE, POTENTIAL_MOVE};
 
         private ContentManager content;
         private DetectionResult mBoardMarker;
@@ -81,6 +81,10 @@ namespace ARChess
         public BoardSquare[,] getBoardSquares()
         {
             return mBoardSquares;
+        }
+
+        public void setMoves(BoardSquare[,] currentMoves) {
+            mBoardSquares = currentMoves;
         }
 
         public void clearBoardSquares()

@@ -109,14 +109,14 @@ namespace ARChess
 
             // Create a timer for this page
             timer.Start();
-
+            GameState.getInstance().loadState(GameStateManager.getInstance().getGameState());
+            gameState = GameState.getInstance();
             //Initialize the camera
             photoCamera = new PhotoCamera();
             photoCamera.Initialized += new EventHandler<CameraOperationCompletedEventArgs>(photoCamera_Initialized);
             ViewFinderBrush.SetSource(photoCamera);
 
-            GameState.getInstance().loadState(GameStateManager.getInstance().getGameState());
-            gameState = GameState.getInstance();
+            
         }
 
         void _client_RecognizeSpeechCompleted(object sender, RecognizeSpeechCompletedEventArgs e)
@@ -272,24 +272,63 @@ namespace ARChess
 
         private void CommitButton_Click(object sender, EventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Once done, this move cannot be undone.", "Are you sure?", MessageBoxButton.OKCancel);
-            if (result == MessageBoxResult.OK)
+            
+            if ( gameState.inCheck( gameState.getMyColor() ) )
             {
-                var bw = new BackgroundWorker();
-                bw.DoWork += (s, args) =>
-                {
-                    new NetworkTask().sendGameState(GameState.getInstance().toCurrentGameState());
-                };
-                bw.RunWorkerCompleted += (s, args) =>
-                {
-                    NavigationService.Navigate(new Uri("/WaitForOpponentPage.xaml", UriKind.Relative));
-                };
-                bw.RunWorkerAsync();
+                // Self in check
+                MessageBox.Show("You cannot leave your King open to attack.", "Please try another move.", MessageBoxButton.OK);
+
+                // Reset Turn
+                gameState.resetTurn();
             }
             else
             {
-                // Reset Turn
-                gameState.resetTurn();
+                // Self not in check - Proceed
+                MessageBoxResult result = MessageBox.Show("Once done, this move cannot be undone.", "Are you sure?", MessageBoxButton.OKCancel);
+                if (result == MessageBoxResult.OK)
+                {
+                    // 
+                    String pageToGo = "/WaitForOpponentPage.xaml";
+
+                    // Check is opponent is in check or checkmate
+                    ChessPiece.Color opponentColor = gameState.getMyColor() == ChessPiece.Color.BLACK ?
+                        ChessPiece.Color.WHITE : ChessPiece.Color.BLACK;
+
+                    if ( gameState.inCheck(opponentColor) )
+                    {
+                        // Opponent is at least in Check
+                        if (false)
+                        {
+                            // Checkmate
+                            // Take King to signify End Game
+                            pageToGo = "/WonPage.xaml";
+                        }
+                        else
+                        {
+                            // Just Check
+                            // Set Check flag
+
+                        }
+                    }
+
+                    // Send result to server
+
+                    var bw = new BackgroundWorker();
+                    bw.DoWork += (s, args) =>
+                    {
+                        new NetworkTask().sendGameState(GameState.getInstance().toCurrentGameState());
+                    };
+                    bw.RunWorkerCompleted += (s, args) =>
+                    {
+                        NavigationService.Navigate(new Uri(pageToGo, UriKind.Relative));
+                    };
+                    bw.RunWorkerAsync();
+                }
+                else
+                {
+                    // Reset Turn
+                    gameState.resetTurn();
+                }
             }
         }
 

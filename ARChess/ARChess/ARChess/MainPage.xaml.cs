@@ -75,7 +75,7 @@ namespace ARChess
             }
             else if (response.game_in_progress && !response.is_current_players_turn)
             {
-                NavigationService.Navigate(new Uri("/WaitingForOpponentPage.xaml", UriKind.Relative));
+                NavigationService.Navigate(new Uri("/WaitForOpponentPage.xaml", UriKind.Relative));
             }
         }
 
