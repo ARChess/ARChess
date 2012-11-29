@@ -114,14 +114,19 @@ namespace ARChess
             //Initialize the camera
             photoCamera = new PhotoCamera();
             photoCamera.Initialized += new EventHandler<CameraOperationCompletedEventArgs>(photoCamera_Initialized);
-            ViewFinderBrush.SetSource(photoCamera);
-
-            
+            ViewFinderBrush.SetSource(photoCamera);   
         }
 
         void _client_RecognizeSpeechCompleted(object sender, RecognizeSpeechCompletedEventArgs e)
         {
-            VoiceCommandFuzzyProcessing.process(e.Result);
+            try
+            {
+                VoiceCommandFuzzyProcessing.process(e.Result);
+            }
+            catch (Exception ex)
+            {
+                handleError(ex.Message);
+            }
             hidePopup();
             SetupPage();
         }

@@ -30,7 +30,7 @@ namespace ARChess
 
                 match3 = r3.Match(command);
             }
-            else
+            else if (command.ToLower().IndexOf("select") != -1)
             {
                 //find piece after select or select the
                 r1 = new Regex(@"select ([A-Za-z0-9\-]+)");
@@ -41,8 +41,12 @@ namespace ARChess
 
                 //find space identity
                 r3 = new Regex(@"space ([A-F1-8]) ([A-Za-z0-9\-]+)");
-               
+
                 match3 = r3.Match(command);
+            }
+            else
+            {
+                throw new Exception(command);
             }
             if (r1 != null && r2 != null)
             {
