@@ -51,7 +51,7 @@ namespace ARChess
             }
         }
 
-        public static void Draw(DetectionResult markerResult, Model model, double x, double y, double z, float zRotation = 0.0f)
+        public static void Draw(DetectionResult markerResult, Model model, double x, double y, double z, float zRotation = 0.0f, bool customLocation = false)
         {
             if (markerResult != null)
             {
@@ -70,7 +70,7 @@ namespace ARChess
                 {
                     foreach (BasicEffect effect in mesh.Effects)
                     {
-                        Vector3 modelPosition = new Vector3((int)((x < 5 ? (4 - x) * -1 : x - 4) * SCALE), (int)((y < 5 ? (4 - y) * -1 : y - 4) * SCALE), (int)(z * SCALE));
+                        Vector3 modelPosition = new Vector3((int)(customLocation ?  x : ((x < 5 ? (4 - x) * -1 : x - 4) * SCALE)), (int)(customLocation ? y : ((y < 5 ? (4 - y) * -1 : y - 4) * SCALE)), (int)(customLocation ? z : (z * SCALE)));
                         effect.EnableDefaultLighting();
                         effect.World = Microsoft.Xna.Framework.Matrix.CreateScale(SCALE / 2) *
                             (transforms[mesh.ParentBone.Index]

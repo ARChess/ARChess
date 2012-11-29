@@ -31,6 +31,10 @@ namespace ARChess
         private CurrentGameState mCurrentState;
 
         private static GameState mInstance = null;
+        private Vector2 previousPosition;
+        private Vector2 moveAlongPosition;
+        private Vector2 chosenPosition = Vector2.Zero;
+        private Vector2 velocity = Vector2.Zero;
 
         public static GameState getInstance()
         {
@@ -63,7 +67,6 @@ namespace ARChess
 
         public void loadState(CurrentGameState state)
         {
-            mMoveMade = false;
             mCurrentState = state;
 
             chessPieces["black_pawn1"].setPosition(new Vector2((float)state.black.pawn1.x, (float)state.black.pawn1.y));
@@ -181,7 +184,12 @@ namespace ARChess
 
         public void resetTurn()
         {
-            mSelectedPiece = null;
+            if (mSelectedPiece != null)
+            {
+                mMoveMade = false;
+                mSelectedPiece.setPosition(previousPosition);
+                mSelectedPiece = null;
+            }
             mBoard.clearBoardSquares();
             loadState(mCurrentState);
         }
@@ -232,8 +240,8 @@ namespace ARChess
                 else if ( squares[x, y] == ChessBoard.BoardSquare.CAN_MOVE )
                 {
                     // Move is valid
-                    mSelectedPiece.setPosition( newPosition );
-                    mSelectedPiece = null;
+                    previousPosition = mSelectedPiece.getPosition();
+                    chosenPosition = newPosition;
                     mBoard.clearBoardSquares();
                     mMoveMade = true;
                 }
@@ -250,13 +258,14 @@ namespace ARChess
                         }
                     }
 
-                    mSelectedPiece.setPosition(newPosition);
-                    mSelectedPiece = null;
+                    previousPosition = mSelectedPiece.getPosition();
+                    chosenPosition = newPosition;
                     mBoard.clearBoardSquares();
                     mMoveMade = true;
                 }
                 else
                 {
+                    resetTurn();
                     // Move is not valid
                     System.Diagnostics.Debug.WriteLine("Invalid Move");
                     System.Diagnostics.Debug.WriteLine(new Vector2(x, y));
@@ -322,10 +331,37 @@ namespace ARChess
 
             foreach (KeyValuePair<string, ChessPiece> entry in chessPieces)
             {
-                if (entry.Value == mSelectedPiece)
+                if (entry.Value == mSelectedPiece && !mMoveMade)
                 {
                     DetectionResult selectorMarker = mSelector.getDetectionResult();
                     entry.Value.Draw(selectorMarker, new Vector3(4,4,0));
+                }
+                else if (entry.Value == mSelectedPiece && mSelectedPiece.getPosition() != chosenPosition)
+                {
+                    if (velocity == Vector2.Zero)
+                    {
+                        Vector2 startPosition = previousPosition;
+                        startPosition -= new Vector2(4, 4);
+                        startPosition *= ModelDrawer.SCALE;
+                        Vector2 endPosition = chosenPosition;
+                        endPosition -= new Vector2(4, 4);
+                        endPosition *= ModelDrawer.SCALE;
+
+                        velocity = endPosition - startPosition;
+                        velocity.Normalize();
+                        velocity = velocity * 1.3f;
+
+                        moveAlongPosition = startPosition;
+                    }
+
+                    moveAlongPosition += velocity;
+                    entry.Value.DrawAtLocation(boardMarker, moveAlongPosition);
+
+                    if ((int)(Vector2.Distance(moveAlongPosition, (chosenPosition - new Vector2(4,4)) * ModelDrawer.SCALE)) < ModelDrawer.SCALE / 10)
+                    {
+                        entry.Value.setPosition(chosenPosition);
+                        velocity = Vector2.Zero;
+                    }
                 }
                 else
                 {
@@ -337,18 +373,6 @@ namespace ARChess
             if (!mMoveMade)
             {
                 mSelector.Draw();
-            }
-        }
-
-        public void processVoiceCommand(string command)
-        {
-            if (command.ToLower().IndexOf("move") != -1 || command.ToLower().IndexOf("select") != -1)
-            {
-                VoiceCommandFuzzyProcessing.process(command);
-            }
-            else
-            {
-                //not a valid command
             }
         }
 

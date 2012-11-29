@@ -44,27 +44,18 @@ namespace ARChess
         private bool isDetecting = false;
         private bool isInitialized = false;
         private PhotoCamera photoCamera = null;
-        //private DetectionResult markerResult = null;
         private GameTimer timer = null;
         private ContentManager content = null;
         private SpriteBatch spriteBatch = null;
 
-        private object handler = null;
-        private string ttsText = string.Empty;
-        private string ttsVoice = string.Empty;
         private CustomMessageBox messageBox;
 
-        private bool isRecording = false;
         private Microphone microphone = Microphone.Default;
         private MemoryStream microphoneMemoryStream;
         private byte[] microphoneBuffer;
         private ARVRClient speechRecognitionClient = null;
 
-        //This is the secret sauce, this will render the Silverlight content
         private UIElementRenderer uiRenderer;
-
-        //private PieceSelector selector;
-        private GameState gameState;
 
         public GamePage()
         {
@@ -110,7 +101,7 @@ namespace ARChess
             // Create a timer for this page
             timer.Start();
             GameState.getInstance().loadState(GameStateManager.getInstance().getGameState());
-            gameState = GameState.getInstance();
+            
             //Initialize the camera
             photoCamera = new PhotoCamera();
             photoCamera.Initialized += new EventHandler<CameraOperationCompletedEventArgs>(photoCamera_Initialized);
@@ -185,7 +176,7 @@ namespace ARChess
             arDetector = new GrayBufferMarkerDetector();
 
             // Setup both markers
-            Marker[] markers = gameState.getMarkers();
+            Marker[] markers = GameState.getInstance().getMarkers();
             
             arDetector.Initialize(System.Convert.ToInt32(photoCamera.PreviewResolution.Width), System.Convert.ToInt32(photoCamera.PreviewResolution.Height), 1, 4000, markers);
             isInitialized = true;
@@ -224,7 +215,7 @@ namespace ARChess
                 arDetector.Threshold = 100;
                 DetectionResults dr = arDetector.DetectAllMarkers(buffer, System.Convert.ToInt32(pixelWidth), System.Convert.ToInt32(pixelHeight));
 
-                gameState.Detect(dr);
+                GameState.getInstance().Detect(dr);
             }
             finally
             {
@@ -239,7 +230,7 @@ namespace ARChess
         /// </summary>
         private void OnUpdate(object sender, GameTimerEventArgs e)
         {
-            gameState.Update();
+            GameState.getInstance().Update();
         }
 
         /// <summary>
@@ -259,7 +250,7 @@ namespace ARChess
             //Draw game
             try
             {
-                gameState.Draw();
+                GameState.getInstance().Draw();
             }
             catch (Exception ex)
             {
@@ -269,7 +260,7 @@ namespace ARChess
 
         private void handleError(string error)
         {
-            gameState.resetTurn();
+            GameState.getInstance().resetTurn();
             VibrateController vibrate = VibrateController.Default;
             vibrate.Start(TimeSpan.FromMilliseconds(2000));
             MessageBox.Show(error, "Error", MessageBoxButton.OK);
@@ -278,13 +269,13 @@ namespace ARChess
         private void CommitButton_Click(object sender, EventArgs e)
         {
             
-            if ( gameState.inCheck( gameState.getMyColor() ) )
+            if ( GameState.getInstance().inCheck( GameState.getInstance().getMyColor() ) )
             {
                 // Self in check
                 MessageBox.Show("You cannot leave your King open to attack.", "Please try another move.", MessageBoxButton.OK);
 
                 // Reset Turn
-                gameState.resetTurn();
+                GameState.getInstance().resetTurn();
             }
             else
             {
@@ -296,10 +287,10 @@ namespace ARChess
                     String pageToGo = "/WaitForOpponentPage.xaml";
 
                     // Check is opponent is in check or checkmate
-                    ChessPiece.Color opponentColor = gameState.getMyColor() == ChessPiece.Color.BLACK ?
+                    ChessPiece.Color opponentColor = GameState.getInstance().getMyColor() == ChessPiece.Color.BLACK ?
                         ChessPiece.Color.WHITE : ChessPiece.Color.BLACK;
 
-                    if ( gameState.inCheck(opponentColor) )
+                    if ( GameState.getInstance().inCheck(opponentColor) )
                     {
                         // Opponent is at least in Check
                         if (false)
@@ -332,7 +323,7 @@ namespace ARChess
                 else
                 {
                     // Reset Turn
-                    gameState.resetTurn();
+                    GameState.getInstance().resetTurn();
                 }
             }
         }
@@ -419,8 +410,8 @@ namespace ARChess
                         {
                             Caption = "Say a Command",
                             Message = "We're listening.",
-                            LeftButtonContent = "Stop",
-                            RightButtonContent = "Cancel",
+                            LeftButtonContent = "Process",
+                            IsRightButtonEnabled = false,
                             IsFullScreen = false
                         };
 
@@ -430,9 +421,6 @@ namespace ARChess
                             {
                                 case CustomMessageBoxResult.LeftButton:
                                     showPopup("Processing Dictation");
-                                    break;
-                                case CustomMessageBoxResult.RightButton:
-                                    hidePopup();
                                     break;
                                 case CustomMessageBoxResult.None:
                                     break;
