@@ -138,6 +138,7 @@ namespace ARChess
             chessPieces["white_queen"].setMasqueradesAs(state.white.queen.masquerading_as);
             chessPieces["white_king"].setMasqueradesAs(state.white.king.masquerading_as);
 
+            mMoveMade = false;
             mMyColor = GameStateManager.getInstance().getCurrentPlayer();
             setPieceMoves();
         }
@@ -263,20 +264,20 @@ namespace ARChess
             else
             {
                 // Piece already selected
-                ChessBoard.BoardSquare[,] squares = mBoard.getBoardSquares();
+                ChessBoard.BoardSquare[,] squares = mSelectedPiece.getMoves();
                 
                 if (mSelectedPiece.getPosition() == newPosition) 
                 {
                     // Put Piece Back
                     mSelectedPiece = null;
-                    mBoard.clearBoardSquares();
+                    //mBoard.clearBoardSquares();
                 }
                 else if ( squares[x, y] == ChessBoard.BoardSquare.CAN_MOVE )
                 {
                     // Move is valid
                     previousPosition = mSelectedPiece.getPosition();
                     chosenPosition = newPosition;
-                    mBoard.clearBoardSquares();
+                    //mBoard.clearBoardSquares();
                     mMoveMade = true;
                 }
                 else if (squares[x, y] == ChessBoard.BoardSquare.CAN_TAKE) 
@@ -294,7 +295,7 @@ namespace ARChess
 
                     previousPosition = mSelectedPiece.getPosition();
                     chosenPosition = newPosition;
-                    mBoard.clearBoardSquares();
+                    //mBoard.clearBoardSquares();
                     mMoveMade = true;
                 }
                 else
