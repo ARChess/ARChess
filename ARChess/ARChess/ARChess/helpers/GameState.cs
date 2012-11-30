@@ -140,6 +140,11 @@ namespace ARChess
                 chessPieces["white_queen"].setMasqueradesAs(state.white.queen.masquerading_as);
                 chessPieces["white_king"].setMasqueradesAs(state.white.king.masquerading_as);
 
+<<<<<<< HEAD
+=======
+				mMoveMade = false;
+				mSelectedPiece = null;
+>>>>>>> 3690d4f... fix merge conflict
                 mMyColor = GameStateManager.getInstance().getCurrentPlayer();
                 setPieceMoves();
             }

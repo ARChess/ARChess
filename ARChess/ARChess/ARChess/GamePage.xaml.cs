@@ -339,7 +339,16 @@ namespace ARChess
 
                             }
                         }
+<<<<<<< HEAD
 
+=======
+						else
+						{
+                            // Just Check
+                            // Set Check flag
+                            MessageBox.Show("But can you finish him off?", "You have placed your opponent in check.", MessageBoxButton.OK);
+                        }
+>>>>>>> 3690d4f... fix merge conflict
                         // Send result to server
                         var bw = new BackgroundWorker();
                         bw.DoWork += (s, args) =>
