@@ -67,16 +67,18 @@ namespace ARChess
         // Simple button Click event handler to take us to the second page
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            GameStateManager.getInstance().setGameState(response.game_state);
             if (response.game_in_progress && response.is_current_players_turn)
             {
                 GameStateManager.getInstance().setCurrentPlayer(response.current_player);
-                GameStateManager.getInstance().setGameState(response.game_state);
-                NavigationService.Navigate(new Uri("/GamePage.xaml", UriKind.Relative));
+                GameStateManager.getInstance().setShouldWait(false);
             }
             else if (response.game_in_progress && !response.is_current_players_turn)
             {
-                NavigationService.Navigate(new Uri("/WaitForOpponentPage.xaml", UriKind.Relative));
+                GameStateManager.getInstance().setCurrentPlayer((response.current_player == "black" ? "white" : "black"));
+                GameStateManager.getInstance().setShouldWait(true);
             }
+            NavigationService.Navigate(new Uri("/GamePage.xaml", UriKind.Relative));
         }
 
         private void SettingsButton_Click(object sender, EventArgs e)

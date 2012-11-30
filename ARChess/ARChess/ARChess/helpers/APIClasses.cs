@@ -16,6 +16,7 @@ namespace ARChess
         private static GameStateManager instance = null;
         private static ChessPiece.Color currentPlayer = ChessPiece.Color.WHITE;
         private static CurrentGameState currentState = null;
+        private static bool shouldWait = false;
 
         public static GameStateManager getInstance()
         {
@@ -51,6 +52,16 @@ namespace ARChess
         public ChessPiece.Color getCurrentPlayer()
         {
             return currentPlayer;
+        }
+
+        public void setShouldWait(bool _shouldWait)
+        {
+            shouldWait = _shouldWait;
+        }
+
+        public bool getShouldWait()
+        {
+            return shouldWait;
         }
     }
 

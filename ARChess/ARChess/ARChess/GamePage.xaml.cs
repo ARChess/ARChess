@@ -36,7 +36,7 @@ namespace ARChess
 
     public partial class GamePage : PhoneApplicationPage
     {
-        private string voiceRecognitionServerIP = "http://" + "10.0.1.4" + ":62495/ARVR.svc";
+        private string voiceRecognitionServerIP = "http://" + "10.0.1.53" + ":62495/ARVR.svc";
 
         private GrayBufferMarkerDetector arDetector = null;
         private byte[] buffer = null;
@@ -50,12 +50,15 @@ namespace ARChess
 
         private CustomMessageBox messageBox;
 
-        private Microphone microphone = Microphone.Default;
-        private MemoryStream microphoneMemoryStream;
-        private byte[] microphoneBuffer;
-        private ARVRClient speechRecognitionClient = null;
+        private static Microphone microphone = Microphone.Default;
+        private static MemoryStream microphoneMemoryStream;
+        private static byte[] microphoneBuffer;
+        private static ARVRClient speechRecognitionClient = null;
 
         private UIElementRenderer uiRenderer;
+        private GameResponse response;
+        private bool setupFinished = false;
+        private bool alreadyCalledWait = false;
 
         public GamePage()
         {
@@ -71,24 +74,30 @@ namespace ARChess
             dispatcherTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
             dispatcherTimer.Tick += (sender, e1) => Detect();
 
+            if (GameState.getInstance(false) != null)
+            {
+                GameState.getInstance().resetTurn();
+            }
 
             microphone.BufferDuration = TimeSpan.FromSeconds(1);
             microphoneBuffer = new byte[microphone.GetSampleSizeInBytes(microphone.BufferDuration)];
+
+            BasicHttpBinding binding = new BasicHttpBinding() { MaxReceivedMessageSize = int.MaxValue, MaxBufferSize = int.MaxValue };
+            EndpointAddress address = new EndpointAddress(voiceRecognitionServerIP);
+            speechRecognitionClient = new ARVRClient(binding, address);
+
             microphone.BufferReady += delegate
             {
                 microphone.GetData(microphoneBuffer);
                 microphoneMemoryStream.Write(microphoneBuffer, 0, microphoneBuffer.Length);
             };
-
-            BasicHttpBinding binding = new BasicHttpBinding() { MaxReceivedMessageSize = int.MaxValue, MaxBufferSize = int.MaxValue };
-            EndpointAddress address = new EndpointAddress(voiceRecognitionServerIP);
-            speechRecognitionClient = new ARVRClient(binding, address);
             speechRecognitionClient.RecognizeSpeechCompleted += new EventHandler<RecognizeSpeechCompletedEventArgs>(_client_RecognizeSpeechCompleted);
         }
 
         ~GamePage()
         {
-            speechRecognitionClient.RecognizeSpeechCompleted -= new EventHandler<RecognizeSpeechCompletedEventArgs>(_client_RecognizeSpeechCompleted);
+            speechRecognitionClient.RecognizeSpeechCompleted -= _client_RecognizeSpeechCompleted;
+            microphone.BufferReady -= null;
         }
 
         public void SetupPage()
@@ -100,6 +109,7 @@ namespace ARChess
 
             // Create a timer for this page
             timer.Start();
+
             GameState.getInstance().loadState(GameStateManager.getInstance().getGameState());
 
             if ((GameStateManager.getInstance().getGameState().black.in_check && GameStateManager.getInstance().getCurrentPlayer() == ChessPiece.Color.BLACK) || (GameStateManager.getInstance().getGameState().white.in_check && GameStateManager.getInstance().getCurrentPlayer() == ChessPiece.Color.WHITE))
@@ -110,7 +120,9 @@ namespace ARChess
             //Initialize the camera
             photoCamera = new PhotoCamera();
             photoCamera.Initialized += new EventHandler<CameraOperationCompletedEventArgs>(photoCamera_Initialized);
-            ViewFinderBrush.SetSource(photoCamera);   
+            ViewFinderBrush.SetSource(photoCamera);
+
+            setupFinished = true;
         }
 
         void _client_RecognizeSpeechCompleted(object sender, RecognizeSpeechCompletedEventArgs e)
@@ -261,6 +273,15 @@ namespace ARChess
             {
                 handleError(ex.Message);
             }
+
+            if (GameStateManager.getInstance().getShouldWait() && setupFinished && !alreadyCalledWait)
+            {
+                Deployment.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    waitForOpponent();
+                });
+                alreadyCalledWait = true;
+            }
         }
 
         private void handleError(string error)
@@ -284,53 +305,100 @@ namespace ARChess
             }
             else
             {
-                // Self not in check - Proceed
-                MessageBoxResult result = MessageBox.Show("Once done, this move cannot be undone.", "Are you sure?", MessageBoxButton.OKCancel);
-                if (result == MessageBoxResult.OK)
+                //check to see if pawn promotion is needed
+                if (false)
                 {
-                    // 
-                    String pageToGo = "/WaitForOpponentPage.xaml";
 
-                    // Check is opponent is in check or checkmate
-                    ChessPiece.Color opponentColor = GameState.getInstance().getMyColor() == ChessPiece.Color.BLACK ?
-                        ChessPiece.Color.WHITE : ChessPiece.Color.BLACK;
-
-                    if ( GameState.getInstance().inCheck(opponentColor) )
-                    {
-                        // Opponent is at least in Check
-                        if (false)
-                        {
-                            // Checkmate
-                            // Take King to signify End Game
-                            pageToGo = "/WonPage.xaml";
-                        }
-                        else
-                        {
-                            // Just Check
-                            // Set Check flag
-                            
-                        }
-                    }
-
-                    // Send result to server
-
-                    var bw = new BackgroundWorker();
-                    bw.DoWork += (s, args) =>
-                    {
-                        new NetworkTask().sendGameState(GameState.getInstance().toCurrentGameState());
-                    };
-                    bw.RunWorkerCompleted += (s, args) =>
-                    {
-                        NavigationService.Navigate(new Uri(pageToGo, UriKind.Relative));
-                    };
-                    bw.RunWorkerAsync();
                 }
                 else
                 {
-                    // Reset Turn
-                    GameState.getInstance().resetTurn();
+                    // Self not in check - Proceed
+                    MessageBoxResult result = MessageBox.Show("Once done, this move cannot be undone.", "Are you sure?", MessageBoxButton.OKCancel);
+                    if (result == MessageBoxResult.OK)
+                    {
+                        // 
+                        String pageToGo = "/WaitForOpponentPage.xaml";
+
+                        // Check is opponent is in check or checkmate
+                        ChessPiece.Color opponentColor = GameState.getInstance().getMyColor() == ChessPiece.Color.BLACK ?
+                            ChessPiece.Color.WHITE : ChessPiece.Color.BLACK;
+
+                        if (GameState.getInstance().inCheck(opponentColor))
+                        {
+                            // Opponent is at least in Check
+                            if (false)
+                            {
+                                // Checkmate
+                                // Take King to signify End Game
+                                pageToGo = "/WonPage.xaml";
+                            }
+                            else
+                            {
+                                // Just Check
+                                // Set Check flag
+
+                            }
+                        }
+
+                        // Send result to server
+                        var bw = new BackgroundWorker();
+                        bw.DoWork += (s, args) =>
+                        {
+                            new NetworkTask().sendGameState(GameState.getInstance().toCurrentGameState());
+                        };
+                        bw.RunWorkerCompleted += (s, args) =>
+                        {
+                            GameStateManager.getInstance().setShouldWait(true);
+                        };
+                        bw.RunWorkerAsync();
+                    }
+                    else
+                    {
+                        // Reset Turn
+                        GameState.getInstance().resetTurn();
+                    }
                 }
             }
+        }
+
+        private void waitForOpponent()
+        {
+            TeardownPage();
+            var bw = new BackgroundWorker();
+            bw.DoWork += (s, args) =>
+            {
+                response = new NetworkTask().getGameState();
+                while (response.is_game_over == false && response.is_current_players_turn == false)
+                {
+                    Thread.Sleep(10000);
+                    response = new NetworkTask().getGameState();
+                }
+            };
+            bw.RunWorkerCompleted += (s, args) =>
+            {
+                alreadyCalledWait = false;
+                if (response.is_game_over == false)
+                {
+                    GameStateManager.getInstance().setShouldWait(false);
+                    GameStateManager.getInstance().setGameState(response.game_state);
+                    SetupPage();
+                    hidePopup();
+                }
+                else
+                {
+                    hidePopup();
+                    if (response.winner == response.current_player)
+                    {
+                        NavigationService.Navigate(new Uri("/WonPage.xaml", UriKind.Relative));
+                    }
+                    else
+                    {
+                        NavigationService.Navigate(new Uri("/LostPage.xaml", UriKind.Relative));
+                    }
+                }
+            };
+            bw.RunWorkerAsync();
+            showPopup("Waiting");
         }
 
         private void ResignButton_Click(object sender, EventArgs e)
@@ -405,6 +473,16 @@ namespace ARChess
                         {
                             Caption = "Processing",
                             Message = "We're processing your command.  Please wait.",
+                            IsLeftButtonEnabled = false,
+                            IsRightButtonEnabled = false,
+                            IsFullScreen = false
+                        };
+                        break;
+                    case "Waiting":
+                        messageBox = new CustomMessageBox()
+                        {
+                            Caption = "Please Wait",
+                            Message = "Your opponent is making a move.",
                             IsLeftButtonEnabled = false,
                             IsRightButtonEnabled = false,
                             IsFullScreen = false

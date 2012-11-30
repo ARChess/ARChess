@@ -36,9 +36,9 @@ namespace ARChess
         private Vector2 chosenPosition = Vector2.Zero;
         private Vector2 velocity = Vector2.Zero;
 
-        public static GameState getInstance()
+        public static GameState getInstance(bool createIfNotExistent = true)
         {
-            if (mInstance == null)
+            if (mInstance == null && createIfNotExistent)
             {
                 mInstance = new GameState();
             }
@@ -67,79 +67,82 @@ namespace ARChess
 
         public void loadState(CurrentGameState state)
         {
-            mCurrentState = state;
+            if (state != null)
+            {
+                mCurrentState = state;
 
-            chessPieces["black_pawn1"].setPosition(new Vector2((float)state.black.pawn1.x, (float)state.black.pawn1.y));
-            chessPieces["black_pawn2"].setPosition(new Vector2((float)state.black.pawn2.x, (float)state.black.pawn2.y));
-            chessPieces["black_pawn3"].setPosition(new Vector2((float)state.black.pawn3.x, (float)state.black.pawn3.y));
-            chessPieces["black_pawn4"].setPosition(new Vector2((float)state.black.pawn4.x, (float)state.black.pawn4.y));
-            chessPieces["black_pawn5"].setPosition(new Vector2((float)state.black.pawn5.x, (float)state.black.pawn5.y));
-            chessPieces["black_pawn6"].setPosition(new Vector2((float)state.black.pawn6.x, (float)state.black.pawn6.y));
-            chessPieces["black_pawn7"].setPosition(new Vector2((float)state.black.pawn7.x, (float)state.black.pawn7.y));
-            chessPieces["black_pawn8"].setPosition(new Vector2((float)state.black.pawn8.x, (float)state.black.pawn8.y));
-            chessPieces["black_rook1"].setPosition(new Vector2((float)state.black.rook1.x, (float)state.black.rook1.y));
-            chessPieces["black_rook2"].setPosition(new Vector2((float)state.black.rook2.x, (float)state.black.rook2.y));
-            chessPieces["black_bishop1"].setPosition(new Vector2((float)state.black.bishop1.x, (float)state.black.bishop1.y));
-            chessPieces["black_bishop2"].setPosition(new Vector2((float)state.black.bishop2.x, (float)state.black.bishop2.y));
-            chessPieces["black_knight1"].setPosition(new Vector2((float)state.black.knight1.x, (float)state.black.knight1.y));
-            chessPieces["black_knight2"].setPosition(new Vector2((float)state.black.knight2.x, (float)state.black.knight2.y));
-            chessPieces["black_queen"].setPosition(new Vector2((float)state.black.queen.x, (float)state.black.queen.y));
-            chessPieces["black_king"].setPosition(new Vector2((float)state.black.king.x, (float)state.black.king.y));
+                chessPieces["black_pawn1"].setPosition(new Vector2((float)state.black.pawn1.x, (float)state.black.pawn1.y));
+                chessPieces["black_pawn2"].setPosition(new Vector2((float)state.black.pawn2.x, (float)state.black.pawn2.y));
+                chessPieces["black_pawn3"].setPosition(new Vector2((float)state.black.pawn3.x, (float)state.black.pawn3.y));
+                chessPieces["black_pawn4"].setPosition(new Vector2((float)state.black.pawn4.x, (float)state.black.pawn4.y));
+                chessPieces["black_pawn5"].setPosition(new Vector2((float)state.black.pawn5.x, (float)state.black.pawn5.y));
+                chessPieces["black_pawn6"].setPosition(new Vector2((float)state.black.pawn6.x, (float)state.black.pawn6.y));
+                chessPieces["black_pawn7"].setPosition(new Vector2((float)state.black.pawn7.x, (float)state.black.pawn7.y));
+                chessPieces["black_pawn8"].setPosition(new Vector2((float)state.black.pawn8.x, (float)state.black.pawn8.y));
+                chessPieces["black_rook1"].setPosition(new Vector2((float)state.black.rook1.x, (float)state.black.rook1.y));
+                chessPieces["black_rook2"].setPosition(new Vector2((float)state.black.rook2.x, (float)state.black.rook2.y));
+                chessPieces["black_bishop1"].setPosition(new Vector2((float)state.black.bishop1.x, (float)state.black.bishop1.y));
+                chessPieces["black_bishop2"].setPosition(new Vector2((float)state.black.bishop2.x, (float)state.black.bishop2.y));
+                chessPieces["black_knight1"].setPosition(new Vector2((float)state.black.knight1.x, (float)state.black.knight1.y));
+                chessPieces["black_knight2"].setPosition(new Vector2((float)state.black.knight2.x, (float)state.black.knight2.y));
+                chessPieces["black_queen"].setPosition(new Vector2((float)state.black.queen.x, (float)state.black.queen.y));
+                chessPieces["black_king"].setPosition(new Vector2((float)state.black.king.x, (float)state.black.king.y));
 
-            chessPieces["black_pawn1"].setMasqueradesAs(state.black.pawn1.masquerading_as);
-            chessPieces["black_pawn2"].setMasqueradesAs(state.black.pawn2.masquerading_as);
-            chessPieces["black_pawn3"].setMasqueradesAs(state.black.pawn3.masquerading_as);
-            chessPieces["black_pawn4"].setMasqueradesAs(state.black.pawn4.masquerading_as);
-            chessPieces["black_pawn5"].setMasqueradesAs(state.black.pawn5.masquerading_as);
-            chessPieces["black_pawn6"].setMasqueradesAs(state.black.pawn6.masquerading_as);
-            chessPieces["black_pawn7"].setMasqueradesAs(state.black.pawn7.masquerading_as);
-            chessPieces["black_pawn8"].setMasqueradesAs(state.black.pawn8.masquerading_as);
-            chessPieces["black_rook1"].setMasqueradesAs(state.black.rook1.masquerading_as);
-            chessPieces["black_rook2"].setMasqueradesAs(state.black.rook2.masquerading_as);
-            chessPieces["black_bishop1"].setMasqueradesAs(state.black.bishop1.masquerading_as);
-            chessPieces["black_bishop2"].setMasqueradesAs(state.black.bishop2.masquerading_as);
-            chessPieces["black_knight1"].setMasqueradesAs(state.black.knight1.masquerading_as);
-            chessPieces["black_knight2"].setMasqueradesAs(state.black.knight2.masquerading_as);
-            chessPieces["black_queen"].setMasqueradesAs(state.black.queen.masquerading_as);
-            chessPieces["black_king"].setMasqueradesAs(state.black.king.masquerading_as);
+                chessPieces["black_pawn1"].setMasqueradesAs(state.black.pawn1.masquerading_as);
+                chessPieces["black_pawn2"].setMasqueradesAs(state.black.pawn2.masquerading_as);
+                chessPieces["black_pawn3"].setMasqueradesAs(state.black.pawn3.masquerading_as);
+                chessPieces["black_pawn4"].setMasqueradesAs(state.black.pawn4.masquerading_as);
+                chessPieces["black_pawn5"].setMasqueradesAs(state.black.pawn5.masquerading_as);
+                chessPieces["black_pawn6"].setMasqueradesAs(state.black.pawn6.masquerading_as);
+                chessPieces["black_pawn7"].setMasqueradesAs(state.black.pawn7.masquerading_as);
+                chessPieces["black_pawn8"].setMasqueradesAs(state.black.pawn8.masquerading_as);
+                chessPieces["black_rook1"].setMasqueradesAs(state.black.rook1.masquerading_as);
+                chessPieces["black_rook2"].setMasqueradesAs(state.black.rook2.masquerading_as);
+                chessPieces["black_bishop1"].setMasqueradesAs(state.black.bishop1.masquerading_as);
+                chessPieces["black_bishop2"].setMasqueradesAs(state.black.bishop2.masquerading_as);
+                chessPieces["black_knight1"].setMasqueradesAs(state.black.knight1.masquerading_as);
+                chessPieces["black_knight2"].setMasqueradesAs(state.black.knight2.masquerading_as);
+                chessPieces["black_queen"].setMasqueradesAs(state.black.queen.masquerading_as);
+                chessPieces["black_king"].setMasqueradesAs(state.black.king.masquerading_as);
 
-            chessPieces["white_pawn1"].setPosition(new Vector2((float)state.white.pawn1.x, (float)state.white.pawn1.y));
-            chessPieces["white_pawn2"].setPosition(new Vector2((float)state.white.pawn2.x, (float)state.white.pawn2.y));
-            chessPieces["white_pawn2"].setPosition(new Vector2((float)state.white.pawn2.x, (float)state.white.pawn2.y));
-            chessPieces["white_pawn3"].setPosition(new Vector2((float)state.white.pawn3.x, (float)state.white.pawn3.y));
-            chessPieces["white_pawn4"].setPosition(new Vector2((float)state.white.pawn4.x, (float)state.white.pawn4.y));
-            chessPieces["white_pawn5"].setPosition(new Vector2((float)state.white.pawn5.x, (float)state.white.pawn5.y));
-            chessPieces["white_pawn6"].setPosition(new Vector2((float)state.white.pawn6.x, (float)state.white.pawn6.y));
-            chessPieces["white_pawn7"].setPosition(new Vector2((float)state.white.pawn7.x, (float)state.white.pawn7.y));
-            chessPieces["white_pawn8"].setPosition(new Vector2((float)state.white.pawn8.x, (float)state.white.pawn8.y));
-            chessPieces["white_rook1"].setPosition(new Vector2((float)state.white.rook1.x, (float)state.white.rook1.y));
-            chessPieces["white_rook2"].setPosition(new Vector2((float)state.white.rook2.x, (float)state.white.rook2.y));
-            chessPieces["white_bishop1"].setPosition(new Vector2((float)state.white.bishop1.x, (float)state.white.bishop1.y));
-            chessPieces["white_bishop2"].setPosition(new Vector2((float)state.white.bishop2.x, (float)state.white.bishop2.y));
-            chessPieces["white_knight1"].setPosition(new Vector2((float)state.white.knight1.x, (float)state.white.knight1.y));
-            chessPieces["white_knight2"].setPosition(new Vector2((float)state.white.knight2.x, (float)state.white.knight2.y));
-            chessPieces["white_queen"].setPosition(new Vector2((float)state.white.queen.x, (float)state.white.queen.y));
-            chessPieces["white_king"].setPosition(new Vector2((float)state.white.king.x, (float)state.white.king.y));
+                chessPieces["white_pawn1"].setPosition(new Vector2((float)state.white.pawn1.x, (float)state.white.pawn1.y));
+                chessPieces["white_pawn2"].setPosition(new Vector2((float)state.white.pawn2.x, (float)state.white.pawn2.y));
+                chessPieces["white_pawn2"].setPosition(new Vector2((float)state.white.pawn2.x, (float)state.white.pawn2.y));
+                chessPieces["white_pawn3"].setPosition(new Vector2((float)state.white.pawn3.x, (float)state.white.pawn3.y));
+                chessPieces["white_pawn4"].setPosition(new Vector2((float)state.white.pawn4.x, (float)state.white.pawn4.y));
+                chessPieces["white_pawn5"].setPosition(new Vector2((float)state.white.pawn5.x, (float)state.white.pawn5.y));
+                chessPieces["white_pawn6"].setPosition(new Vector2((float)state.white.pawn6.x, (float)state.white.pawn6.y));
+                chessPieces["white_pawn7"].setPosition(new Vector2((float)state.white.pawn7.x, (float)state.white.pawn7.y));
+                chessPieces["white_pawn8"].setPosition(new Vector2((float)state.white.pawn8.x, (float)state.white.pawn8.y));
+                chessPieces["white_rook1"].setPosition(new Vector2((float)state.white.rook1.x, (float)state.white.rook1.y));
+                chessPieces["white_rook2"].setPosition(new Vector2((float)state.white.rook2.x, (float)state.white.rook2.y));
+                chessPieces["white_bishop1"].setPosition(new Vector2((float)state.white.bishop1.x, (float)state.white.bishop1.y));
+                chessPieces["white_bishop2"].setPosition(new Vector2((float)state.white.bishop2.x, (float)state.white.bishop2.y));
+                chessPieces["white_knight1"].setPosition(new Vector2((float)state.white.knight1.x, (float)state.white.knight1.y));
+                chessPieces["white_knight2"].setPosition(new Vector2((float)state.white.knight2.x, (float)state.white.knight2.y));
+                chessPieces["white_queen"].setPosition(new Vector2((float)state.white.queen.x, (float)state.white.queen.y));
+                chessPieces["white_king"].setPosition(new Vector2((float)state.white.king.x, (float)state.white.king.y));
 
-            chessPieces["white_pawn1"].setMasqueradesAs(state.white.pawn1.masquerading_as);
-            chessPieces["white_pawn2"].setMasqueradesAs(state.white.pawn2.masquerading_as);
-            chessPieces["white_pawn3"].setMasqueradesAs(state.white.pawn3.masquerading_as);
-            chessPieces["white_pawn4"].setMasqueradesAs(state.white.pawn4.masquerading_as);
-            chessPieces["white_pawn5"].setMasqueradesAs(state.white.pawn5.masquerading_as);
-            chessPieces["white_pawn6"].setMasqueradesAs(state.white.pawn6.masquerading_as);
-            chessPieces["white_pawn7"].setMasqueradesAs(state.white.pawn7.masquerading_as);
-            chessPieces["white_pawn8"].setMasqueradesAs(state.white.pawn8.masquerading_as);
-            chessPieces["white_rook1"].setMasqueradesAs(state.white.rook1.masquerading_as);
-            chessPieces["white_rook2"].setMasqueradesAs(state.white.rook2.masquerading_as);
-            chessPieces["white_bishop1"].setMasqueradesAs(state.white.bishop1.masquerading_as);
-            chessPieces["white_bishop2"].setMasqueradesAs(state.white.bishop2.masquerading_as);
-            chessPieces["white_knight1"].setMasqueradesAs(state.white.knight1.masquerading_as);
-            chessPieces["white_knight2"].setMasqueradesAs(state.white.knight2.masquerading_as);
-            chessPieces["white_queen"].setMasqueradesAs(state.white.queen.masquerading_as);
-            chessPieces["white_king"].setMasqueradesAs(state.white.king.masquerading_as);
+                chessPieces["white_pawn1"].setMasqueradesAs(state.white.pawn1.masquerading_as);
+                chessPieces["white_pawn2"].setMasqueradesAs(state.white.pawn2.masquerading_as);
+                chessPieces["white_pawn3"].setMasqueradesAs(state.white.pawn3.masquerading_as);
+                chessPieces["white_pawn4"].setMasqueradesAs(state.white.pawn4.masquerading_as);
+                chessPieces["white_pawn5"].setMasqueradesAs(state.white.pawn5.masquerading_as);
+                chessPieces["white_pawn6"].setMasqueradesAs(state.white.pawn6.masquerading_as);
+                chessPieces["white_pawn7"].setMasqueradesAs(state.white.pawn7.masquerading_as);
+                chessPieces["white_pawn8"].setMasqueradesAs(state.white.pawn8.masquerading_as);
+                chessPieces["white_rook1"].setMasqueradesAs(state.white.rook1.masquerading_as);
+                chessPieces["white_rook2"].setMasqueradesAs(state.white.rook2.masquerading_as);
+                chessPieces["white_bishop1"].setMasqueradesAs(state.white.bishop1.masquerading_as);
+                chessPieces["white_bishop2"].setMasqueradesAs(state.white.bishop2.masquerading_as);
+                chessPieces["white_knight1"].setMasqueradesAs(state.white.knight1.masquerading_as);
+                chessPieces["white_knight2"].setMasqueradesAs(state.white.knight2.masquerading_as);
+                chessPieces["white_queen"].setMasqueradesAs(state.white.queen.masquerading_as);
+                chessPieces["white_king"].setMasqueradesAs(state.white.king.masquerading_as);
 
-            mMyColor = GameStateManager.getInstance().getCurrentPlayer();
-            setPieceMoves();
+                mMyColor = GameStateManager.getInstance().getCurrentPlayer();
+                setPieceMoves();
+            }
         }
 
         private void initializePlayerPieces(ChessPiece.Color _player)
@@ -148,7 +151,7 @@ namespace ARChess
             // Initialize Pawns
             for (int i = 0; i < 8; i++)
             {
-                position = new Vector2((_player == ChessPiece.Color.BLACK ? 6 : 2), i);
+                position = new Vector2((_player == ChessPiece.Color.BLACK ? 6 : 1), i);
                 chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_pawn" + (i + 1).ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.PAWN, position, "pawn");
             }
 
