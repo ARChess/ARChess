@@ -150,52 +150,61 @@ namespace ARChess
             string color = GameStateManager.getInstance().getCurrentPlayer().ToString().ToLower() + "_";
             Vector2 closestLocation = new Vector2();
 
-            switch (chosenPiece.ToString().ToLower())
+            for (int i = 1; i <= 8; ++i)
             {
-                case "rook":
-                    for (int i = 1; i <= 2; ++i)
+                if (chessPieces[color + "pawn" + i].getMasqueradeType() == chosenPiece.ToString().ToLower())
+                {
+                    if (Vector2.Distance(chosenLocation, chessPieces[color + "pawn" + i].getPosition()) < Vector2.Distance(chosenLocation, closestLocation))
                     {
-                        if (Vector2.Distance(chosenLocation, chessPieces[color + chosenPiece.ToString().ToLower() + i].getPosition()) < Vector2.Distance(chosenLocation, closestLocation))
-                        {
-                            closestLocation = chessPieces[color + chosenPiece.ToString().ToLower() + i].getPosition();
-                        }
+                        closestLocation = chessPieces[color + "pawn" + i].getPosition();
                     }
-                    break;
-                case "bishop":
-                    for (int i = 1; i <= 2; ++i)
-                    {
-                        if (Vector2.Distance(chosenLocation, chessPieces[color + chosenPiece.ToString().ToLower() + i].getPosition()) < Vector2.Distance(chosenLocation, closestLocation))
-                        {
-                            closestLocation = chessPieces[color + chosenPiece.ToString().ToLower() + i].getPosition();
-                        }
-                    }
-                    break;
-                case "knight":
-                    for (int i = 1; i <= 2; ++i)
-                    {
-                        if (Vector2.Distance(chosenLocation, chessPieces[color + chosenPiece.ToString().ToLower() + i].getPosition()) < Vector2.Distance(chosenLocation, closestLocation))
-                        {
-                            closestLocation = chessPieces[color + chosenPiece.ToString().ToLower() + i].getPosition();
-                        }
-                    }
-                    break;
-                case "king":
-                    closestLocation = chessPieces[color + chosenPiece.ToString().ToLower()].getPosition();
-                    break;
-                case "queen":
-                    closestLocation = chessPieces[color + chosenPiece.ToString().ToLower()].getPosition();
-                    break;
-                case "pawn":
-                    for (int i = 1; i <= 8; ++i)
-                    {
-                        if (Vector2.Distance(chosenLocation, chessPieces[color + chosenPiece.ToString().ToLower() + i].getPosition()) < Vector2.Distance(chosenLocation, closestLocation))
-                        {
-                            closestLocation = chessPieces[color + chosenPiece.ToString().ToLower() + i].getPosition();
-                        }
-                    }
-                    break;
+                }
             }
-
+            for (int i = 1; i <= 2; ++i)
+            {
+                if (chessPieces[color + "rook" + i].getMasqueradeType() == chosenPiece.ToString().ToLower())
+                {
+                    if (Vector2.Distance(chosenLocation, chessPieces[color + "rook" + i].getPosition()) < Vector2.Distance(chosenLocation, closestLocation))
+                    {
+                        closestLocation = chessPieces[color + "rook" + i].getPosition();
+                    }
+                }
+            }
+            for (int i = 1; i <= 2; ++i)
+            {
+                if (chessPieces[color + "knight" + i].getMasqueradeType() == chosenPiece.ToString().ToLower())
+                {
+                    if (Vector2.Distance(chosenLocation, chessPieces[color + "knight" + i].getPosition()) < Vector2.Distance(chosenLocation, closestLocation))
+                    {
+                        closestLocation = chessPieces[color + "knight" + i].getPosition();
+                    }
+                }
+            }
+            if (chessPieces[color + "king"].getMasqueradeType() == chosenPiece.ToString().ToLower())
+            {
+                if (Vector2.Distance(chosenLocation, chessPieces[color + "king"].getPosition()) < Vector2.Distance(chosenLocation, closestLocation))
+                {
+                    closestLocation = chessPieces[color + "king"].getPosition();   
+                }
+            }
+            if (chessPieces[color + "queen"].getMasqueradeType() == chosenPiece.ToString().ToLower())
+            {
+                if (Vector2.Distance(chosenLocation, chessPieces[color + "queen"].getPosition()) < Vector2.Distance(chosenLocation, closestLocation))
+                {
+                    closestLocation = chessPieces[color + "queen"].getPosition();
+                }
+            }
+            for (int i = 1; i <= 2; ++i)
+            {
+                if (chessPieces[color + "bishop" + i].getMasqueradeType() == chosenPiece.ToString().ToLower())
+                {
+                    if (Vector2.Distance(chosenLocation, chessPieces[color + "bishop" + i].getPosition()) < Vector2.Distance(chosenLocation, closestLocation))
+                    {
+                        closestLocation = chessPieces[color + "bishop" + i].getPosition();
+                    }
+                }
+            }
+            
             return closestLocation;
         }
 
