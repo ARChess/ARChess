@@ -317,6 +317,7 @@ namespace ARChess
             {
                 // TODO reverse sliding for guard test
 
+
                 int boardX = x + j * xDelta;
                 int boardY = y + j * yDelta;
                 if ((boardX > 7) || (boardX < 0) || (boardY > 7) || (boardY < 0))
