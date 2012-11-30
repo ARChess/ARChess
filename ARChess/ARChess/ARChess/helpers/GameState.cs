@@ -86,6 +86,23 @@ namespace ARChess
             chessPieces["black_queen"].setPosition(new Vector2((float)state.black.queen.x, (float)state.black.queen.y));
             chessPieces["black_king"].setPosition(new Vector2((float)state.black.king.x, (float)state.black.king.y));
 
+            chessPieces["black_pawn1"].setMasqueradesAs(state.black.pawn1.masquerading_as);
+            chessPieces["black_pawn2"].setMasqueradesAs(state.black.pawn2.masquerading_as);
+            chessPieces["black_pawn3"].setMasqueradesAs(state.black.pawn3.masquerading_as);
+            chessPieces["black_pawn4"].setMasqueradesAs(state.black.pawn4.masquerading_as);
+            chessPieces["black_pawn5"].setMasqueradesAs(state.black.pawn5.masquerading_as);
+            chessPieces["black_pawn6"].setMasqueradesAs(state.black.pawn6.masquerading_as);
+            chessPieces["black_pawn7"].setMasqueradesAs(state.black.pawn7.masquerading_as);
+            chessPieces["black_pawn8"].setMasqueradesAs(state.black.pawn8.masquerading_as);
+            chessPieces["black_rook1"].setMasqueradesAs(state.black.rook1.masquerading_as);
+            chessPieces["black_rook2"].setMasqueradesAs(state.black.rook2.masquerading_as);
+            chessPieces["black_bishop1"].setMasqueradesAs(state.black.bishop1.masquerading_as);
+            chessPieces["black_bishop2"].setMasqueradesAs(state.black.bishop2.masquerading_as);
+            chessPieces["black_knight1"].setMasqueradesAs(state.black.knight1.masquerading_as);
+            chessPieces["black_knight2"].setMasqueradesAs(state.black.knight2.masquerading_as);
+            chessPieces["black_queen"].setMasqueradesAs(state.black.queen.masquerading_as);
+            chessPieces["black_king"].setMasqueradesAs(state.black.king.masquerading_as);
+
             chessPieces["white_pawn1"].setPosition(new Vector2((float)state.white.pawn1.x, (float)state.white.pawn1.y));
             chessPieces["white_pawn2"].setPosition(new Vector2((float)state.white.pawn2.x, (float)state.white.pawn2.y));
             chessPieces["white_pawn2"].setPosition(new Vector2((float)state.white.pawn2.x, (float)state.white.pawn2.y));
@@ -104,6 +121,23 @@ namespace ARChess
             chessPieces["white_queen"].setPosition(new Vector2((float)state.white.queen.x, (float)state.white.queen.y));
             chessPieces["white_king"].setPosition(new Vector2((float)state.white.king.x, (float)state.white.king.y));
 
+            chessPieces["white_pawn1"].setMasqueradesAs(state.white.pawn1.masquerading_as);
+            chessPieces["white_pawn2"].setMasqueradesAs(state.white.pawn2.masquerading_as);
+            chessPieces["white_pawn3"].setMasqueradesAs(state.white.pawn3.masquerading_as);
+            chessPieces["white_pawn4"].setMasqueradesAs(state.white.pawn4.masquerading_as);
+            chessPieces["white_pawn5"].setMasqueradesAs(state.white.pawn5.masquerading_as);
+            chessPieces["white_pawn6"].setMasqueradesAs(state.white.pawn6.masquerading_as);
+            chessPieces["white_pawn7"].setMasqueradesAs(state.white.pawn7.masquerading_as);
+            chessPieces["white_pawn8"].setMasqueradesAs(state.white.pawn8.masquerading_as);
+            chessPieces["white_rook1"].setMasqueradesAs(state.white.rook1.masquerading_as);
+            chessPieces["white_rook2"].setMasqueradesAs(state.white.rook2.masquerading_as);
+            chessPieces["white_bishop1"].setMasqueradesAs(state.white.bishop1.masquerading_as);
+            chessPieces["white_bishop2"].setMasqueradesAs(state.white.bishop2.masquerading_as);
+            chessPieces["white_knight1"].setMasqueradesAs(state.white.knight1.masquerading_as);
+            chessPieces["white_knight2"].setMasqueradesAs(state.white.knight2.masquerading_as);
+            chessPieces["white_queen"].setMasqueradesAs(state.white.queen.masquerading_as);
+            chessPieces["white_king"].setMasqueradesAs(state.white.king.masquerading_as);
+
             mMyColor = GameStateManager.getInstance().getCurrentPlayer();
             setPieceMoves();
         }
@@ -115,37 +149,37 @@ namespace ARChess
             for (int i = 0; i < 8; i++)
             {
                 position = new Vector2((_player == ChessPiece.Color.BLACK ? 6 : 2), i);
-                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_pawn" + (i + 1).ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.PAWN, position);
+                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_pawn" + (i + 1).ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.PAWN, position, "pawn");
             }
 
             // Initialize Knights
             for (int i = 0; i < 2; i++)
             {
                 position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (i == 0 ? 1 : 6));
-                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_knight" + (i + 1).ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.KNIGHT, position);
+                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_knight" + (i + 1).ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.KNIGHT, position, "knight");
             }
 
             // Initialize Bishops
             for (int i = 0; i < 2; i++)
             {
                 position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (i == 0 ? 2 : 5));
-                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_bishop" + (i + 1).ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.BISHOP, position);
+                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_bishop" + (i + 1).ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.BISHOP, position, "bishop");
             }
 
             // Initialize Rooks
             for (int i = 0; i < 2; i++)
             {
                 position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (i == 0 ? 0 : 7));
-                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_rook" + (i + 1).ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.ROOK, position);
+                chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_rook" + (i + 1).ToString()] = new ChessPiece(content, _player, ChessPiece.Piece.ROOK, position, "rook");
             }
 
             // Initialize Queens
             position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (_player == ChessPiece.Color.BLACK ? 3 : 4));
-            chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_queen"] = new ChessPiece(content, _player, ChessPiece.Piece.QUEEN, position);
+            chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_queen"] = new ChessPiece(content, _player, ChessPiece.Piece.QUEEN, position, "queen");
 
             // Initialize Kings
             position = new Vector2((_player == ChessPiece.Color.BLACK ? 7 : 0), (_player == ChessPiece.Color.BLACK ? 4 : 3));
-            chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_king"] = new ChessPiece(content, _player, ChessPiece.Piece.KING, position);
+            chessPieces[(_player == ChessPiece.Color.BLACK ? "black" : "white") + "_king"] = new ChessPiece(content, _player, ChessPiece.Piece.KING, position, "king");
         }
 
         private void setPieceMoves()

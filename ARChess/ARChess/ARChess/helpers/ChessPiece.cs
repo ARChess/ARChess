@@ -29,93 +29,39 @@ namespace ARChess
         private Model mModel;
         private Vector2 mPosition;
         private ContentManager content;
-
+        private string masqueradesAs;
         private ChessBoard.BoardSquare[,] mMoves;
 
-        public ChessPiece(ContentManager _content, XElement pieceElement)
+        public ChessPiece(ContentManager _content, Color _player, Piece _type, Vector2 _position, string _masqueradeType)
         {
-            // Player
-            XElement playerNode = pieceElement.Element("Player");
-            String playerString = playerNode.Value;
-            Color player;
-            if (playerString == "WHITE")
-            {
-                player = Color.WHITE;
-            }
-            else
-            {
-                player = Color.BLACK;
-            }
-
-            // Type
-            XElement typeNode = pieceElement.Element("Type");
-            String typeString = typeNode.Value;
-            Piece type = Piece.PAWN;
-            switch (typeString)
-            {
-                case "PAWN" :
-                    type = Piece.PAWN;
-                    break;
-                case "ROOK" :
-                    type = Piece.ROOK;
-                    break;
-                case "KNIGHT" :
-                    type = Piece.KNIGHT;
-                    break;
-                case "BISHOP" :
-                    type = Piece.BISHOP;
-                    break;
-                case "QUEEN" :
-                    type = Piece.QUEEN;
-                    break;
-                case "KING" :
-                    type = Piece.KING;
-                    break;
-            }
-
-            // Position
-            XElement positionNode = pieceElement.Element("Position");
-            String positionXString = positionNode.Attribute("X").Value;
-            String positionYString = positionNode.Attribute("Y").Value;
-
-            int x = System.Convert.ToInt32(positionXString);
-            int y = System.Convert.ToInt32(positionYString);
-
-            Vector2 position = new Vector2(x, y);
-
-            initialize(_content, player, type, position);
+            initialize(_content, _player, _type, _position, _masqueradeType);
         }
 
-        public ChessPiece(ContentManager _content, Color _player, Piece _type, Vector2 _position)
-        {
-            initialize(_content, _player, _type, _position);
-        }
-
-        private void initialize(ContentManager _content, Color _player, Piece _type, Vector2 _position)
+        private void initialize(ContentManager _content, Color _player, Piece _type, Vector2 _position, string _masqueradeType)
         {
             mType = _type;
             mPlayer = _player;
             content = _content;
+            masqueradesAs = _masqueradeType;
 
-
-            switch (_type)
+            switch (masqueradesAs)
             {
-                case Piece.PAWN:
+                case "pawn":
                     mModel = ModelSelector.getModel(_player == Color.WHITE ? ModelSelector.Pieces.WHITE_PAWN : ModelSelector.Pieces.BLACK_PAWN);
                     break;
-                case Piece.ROOK:
+                case "rook":
                     mModel = ModelSelector.getModel(_player == Color.WHITE ? ModelSelector.Pieces.WHITE_ROOK : ModelSelector.Pieces.BLACK_ROOK);
                     break;
-                case Piece.KNIGHT:
+                case "knight":
                     mModel = ModelSelector.getModel(_player == Color.WHITE ? ModelSelector.Pieces.WHITE_KNIGHT : ModelSelector.Pieces.BLACK_KNIGHT);
                     break;
-                case Piece.BISHOP:
+                case "bishop":
                     mModel = ModelSelector.getModel(_player == Color.WHITE ? ModelSelector.Pieces.WHITE_BISHOP : ModelSelector.Pieces.BLACK_BISHOP);
                     break;
-                case Piece.QUEEN:
+                case "queen":
                     mModel = ModelSelector.getModel(_player == Color.WHITE ? ModelSelector.Pieces.WHITE_QUEEN : ModelSelector.Pieces.BLACK_QUEEN);
                     break;
-                case Piece.KING:
+                case "king":
                     mModel = ModelSelector.getModel(_player == Color.WHITE ? ModelSelector.Pieces.WHITE_KING : ModelSelector.Pieces.BLACK_KING);
                     break;
             }
@@ -141,6 +87,38 @@ namespace ARChess
         public Vector2 getPosition()
         {
             return mPosition;
+        }
+
+        public string getMasqueradeType()
+        {
+            return masqueradesAs;
+        }
+
+        public void setMasqueradesAs(string type)
+        {
+            masqueradesAs = type;
+
+            switch (masqueradesAs)
+            {
+                case "pawn":
+                    mModel = ModelSelector.getModel(mPlayer == Color.WHITE ? ModelSelector.Pieces.WHITE_PAWN : ModelSelector.Pieces.BLACK_PAWN);
+                    break;
+                case "rook":
+                    mModel = ModelSelector.getModel(mPlayer == Color.WHITE ? ModelSelector.Pieces.WHITE_ROOK : ModelSelector.Pieces.BLACK_ROOK);
+                    break;
+                case "knight":
+                    mModel = ModelSelector.getModel(mPlayer == Color.WHITE ? ModelSelector.Pieces.WHITE_KNIGHT : ModelSelector.Pieces.BLACK_KNIGHT);
+                    break;
+                case "bishop":
+                    mModel = ModelSelector.getModel(mPlayer == Color.WHITE ? ModelSelector.Pieces.WHITE_BISHOP : ModelSelector.Pieces.BLACK_BISHOP);
+                    break;
+                case "queen":
+                    mModel = ModelSelector.getModel(mPlayer == Color.WHITE ? ModelSelector.Pieces.WHITE_QUEEN : ModelSelector.Pieces.BLACK_QUEEN);
+                    break;
+                case "king":
+                    mModel = ModelSelector.getModel(mPlayer == Color.WHITE ? ModelSelector.Pieces.WHITE_KING : ModelSelector.Pieces.BLACK_KING);
+                    break;
+            }
         }
 
         public void remove()
@@ -193,9 +171,9 @@ namespace ARChess
             int y = (int)mPosition.Y;
             List<Vector2> potentialMoves = new List<Vector2>();
 
-            switch (mType)
+            switch (masqueradesAs)
             {
-                case Piece.PAWN:
+                case "pawn":
                     // Pawns can only take diagonally
                     if ((y > 0) && (mMoves[x + forward, y - 1] == ChessBoard.BoardSquare.ENEMY))
                     {
@@ -214,14 +192,14 @@ namespace ARChess
                     }
                     break;
 
-                case Piece.ROOK:
+                case "rook":
                     slidePiece(new Vector2( 0,  1), 8);
                     slidePiece(new Vector2( 0, -1), 8);
                     slidePiece(new Vector2( 1,  0), 8);
                     slidePiece(new Vector2(-1,  0), 8);
                     break;
 
-                case ChessPiece.Piece.KNIGHT:
+                case "knight":
                     for (int i = -1; i <= 1; i = i + 2)
                     {
                         for (int j = -1; j <= 1; j = j + 2)
@@ -232,14 +210,14 @@ namespace ARChess
                     }
                     break;
 
-                case ChessPiece.Piece.BISHOP:
+                case "bishop":
                     slidePiece(new Vector2( 1,  1), 8);
                     slidePiece(new Vector2(-1,  1), 8);
                     slidePiece(new Vector2( 1, -1), 8);
                     slidePiece(new Vector2(-1, -1), 8);
                     break;
 
-                case ChessPiece.Piece.QUEEN:
+                case "queen":
                     // Essentially a Rook and Bishop combined
                     slidePiece(new Vector2( 0,  1), 8);
                     slidePiece(new Vector2( 0, -1), 8);
@@ -251,7 +229,7 @@ namespace ARChess
                     slidePiece(new Vector2(-1, -1), 8);
                     break;
 
-                case ChessPiece.Piece.KING:
+                case "king":
                     slidePiece(new Vector2( 0,  1), 1);
                     slidePiece(new Vector2( 0, -1), 1);
                     slidePiece(new Vector2( 1,  0), 1);
