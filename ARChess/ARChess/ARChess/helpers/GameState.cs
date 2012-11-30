@@ -416,168 +416,202 @@ namespace ARChess
             {
                 black = new PlayerState()
                 {
+                    in_check = inCheck(ChessPiece.Color.BLACK),
                     pawn1 = new PieceLocation()
                     {
                         x = (int)chessPieces["black_pawn1"].getPosition().X,
-                        y = (int)chessPieces["black_pawn1"].getPosition().Y
+                        y = (int)chessPieces["black_pawn1"].getPosition().Y,
+                        masquerading_as = chessPieces["black_pawn1"].getMasqueradeType()
                     },
                     pawn2 = new PieceLocation()
                     {
                         x = (int)chessPieces["black_pawn2"].getPosition().X,
-                        y = (int)chessPieces["black_pawn2"].getPosition().Y
+                        y = (int)chessPieces["black_pawn2"].getPosition().Y,
+                        masquerading_as = chessPieces["black_pawn2"].getMasqueradeType()
                     },
                     pawn3 = new PieceLocation()
                     {
                         x = (int)chessPieces["black_pawn3"].getPosition().X,
-                        y = (int)chessPieces["black_pawn3"].getPosition().Y
+                        y = (int)chessPieces["black_pawn3"].getPosition().Y,
+                        masquerading_as = chessPieces["black_pawn3"].getMasqueradeType()
                     },
                     pawn4 = new PieceLocation()
                     {
                         x = (int)chessPieces["black_pawn4"].getPosition().X,
-                        y = (int)chessPieces["black_pawn4"].getPosition().Y
+                        y = (int)chessPieces["black_pawn4"].getPosition().Y,
+                        masquerading_as = chessPieces["black_pawn4"].getMasqueradeType()
                     },
                     pawn5 = new PieceLocation()
                     {
                         x = (int)chessPieces["black_pawn5"].getPosition().X,
-                        y = (int)chessPieces["black_pawn5"].getPosition().Y
+                        y = (int)chessPieces["black_pawn5"].getPosition().Y,
+                        masquerading_as = chessPieces["black_pawn5"].getMasqueradeType()
                     },
                     pawn6 = new PieceLocation()
                     {
                         x = (int)chessPieces["black_pawn6"].getPosition().X,
-                        y = (int)chessPieces["black_pawn6"].getPosition().Y
+                        y = (int)chessPieces["black_pawn6"].getPosition().Y,
+                        masquerading_as = chessPieces["black_pawn6"].getMasqueradeType()
                     },
                     pawn7 = new PieceLocation()
                     {
                         x = (int)chessPieces["black_pawn7"].getPosition().X,
-                        y = (int)chessPieces["black_pawn7"].getPosition().Y
+                        y = (int)chessPieces["black_pawn7"].getPosition().Y,
+                        masquerading_as = chessPieces["black_pawn7"].getMasqueradeType()
                     },
                     pawn8 = new PieceLocation()
                     {
                         x = (int)chessPieces["black_pawn8"].getPosition().X,
-                        y = (int)chessPieces["black_pawn8"].getPosition().Y
+                        y = (int)chessPieces["black_pawn8"].getPosition().Y,
+                        masquerading_as = chessPieces["black_pawn8"].getMasqueradeType()
                     },
                     rook1 = new PieceLocation()
                     {
                         x = (int)chessPieces["black_rook1"].getPosition().X,
-                        y = (int)chessPieces["black_rook1"].getPosition().Y
+                        y = (int)chessPieces["black_rook1"].getPosition().Y,
+                        masquerading_as = chessPieces["black_rook1"].getMasqueradeType()
                     },
                     rook2 = new PieceLocation()
                     {
                         x = (int)chessPieces["black_rook2"].getPosition().X,
-                        y = (int)chessPieces["black_rook2"].getPosition().Y
+                        y = (int)chessPieces["black_rook2"].getPosition().Y,
+                        masquerading_as = chessPieces["black_rook2"].getMasqueradeType()
                     },
                     bishop1 = new PieceLocation()
                     {
                         x = (int)chessPieces["black_bishop1"].getPosition().X,
-                        y = (int)chessPieces["black_bishop1"].getPosition().Y
+                        y = (int)chessPieces["black_bishop1"].getPosition().Y,
+                        masquerading_as = chessPieces["black_bishop1"].getMasqueradeType()
                     },
                     bishop2 = new PieceLocation()
                     {
                         x = (int)chessPieces["black_bishop2"].getPosition().X,
-                        y = (int)chessPieces["black_bishop2"].getPosition().Y
+                        y = (int)chessPieces["black_bishop2"].getPosition().Y,
+                        masquerading_as = chessPieces["black_bishop2"].getMasqueradeType()
                     },
                     knight1 = new PieceLocation()
                     {
                         x = (int)chessPieces["black_knight1"].getPosition().X,
-                        y = (int)chessPieces["black_knight1"].getPosition().Y
+                        y = (int)chessPieces["black_knight1"].getPosition().Y,
+                        masquerading_as = chessPieces["black_knight1"].getMasqueradeType()
                     },
                     knight2 = new PieceLocation()
                     {
                         x = (int)chessPieces["black_knight2"].getPosition().X,
-                        y = (int)chessPieces["black_knight2"].getPosition().Y
+                        y = (int)chessPieces["black_knight2"].getPosition().Y,
+                        masquerading_as = chessPieces["black_knight2"].getMasqueradeType()
                     },
                     queen = new PieceLocation()
                     {
                         x = (int)chessPieces["black_queen"].getPosition().X,
-                        y = (int)chessPieces["black_queen"].getPosition().Y
+                        y = (int)chessPieces["black_queen"].getPosition().Y,
+                        masquerading_as = chessPieces["black_queen"].getMasqueradeType()
                     },
                     king = new PieceLocation()
                     {
                         x = (int)chessPieces["black_king"].getPosition().X,
-                        y = (int)chessPieces["black_king"].getPosition().Y
+                        y = (int)chessPieces["black_king"].getPosition().Y,
+                        masquerading_as = chessPieces["black_king"].getMasqueradeType()
                     }
                 },
                 white = new PlayerState()
                 {
+                    in_check = inCheck(ChessPiece.Color.WHITE),
                     pawn1 = new PieceLocation()
                     {
                         x = (int)chessPieces["white_pawn1"].getPosition().X,
-                        y = (int)chessPieces["white_pawn1"].getPosition().Y
+                        y = (int)chessPieces["white_pawn1"].getPosition().Y,
+                        masquerading_as = chessPieces["white_pawn1"].getMasqueradeType()
                     },
                     pawn2 = new PieceLocation()
                     {
                         x = (int)chessPieces["white_pawn2"].getPosition().X,
-                        y = (int)chessPieces["white_pawn2"].getPosition().Y
+                        y = (int)chessPieces["white_pawn2"].getPosition().Y,
+                        masquerading_as = chessPieces["white_pawn2"].getMasqueradeType()
                     },
                     pawn3 = new PieceLocation()
                     {
                         x = (int)chessPieces["white_pawn3"].getPosition().X,
-                        y = (int)chessPieces["white_pawn3"].getPosition().Y
+                        y = (int)chessPieces["white_pawn3"].getPosition().Y,
+                        masquerading_as = chessPieces["white_pawn3"].getMasqueradeType()
                     },
                     pawn4 = new PieceLocation()
                     {
                         x = (int)chessPieces["white_pawn4"].getPosition().X,
-                        y = (int)chessPieces["white_pawn4"].getPosition().Y
+                        y = (int)chessPieces["white_pawn4"].getPosition().Y,
+                        masquerading_as = chessPieces["white_pawn4"].getMasqueradeType()
                     },
                     pawn5 = new PieceLocation()
                     {
                         x = (int)chessPieces["white_pawn5"].getPosition().X,
-                        y = (int)chessPieces["white_pawn5"].getPosition().Y
+                        y = (int)chessPieces["white_pawn5"].getPosition().Y,
+                        masquerading_as = chessPieces["white_pawn5"].getMasqueradeType()
                     },
                     pawn6 = new PieceLocation()
                     {
                         x = (int)chessPieces["white_pawn6"].getPosition().X,
-                        y = (int)chessPieces["white_pawn6"].getPosition().Y
+                        y = (int)chessPieces["white_pawn6"].getPosition().Y,
+                        masquerading_as = chessPieces["white_pawn6"].getMasqueradeType()
                     },
                     pawn7 = new PieceLocation()
                     {
                         x = (int)chessPieces["white_pawn7"].getPosition().X,
-                        y = (int)chessPieces["white_pawn7"].getPosition().Y
+                        y = (int)chessPieces["white_pawn7"].getPosition().Y,
+                        masquerading_as = chessPieces["white_pawn7"].getMasqueradeType()
                     },
                     pawn8 = new PieceLocation()
                     {
                         x = (int)chessPieces["white_pawn8"].getPosition().X,
-                        y = (int)chessPieces["white_pawn8"].getPosition().Y
+                        y = (int)chessPieces["white_pawn8"].getPosition().Y,
+                        masquerading_as = chessPieces["white_pawn8"].getMasqueradeType()
                     },
                     rook1 = new PieceLocation()
                     {
                         x = (int)chessPieces["white_rook1"].getPosition().X,
-                        y = (int)chessPieces["white_rook1"].getPosition().Y
+                        y = (int)chessPieces["white_rook1"].getPosition().Y,
+                        masquerading_as = chessPieces["white_rook1"].getMasqueradeType()
                     },
                     rook2 = new PieceLocation()
                     {
                         x = (int)chessPieces["white_rook2"].getPosition().X,
-                        y = (int)chessPieces["white_rook2"].getPosition().Y
+                        y = (int)chessPieces["white_rook2"].getPosition().Y,
+                        masquerading_as = chessPieces["white_rook2"].getMasqueradeType()
                     },
                     bishop1 = new PieceLocation()
                     {
                         x = (int)chessPieces["white_bishop1"].getPosition().X,
-                        y = (int)chessPieces["white_bishop1"].getPosition().Y
+                        y = (int)chessPieces["white_bishop1"].getPosition().Y,
+                        masquerading_as = chessPieces["white_bishop1"].getMasqueradeType()
                     },
                     bishop2 = new PieceLocation()
                     {
                         x = (int)chessPieces["white_bishop2"].getPosition().X,
-                        y = (int)chessPieces["white_bishop2"].getPosition().Y
+                        y = (int)chessPieces["white_bishop2"].getPosition().Y,
+                        masquerading_as = chessPieces["white_bishop2"].getMasqueradeType()
                     },
                     knight1 = new PieceLocation()
                     {
                         x = (int)chessPieces["white_knight1"].getPosition().X,
-                        y = (int)chessPieces["white_knight1"].getPosition().Y
+                        y = (int)chessPieces["white_knight1"].getPosition().Y,
+                        masquerading_as = chessPieces["white_knight1"].getMasqueradeType()
                     },
                     knight2 = new PieceLocation()
                     {
                         x = (int)chessPieces["white_knight2"].getPosition().X,
-                        y = (int)chessPieces["white_knight2"].getPosition().Y
+                        y = (int)chessPieces["white_knight2"].getPosition().Y,
+                        masquerading_as = chessPieces["white_knight2"].getMasqueradeType()
                     },
                     queen = new PieceLocation()
                     {
                         x = (int)chessPieces["white_queen"].getPosition().X,
-                        y = (int)chessPieces["white_queen"].getPosition().Y
+                        y = (int)chessPieces["white_queen"].getPosition().Y,
+                        masquerading_as = chessPieces["white_queen"].getMasqueradeType()
                     },
                     king = new PieceLocation()
                     {
                         x = (int)chessPieces["white_king"].getPosition().X,
-                        y = (int)chessPieces["white_king"].getPosition().Y
+                        y = (int)chessPieces["white_king"].getPosition().Y,
+                        masquerading_as = chessPieces["white_king"].getMasqueradeType()
                     }
                 }
             };
