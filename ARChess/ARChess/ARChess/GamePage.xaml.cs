@@ -101,6 +101,11 @@ namespace ARChess
             // Create a timer for this page
             timer.Start();
             GameState.getInstance().loadState(GameStateManager.getInstance().getGameState());
+
+            if ((GameStateManager.getInstance().getGameState().black.in_check && GameStateManager.getInstance().getCurrentPlayer() == ChessPiece.Color.BLACK) || (GameStateManager.getInstance().getGameState().white.in_check && GameStateManager.getInstance().getCurrentPlayer() == ChessPiece.Color.WHITE))
+            {
+                handleError("You have been placed into check by your opponent.");
+            }
             
             //Initialize the camera
             photoCamera = new PhotoCamera();
@@ -303,7 +308,7 @@ namespace ARChess
                         {
                             // Just Check
                             // Set Check flag
-
+                            
                         }
                     }
 
