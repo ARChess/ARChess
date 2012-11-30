@@ -33,7 +33,7 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <CheckBox Content="Advanced Play Mode" Height="Auto" HorizontalAlignment="Left" Margin="60,20,0,0" Name="checkBoxSetting1" VerticalAlignment="Top" IsChecked="{Binding Source={StaticResource appSettings}, Path=AdvancedModeSetting, Mode=TwoWay}" />
+            <CheckBox Content="Advanced Play Mode" Height="Auto" HorizontalAlignment="Left" Margin="60,20,0,0" Name="checkBoxSetting1" VerticalAlignment="Top" IsChecked="{Binding Source={StaticResource appSettings}, Path=AdvancedModeSettings, Mode=TwoWay}" />
             <TextBlock TextWrapping="Wrap" Height="Auto" HorizontalAlignment="Left" Margin="60,80,0,0">
                 Playing with this mode enabled will cause move highlighting to become disabled during play.
             </TextBlock>

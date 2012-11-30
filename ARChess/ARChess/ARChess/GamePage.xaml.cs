@@ -298,16 +298,18 @@ namespace ARChess
                     if ( GameState.getInstance().inCheck(opponentColor) )
                     {
                         // Opponent is at least in Check
-                        if (false)
+                        if ( GameState.getInstance().checkmate() )
                         {
                             // Checkmate
                             // Take King to signify End Game
-                            pageToGo = "/WonPage.xaml";
+                            MessageBox.Show("You have placed your opponent in checkmate.", "Winner! It works!!!", MessageBoxButton.OK);
+                            //pageToGo = "/WonPage.xaml";
                         }
                         else
                         {
                             // Just Check
                             // Set Check flag
+                            MessageBox.Show("But can you finish him off?", "You have placed your opponent in check.", MessageBoxButton.OK);
                             
                         }
                     }

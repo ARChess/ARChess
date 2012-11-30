@@ -52,6 +52,7 @@ namespace ARChess
 
         private void initialize() 
         {
+            System.Diagnostics.Debug.WriteLine("Initializing");
             chessPieces = new Dictionary<string, ChessPiece>();
 
             // Initialize all ChessPieces for ech player
@@ -67,6 +68,7 @@ namespace ARChess
 
         public void loadState(CurrentGameState state)
         {
+            System.Diagnostics.Debug.WriteLine("Loading State");
             mCurrentState = state;
 
             chessPieces["black_pawn1"].setPosition(new Vector2((float)state.black.pawn1.x, (float)state.black.pawn1.y));
@@ -139,6 +141,7 @@ namespace ARChess
             chessPieces["white_king"].setMasqueradesAs(state.white.king.masquerading_as);
 
             mMoveMade = false;
+            mSelectedPiece = null;
             mMyColor = GameStateManager.getInstance().getCurrentPlayer();
             setPieceMoves();
         }
@@ -189,6 +192,7 @@ namespace ARChess
             {
                 if (!entry.Value.isTaken())
                 {
+                    //System.Diagnostics.Debug.WriteLine("Setting Moves for: >" + entry.Value.getMasqueradeType() + "<");
                     entry.Value.determineMoves(chessPieces);
                 }
             }
@@ -215,6 +219,71 @@ namespace ARChess
                 }
             }
             return false;
+        }
+
+        public bool checkmate()
+        {
+            // Assume inCheck() has been called,
+            // therefore all piece moves have been calculated
+
+            //Cache current state
+            mCurrentState = toCurrentGameState();
+            ChessPiece.Color opponentColor = (mMyColor == ChessPiece.Color.BLACK ? ChessPiece.Color.WHITE : ChessPiece.Color.BLACK);
+            ChessPiece kingPiece = chessPieces[(opponentColor == ChessPiece.Color.BLACK ? "black" : "white") + "_king"];
+            Vector2 kingPos = kingPiece.getPosition();
+
+            // If king has a move that is not CAN_TAKE or CAN_MOVE
+            // Check if any of kings moves do not result in check
+            int[] cardinalDir = new int[16]{-1,1,  0,1,  1,1,
+                                            -1,0,        1,0,
+                                            -1,-1, 0,-1, 1,-1 };
+
+            for (int i = 0; i < 8; ++i)
+            {
+                System.Diagnostics.Debug.WriteLine("Check # " + i);
+                
+                //mSelectedPiece = kingPiece;
+
+                Vector2 potentialMove = kingPos + new Vector2(cardinalDir[2 * i], cardinalDir[2 * i + 1]);
+                System.Diagnostics.Debug.WriteLine(potentialMove);
+                try
+                {
+
+                    //setSelected(potentialMove);
+                    kingPiece.makeMove(potentialMove, chessPieces);
+                    if (!inCheck(opponentColor))
+                    {
+                        // Valid move out of check exists
+                        System.Diagnostics.Debug.WriteLine("CheckMate Check - Valid Move :)");
+                        resetTurn();
+                        return false;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    // Not valid move
+                    System.Diagnostics.Debug.WriteLine("CheckMate Check - Exception");
+                    //System.Diagnostics.Debug.WriteLine(kingPos + new Vector2(i, 2 * i + 1));
+                }
+                // Reset and try new move
+                resetTurn();
+                System.Diagnostics.Debug.WriteLine("CheckMate Check - Invalid Move");
+                System.Diagnostics.Debug.WriteLine("");
+            }
+            // All moves have been checked, king is stuck.
+            // But can he be saved?
+
+
+
+            // If there is only one piece checking the king, 
+            // and a friendly piece can take it OR block its path
+            // without exposing the king
+            // NOT IN CHECKMATE
+
+            // Otherwise, in checkmate
+
+            return true;
         }
 
         public void resetTurn()
@@ -254,8 +323,12 @@ namespace ARChess
                         // Set Selected Piece
                         mSelectedPiece = entry.Value;
 
-                        // Set moves to display
-                        mBoard.setMoves( entry.Value.getMoves() );
+                        // In easy mode - set moves to display
+                        AppSettings settings = new AppSettings();
+                        if (!settings.AdvancedModeSettings)
+                        {
+                            mBoard.setMoves( entry.Value.getMoves() );
+                        }
 
                         return;
                     }
