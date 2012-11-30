@@ -316,39 +316,20 @@ namespace ARChess
                     MessageBoxResult result = MessageBox.Show("Once done, this move cannot be undone.", "Are you sure?", MessageBoxButton.OKCancel);
                     if (result == MessageBoxResult.OK)
                     {
-                        // 
-                        String pageToGo = "/WaitForOpponentPage.xaml";
-
-                        // Check is opponent is in check or checkmate
-                        ChessPiece.Color opponentColor = GameState.getInstance().getMyColor() == ChessPiece.Color.BLACK ?
-                            ChessPiece.Color.WHITE : ChessPiece.Color.BLACK;
-
-                        if (GameState.getInstance().inCheck(opponentColor))
+                        // Opponent is at least in Check
+                        if ( GameState.getInstance().checkmate() )
                         {
-                            // Opponent is at least in Check
-                            if (false)
-                            {
-                                // Checkmate
-                                // Take King to signify End Game
-                                pageToGo = "/WonPage.xaml";
-                            }
-                            else
-                            {
-                                // Just Check
-                                // Set Check flag
-
-                            }
+                            // Checkmate
+                            // Take King to signify End Game
+                            MessageBox.Show("You have placed your opponent in checkmate.", "Winner! It works!!!", MessageBoxButton.OK);
+                            //pageToGo = "/WonPage.xaml";
                         }
-<<<<<<< HEAD
-
-=======
 						else
 						{
                             // Just Check
                             // Set Check flag
                             MessageBox.Show("But can you finish him off?", "You have placed your opponent in check.", MessageBoxButton.OK);
                         }
->>>>>>> 3690d4f... fix merge conflict
                         // Send result to server
                         var bw = new BackgroundWorker();
                         bw.DoWork += (s, args) =>

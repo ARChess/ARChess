@@ -52,6 +52,7 @@ namespace ARChess
 
         private void initialize() 
         {
+            System.Diagnostics.Debug.WriteLine("Initializing");
             chessPieces = new Dictionary<string, ChessPiece>();
 
             // Initialize all ChessPieces for ech player
@@ -140,11 +141,8 @@ namespace ARChess
                 chessPieces["white_queen"].setMasqueradesAs(state.white.queen.masquerading_as);
                 chessPieces["white_king"].setMasqueradesAs(state.white.king.masquerading_as);
 
-<<<<<<< HEAD
-=======
 				mMoveMade = false;
 				mSelectedPiece = null;
->>>>>>> 3690d4f... fix merge conflict
                 mMyColor = GameStateManager.getInstance().getCurrentPlayer();
                 setPieceMoves();
             }
@@ -196,14 +194,20 @@ namespace ARChess
             {
                 if (!entry.Value.isTaken())
                 {
+                    //System.Diagnostics.Debug.WriteLine("Setting Moves for: >" + entry.Value.getMasqueradeType() + "<");
                     entry.Value.determineMoves(chessPieces);
                 }
             }
         }
 
+        private List<ChessPiece> checkingPieces = new List<ChessPiece>();
+        private List<ChessPiece> guardingPieces = new List<ChessPiece>();
         public bool inCheck(ChessPiece.Color playerColor)
         {
             setPieceMoves();
+            checkingPieces.Clear();
+            guardingPieces.Clear();
+            bool inCheck = false;
 
             Vector2 kingPosition = chessPieces[(playerColor == ChessPiece.Color.BLACK ? "black" : "white") + "_king"].getPosition();
             int x = (int)kingPosition.X;
@@ -217,11 +221,125 @@ namespace ARChess
                     if (moves[x,y] == ChessBoard.BoardSquare.CAN_TAKE)
                     {
                         // Player is in check
-                        return true;
+                        checkingPieces.Add(entry.Value);
+                        inCheck = true;
                     }
                 }
             }
-            return false;
+            return inCheck;
+        }
+
+        public bool checkmate()
+        {
+            // Assume inCheck() has been called,
+            // therefore all piece moves have been calculated
+
+            //Cache current state
+            mCurrentState = toCurrentGameState();
+            ChessPiece.Color opponentColor = (mMyColor == ChessPiece.Color.BLACK ? ChessPiece.Color.WHITE : ChessPiece.Color.BLACK);
+            ChessPiece kingPiece = chessPieces[(opponentColor == ChessPiece.Color.BLACK ? "black" : "white") + "_king"];
+            Vector2 kingPos = kingPiece.getPosition();
+
+            // If king has a move that is not CAN_TAKE or CAN_MOVE
+            // Check if any of kings moves do not result in check
+            int[] cardinalDir = new int[16]{-1,1,  0,1,  1,1,
+                                            -1,0,        1,0,
+                                            -1,-1, 0,-1, 1,-1 };
+
+            for (int i = 0; i < 8; ++i)
+            {
+                //System.Diagnostics.Debug.WriteLine("Check # " + i);
+                
+                //mSelectedPiece = kingPiece;
+
+                Vector2 potentialMove = kingPos + new Vector2(cardinalDir[2 * i], cardinalDir[2 * i + 1]);
+                //System.Diagnostics.Debug.WriteLine(potentialMove);
+                try
+                {
+
+                    //setSelected(potentialMove);
+                    kingPiece.makeMove(potentialMove, chessPieces);
+                    if (!inCheck(opponentColor))
+                    {
+                        // Valid move out of check exists
+                        //System.Diagnostics.Debug.WriteLine("CheckMate Check - Valid Move :)");
+                        resetTurn();
+                        return false;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    // Not valid move
+                    //System.Diagnostics.Debug.WriteLine("CheckMate Check - Exception");
+                    //System.Diagnostics.Debug.WriteLine(kingPos + new Vector2(i, 2 * i + 1));
+                }
+                // Reset and try new move
+                resetTurn();
+                //System.Diagnostics.Debug.WriteLine("CheckMate Check - Invalid Move");
+                //System.Diagnostics.Debug.WriteLine("");
+            }
+            // All moves have been checked, king is stuck.
+
+            inCheck(opponentColor);
+            if (checkingPieces.Count > 1) {
+                // If checked by two pieces & can't move, checkmate
+                return true;
+            }
+
+            // But can he be saved without being exposed to new attack?
+
+            ChessPiece checkingPiece = checkingPieces[0];
+            int x = (int)checkingPiece.getPosition().X,
+                y = (int)checkingPiece.getPosition().Y,
+                xDelta = x - (int)kingPos.X,
+                yDelta = y - (int)kingPos.Y,
+                dist = (xDelta == 0 ? Math.Abs(yDelta) : Math.Abs(xDelta));
+            xDelta /= Math.Abs(xDelta);
+            yDelta /= Math.Abs(yDelta);
+
+            foreach (KeyValuePair<string, ChessPiece> entry in chessPieces)
+            {
+                if ((!entry.Value.isTaken()) && (entry.Value.getPlayer() == opponentColor))
+                {
+                    //Check if piece is already guarding
+                    if (false)
+                    {
+                        //Piece is guarding, cannot help
+                    }
+                    else
+                    {
+
+                        ChessBoard.BoardSquare[,] moves = entry.Value.getMoves();
+                        // Check if piece can be taken or blocked if sliding
+
+                        if (checkingPieces[0].getType() != ChessPiece.Piece.PAWN &&
+                            checkingPieces[0].getType() != ChessPiece.Piece.KNIGHT) {
+                            // Check for blocking
+
+                                for (int i = 1; i < dist; ++i ) {
+
+                                    if (moves[(int)kingPos.X + i * xDelta, (int)kingPos.Y + i * yDelta] == ChessBoard.BoardSquare.CAN_MOVE)
+                                    {
+                                        // Can block!
+                                        return false;
+
+                                    }
+                                }
+                        }
+
+                        if (moves[x, y] == ChessBoard.BoardSquare.CAN_TAKE)
+                        {
+                            // Can take the checking piece
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            // Otherwise, in checkmate
+
+            return true;
         }
 
         public void resetTurn()
@@ -261,8 +379,12 @@ namespace ARChess
                         // Set Selected Piece
                         mSelectedPiece = entry.Value;
 
-                        // Set moves to display
-                        mBoard.setMoves( entry.Value.getMoves() );
+                        // In easy mode - set moves to display
+                        AppSettings settings = new AppSettings();
+                        if (!settings.AdvancedModeSettings)
+                        {
+                            mBoard.setMoves( entry.Value.getMoves() );
+                        }
 
                         return;
                     }
@@ -271,20 +393,20 @@ namespace ARChess
             else
             {
                 // Piece already selected
-                ChessBoard.BoardSquare[,] squares = mBoard.getBoardSquares();
+                ChessBoard.BoardSquare[,] squares = mSelectedPiece.getMoves();
                 
                 if (mSelectedPiece.getPosition() == newPosition) 
                 {
                     // Put Piece Back
                     mSelectedPiece = null;
-                    mBoard.clearBoardSquares();
+                    //mBoard.clearBoardSquares();
                 }
                 else if ( squares[x, y] == ChessBoard.BoardSquare.CAN_MOVE )
                 {
                     // Move is valid
                     previousPosition = mSelectedPiece.getPosition();
                     chosenPosition = newPosition;
-                    mBoard.clearBoardSquares();
+                    //mBoard.clearBoardSquares();
                     mMoveMade = true;
                 }
                 else if (squares[x, y] == ChessBoard.BoardSquare.CAN_TAKE) 
@@ -302,7 +424,7 @@ namespace ARChess
 
                     previousPosition = mSelectedPiece.getPosition();
                     chosenPosition = newPosition;
-                    mBoard.clearBoardSquares();
+                    //mBoard.clearBoardSquares();
                     mMoveMade = true;
                 }
                 else

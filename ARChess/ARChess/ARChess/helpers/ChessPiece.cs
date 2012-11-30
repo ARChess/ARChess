@@ -131,6 +131,43 @@ namespace ARChess
             mPosition = _position;
         }
 
+        public ChessBoard.BoardSquare makeMove(Vector2 dest, Dictionary<string, ChessPiece> chessPieces)
+        {
+            int x = (int)dest.X;
+            int y = (int)dest.Y;
+
+            if (mMoves[x, y] == ChessBoard.BoardSquare.CAN_MOVE)
+            {
+                // Move is valid
+                mPosition = dest;
+            }
+            else if (mMoves[x, y] == ChessBoard.BoardSquare.CAN_TAKE)
+            {
+                
+                // Move is valid - Enemy Piece is taken
+                foreach (KeyValuePair<string, ChessPiece> entry in chessPieces)
+                {
+                    if ((mPlayer != entry.Value.getPlayer()) && (dest == entry.Value.getPosition()))
+                    {
+                        // Remove Enemy Piece
+                        entry.Value.remove();
+                        break;
+                    }
+                }
+
+                mPosition = dest;
+            }
+            else
+            {
+                // Move is not valid
+                System.Diagnostics.Debug.WriteLine("Invalid Move");
+                System.Diagnostics.Debug.WriteLine(new Vector2(x, y));
+                throw new Exception("Move is not Valid");
+            }
+
+            return mMoves[x, y];
+        }
+
         public bool isTaken()
         {
             return (mPosition.X == -1) && (mPosition.Y == -1);
@@ -278,6 +315,9 @@ namespace ARChess
 
             for (int j = 1; j <= range; ++j)
             {
+                // TODO reverse sliding for guard test
+
+
                 int boardX = x + j * xDelta;
                 int boardY = y + j * yDelta;
                 if ((boardX > 7) || (boardX < 0) || (boardY > 7) || (boardY < 0))
@@ -286,7 +326,7 @@ namespace ARChess
                 }
                 else if (mMoves[boardX, boardY] == ChessBoard.BoardSquare.FRIEND)
                 {
-                    //break;
+                    break;
                 }
                 else if (mMoves[boardX, boardY] == ChessBoard.BoardSquare.ENEMY)
                 {
