@@ -23,6 +23,7 @@ namespace ARChess
             Regex r1 = null, r2 = null, r3 = null;
             Match match1 = null, match2 = null, match3 = null;
 
+            //grab only the parts of the commands that we care about
             if (command.ToLower().IndexOf("move") != -1)
             {
                 //find space identity
@@ -64,14 +65,16 @@ namespace ARChess
                     chosenPiece = processPiece(match2.Groups[1].Value);
                 }
 
-
+                //convert A7 or whatever board space to X, Y coordinates
                 chosenLocation = processLocation(match3.Groups[1].Value, match3.Groups[2].Value);
 
+                //find the closest piece of the specified type to the specified board square
                 Vector2 closestApproximation = findClosestPiece(chosenLocation, chosenPiece);
                 GameState.getInstance().setSelected(closestApproximation);
             }
             else
             {
+                //convert A7 or whatever board space to X, Y coordinates
                 Vector2 chosenLocation = processLocation(match3.Groups[1].Value, match3.Groups[2].Value);
 
                 GameState.getInstance().setSelected(chosenLocation);
