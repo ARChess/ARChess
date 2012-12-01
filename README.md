@@ -23,5 +23,4 @@ ARC (Augmented Reality Chess) is a project between Jordan Gestring and Ethan McG
 ## Credits
 
 * SLARToolkit for Windows Phone by teichgraf
-* Nuance Voice Recognition by Dragon
 * Silverlight and XNA Frameworks/Toolkits for Windows Phone by Microsoft
