@@ -305,8 +305,16 @@ namespace ARChess
             }
             else
             {
+                bool doesAPawnNeedPromotion = false;
+
+                string color = GameStateManager.getInstance().getCurrentPlayer().ToString().ToLower();
+                bool white_and_end = color == "white" && GameState.getInstance().getSelectedPiece().getPosition().X == 7;
+                bool black_and_end = color == "black" && GameState.getInstance().getSelectedPiece().getPosition().X == 0;
+
+                doesAPawnNeedPromotion = (white_and_end || black_and_end);
+                
                 //check to see if pawn promotion is needed
-                if (false)
+                if (doesAPawnNeedPromotion)
                 {
                     messageBox = new CustomMessageBox()
                     {
