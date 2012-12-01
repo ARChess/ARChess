@@ -26,7 +26,7 @@ namespace ARChess
             if (command.ToLower().IndexOf("move") != -1)
             {
                 //find space identity
-                r3 = new Regex(@"space ([A-F1-8]) ([A-Za-z0-9\-]+)");
+                r3 = new Regex(@"space ([A-H1-8]) ([A-Za-z0-9\-]+)");
 
                 match3 = r3.Match(command);
             }
@@ -40,7 +40,7 @@ namespace ARChess
                 match2 = r2.Match(command);
 
                 //find space identity
-                r3 = new Regex(@"space ([A-F1-8]) ([A-Za-z0-9\-]+)");
+                r3 = new Regex(@"space ([A-H1-8]) ([A-Za-z0-9\-]+)");
 
                 match3 = r3.Match(command);
             }
@@ -83,26 +83,26 @@ namespace ARChess
             
             switch (location_match)
             {
-                case "A": chosenLocation.X = 0; break;
-                case "B": chosenLocation.X = 1; break;
-                case "C": chosenLocation.X = 2; break;
-                case "D": chosenLocation.X = 3; break;
-                case "E": chosenLocation.X = 4; break;
-                case "F": chosenLocation.X = 5; break;
-                case "G": chosenLocation.X = 6; break;
-                case "H": chosenLocation.X = 7; break;
+                case "A": chosenLocation.X = 1; break;
+                case "B": chosenLocation.X = 2; break;
+                case "C": chosenLocation.X = 3; break;
+                case "D": chosenLocation.X = 4; break;
+                case "E": chosenLocation.X = 5; break;
+                case "F": chosenLocation.X = 6; break;
+                case "G": chosenLocation.X = 7; break;
+                case "H": chosenLocation.X = 8; break;
             }
 
             switch (location_match_alternate)
             {
-                case "one": chosenLocation.Y = 7; break;
-                case "two": chosenLocation.Y = 6; break;
-                case "three": chosenLocation.Y = 5; break;
-                case "four": chosenLocation.Y = 4; break;
-                case "five": chosenLocation.Y = 3; break;
-                case "six": chosenLocation.Y = 2; break;
-                case "seven": chosenLocation.Y = 1; break;
-                case "eight": chosenLocation.Y = 0; break;
+                case "one": chosenLocation.Y = 8; break;
+                case "two": chosenLocation.Y = 7; break;
+                case "three": chosenLocation.Y = 6; break;
+                case "four": chosenLocation.Y = 5; break;
+                case "five": chosenLocation.Y = 4; break;
+                case "six": chosenLocation.Y = 3; break;
+                case "seven": chosenLocation.Y = 2; break;
+                case "eight": chosenLocation.Y = 1; break;
             }
             
             return chosenLocation;
