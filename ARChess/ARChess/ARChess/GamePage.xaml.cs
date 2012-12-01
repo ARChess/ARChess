@@ -306,8 +306,8 @@ namespace ARChess
                 bool doesAPawnNeedPromotion = false;
 
                 string color = GameStateManager.getInstance().getCurrentPlayer().ToString().ToLower();
-                bool white_and_end = color == "white" && GameState.getInstance().getSelectedPiece() != null && GameState.getInstance().getSelectedPiece().getMasqueradeType() == "pawn" && GameState.getInstance().getChosenPosition().X == 7;
-                bool black_and_end = color == "black" && GameState.getInstance().getSelectedPiece() != null && GameState.getInstance().getSelectedPiece().getMasqueradeType() == "pawn" && GameState.getInstance().getChosenPosition().X == 0;
+                bool white_and_end = color == "white" && GameState.getInstance().getSelectedPiece() != null && GameState.getInstance().getSelectedPiece().getMasqueradeType() == "pawn" && GameState.getInstance().getSelectedPiece().getPosition().X == 7;
+                bool black_and_end = color == "black" && GameState.getInstance().getSelectedPiece() != null && GameState.getInstance().getSelectedPiece().getMasqueradeType() == "pawn" && GameState.getInstance().getSelectedPiece().getPosition().X == 0;
 
                 doesAPawnNeedPromotion = (white_and_end || black_and_end);
 
@@ -369,7 +369,7 @@ namespace ARChess
                         {
                             // Checkmate
                             // Take King to signify End Game
-                            MessageBox.Show("You have placed your opponent in checkmate.", "Winner! It works!!!", MessageBoxButton.OK);
+                            //MessageBox.Show("You have placed your opponent in checkmate.", "Winner! It works!!!", MessageBoxButton.OK);
                             //pageToGo = "/WonPage.xaml";
                         }
                         else
@@ -387,6 +387,7 @@ namespace ARChess
                 else
                 {
                     // Reset Turn
+                    alreadyCalledPromote = false;
                     GameState.getInstance().resetTurn();
                 }
             }
