@@ -23,6 +23,7 @@ namespace ARChess
         private Dictionary<string, ChessPiece> chessPieces;
         private ChessPiece.Color mMyColor;
         private ChessPiece mSelectedPiece;
+        private string selectedPieceMasqueradingAs;
         private ContentManager content;
 
         private ChessBoard mBoard;
@@ -141,8 +142,6 @@ namespace ARChess
                 chessPieces["white_queen"].setMasqueradesAs(state.white.queen.masquerading_as);
                 chessPieces["white_king"].setMasqueradesAs(state.white.king.masquerading_as);
 
-				mMoveMade = false;
-				mSelectedPiece = null;
                 mMyColor = GameStateManager.getInstance().getCurrentPlayer();
                 setPieceMoves();
             }
@@ -371,6 +370,7 @@ namespace ARChess
             {
                 mMoveMade = false;
                 mSelectedPiece.setPosition(previousPosition);
+                mSelectedPiece.setMasqueradesAs(selectedPieceMasqueradingAs);
                 mSelectedPiece = null;
             }
             mBoard.clearBoardSquares();
@@ -401,6 +401,7 @@ namespace ARChess
                     {
                         // Set Selected Piece
                         mSelectedPiece = entry.Value;
+                        selectedPieceMasqueradingAs = entry.Value.getMasqueradeType();
 
                         // In easy mode - set moves to display
                         AppSettings settings = new AppSettings();
@@ -464,6 +465,11 @@ namespace ARChess
         public ChessPiece getSelectedPiece()
         {
             return mSelectedPiece;
+        }
+
+        public Vector2 getChosenPosition()
+        {
+            return chosenPosition;
         }
 
         public void movePiece(Vector2 dest)

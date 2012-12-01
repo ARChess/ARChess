@@ -212,11 +212,11 @@ namespace ARChess
             {
                 case "pawn":
                     // Pawns can only take diagonally
-                    if ((y > 0) && (mMoves[x + forward, y - 1] == ChessBoard.BoardSquare.ENEMY))
+                    if (!(x == 7 || x == 1) && (y > 0) && (mMoves[x + forward, y - 1] == ChessBoard.BoardSquare.ENEMY))
                     {
                         mMoves[x + forward, y - 1] = ChessBoard.BoardSquare.CAN_TAKE;
                     }
-                    if ((y < 7) && (mMoves[x + forward, y + 1] == ChessBoard.BoardSquare.ENEMY))
+                    if (!(x == 7 || x == 1) && (y < 7) && (mMoves[x + forward, y + 1] == ChessBoard.BoardSquare.ENEMY))
                     {
                         mMoves[x + forward, y + 1] = ChessBoard.BoardSquare.CAN_TAKE;
                     }

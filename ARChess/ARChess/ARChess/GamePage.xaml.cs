@@ -127,16 +127,31 @@ namespace ARChess
 
         void _client_RecognizeSpeechCompleted(object sender, RecognizeSpeechCompletedEventArgs e)
         {
+            hidePopup();
+            SetupPage();
             try
             {
                 VoiceCommandFuzzyProcessing.process(e.Result);
+
+                bool doesAPawnNeedPromotion = false;
+
+                string color = GameStateManager.getInstance().getCurrentPlayer().ToString().ToLower();
+                bool white_and_end = color == "white" && GameState.getInstance().getSelectedPiece() != null && GameState.getInstance().getSelectedPiece().getType() == ChessPiece.Piece.PAWN && GameState.getInstance().getChosenPosition().X == 7;
+                bool black_and_end = color == "black" && GameState.getInstance().getSelectedPiece() != null && GameState.getInstance().getSelectedPiece().getType() == ChessPiece.Piece.PAWN && GameState.getInstance().getChosenPosition().X == 0;
+
+                doesAPawnNeedPromotion = (white_and_end || black_and_end);
+
+                //check to see if pawn promotion is needed
+                if (doesAPawnNeedPromotion)
+                {
+                    TeardownPage();
+                    showPopup("Pawn Promote");
+                }
             }
             catch (Exception ex)
             {
                 handleError(ex.Message);
             }
-            hidePopup();
-            SetupPage();
         }
 
         public void TeardownPage()
@@ -305,74 +320,39 @@ namespace ARChess
             }
             else
             {
-                bool doesAPawnNeedPromotion = false;
-
-                string color = GameStateManager.getInstance().getCurrentPlayer().ToString().ToLower();
-                bool white_and_end = color == "white" && GameState.getInstance().getSelectedPiece().getPosition().X == 7;
-                bool black_and_end = color == "black" && GameState.getInstance().getSelectedPiece().getPosition().X == 0;
-
-                doesAPawnNeedPromotion = (white_and_end || black_and_end);
-                
-                //check to see if pawn promotion is needed
-                if (doesAPawnNeedPromotion)
+                // Self not in check - Proceed
+                MessageBoxResult result = MessageBox.Show("Once done, this move cannot be undone.", "Are you sure?", MessageBoxButton.OKCancel);
+                if (result == MessageBoxResult.OK)
                 {
-                    messageBox = new CustomMessageBox()
-                    {
-                        ContentTemplate = (DataTemplate)this.Resources["PawnPromoteTemplate"],
-                        IsLeftButtonEnabled = false,
-                        IsRightButtonEnabled = false,
-                        IsFullScreen = true 
-                    };
+                    // Check is opponent is in check or checkmate
+                    ChessPiece.Color opponentColor = GameState.getInstance().getMyColor() == ChessPiece.Color.BLACK ?
+                        ChessPiece.Color.WHITE : ChessPiece.Color.BLACK;
 
-                    messageBox.Dismissed += (s1, e1) =>
+                    if ( GameState.getInstance().inCheck(opponentColor) )
                     {
-                        switch (e1.Result)
+                        if (GameState.getInstance().checkmate(opponentColor))
                         {
-                            case CustomMessageBoxResult.None:
-                                break;
-                            default:
-                                break;
+                            // Checkmate
+                            // Take King to signify End Game
+                            MessageBox.Show("You have placed your opponent in checkmate.", "Winner! It works!!!", MessageBoxButton.OK);
+                            //pageToGo = "/WonPage.xaml";
                         }
-                    };
-
-                    messageBox.Show();
+                        else
+                        {
+                            // Just Check
+                            // Set Check flag
+                            MessageBox.Show("But can you finish him off?", "You have placed your opponent in check.", MessageBoxButton.OK);
+                        }
+                    }
+                    // Opponent is at least in Check
+                        
+                    // Send result to server
+                    sendMove();
                 }
                 else
                 {
-                    // Self not in check - Proceed
-                    MessageBoxResult result = MessageBox.Show("Once done, this move cannot be undone.", "Are you sure?", MessageBoxButton.OKCancel);
-                    if (result == MessageBoxResult.OK)
-                    {
-                        // Check is opponent is in check or checkmate
-                        ChessPiece.Color opponentColor = GameState.getInstance().getMyColor() == ChessPiece.Color.BLACK ?
-                            ChessPiece.Color.WHITE : ChessPiece.Color.BLACK;
-
-                        if ( GameState.getInstance().inCheck(opponentColor) )
-                        {
-                            if (GameState.getInstance().checkmate(opponentColor))
-                            {
-                                // Checkmate
-                                // Take King to signify End Game
-                                MessageBox.Show("You have placed your opponent in checkmate.", "Winner! It works!!!", MessageBoxButton.OK);
-                                //pageToGo = "/WonPage.xaml";
-                            }
-                            else
-                            {
-                                // Just Check
-                                // Set Check flag
-                                MessageBox.Show("But can you finish him off?", "You have placed your opponent in check.", MessageBoxButton.OK);
-                            }
-                        }
-                        // Opponent is at least in Check
-                        
-                        // Send result to server
-                        sendMove();
-                    }
-                    else
-                    {
-                        // Reset Turn
-                        GameState.getInstance().resetTurn();
-                    }
+                    // Reset Turn
+                    GameState.getInstance().resetTurn();
                 }
             }
         }
@@ -498,6 +478,26 @@ namespace ARChess
             {
                 switch (text)
                 {
+                    case "Pawn Promote":
+                        messageBox = new CustomMessageBox()
+                        {
+                            ContentTemplate = (DataTemplate)this.Resources["PawnPromoteTemplate"],
+                            IsLeftButtonEnabled = false,
+                            IsRightButtonEnabled = false,
+                            IsFullScreen = true
+                        };
+
+                        messageBox.Dismissed += (s1, e1) =>
+                        {
+                            switch (e1.Result)
+                            {
+                                case CustomMessageBoxResult.None:
+                                    break;
+                                default:
+                                    break;
+                            }
+                        };
+                        break;
                     case "Processing Dictation":
                         messageBox = new CustomMessageBox()
                         {
@@ -590,28 +590,28 @@ namespace ARChess
         {
             GameState.getInstance().getSelectedPiece().setMasqueradesAs("queen");
             hidePopup();
-            sendMove();
+            SetupPage();
         }
 
         private void RookClick(object sender, RoutedEventArgs e)
         {
             GameState.getInstance().getSelectedPiece().setMasqueradesAs("rook");
             hidePopup();
-            sendMove();
+            SetupPage();
         }
 
         private void BishopClick(object sender, RoutedEventArgs e)
         {
             GameState.getInstance().getSelectedPiece().setMasqueradesAs("bishop");
             hidePopup();
-            sendMove();
+            SetupPage();
         }
 
         private void KnightClick(object sender, RoutedEventArgs e)
         {
             GameState.getInstance().getSelectedPiece().setMasqueradesAs("knight");
             hidePopup();
-            sendMove();
+            SetupPage();
         }
     }
 }
