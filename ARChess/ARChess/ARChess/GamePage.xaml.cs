@@ -36,6 +36,7 @@ namespace ARChess
 
     public partial class GamePage : PhoneApplicationPage
     {
+        //url for voice recognition server
         private string voiceRecognitionServerIP = "http://" + "10.0.1.53" + ":62495/ARVR.svc";
 
         private GrayBufferMarkerDetector arDetector = null;
@@ -57,6 +58,8 @@ namespace ARChess
 
         private UIElementRenderer uiRenderer;
         private GameResponse response;
+
+        //thread locks
         private bool setupFinished = false;
         private bool alreadyCalledWait = false;
         private bool alreadyCalledPromote = false;
@@ -201,7 +204,6 @@ namespace ARChess
 
         private void SetupTheUIRenderer()
         {
-            // Do we already have a UIElementRenderer of the correct size?
             if (uiRenderer != null &&
                 uiRenderer.Texture != null &&
                 uiRenderer.Texture.Width == 800 &&
