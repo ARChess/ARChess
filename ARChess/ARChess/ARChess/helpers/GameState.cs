@@ -30,6 +30,7 @@ namespace ARChess
         private PieceSelector mSelector;
         private bool mMoveMade = false;
         private CurrentGameState mCurrentState;
+        private ChessPiece pawnToPromote;
 
         private static GameState mInstance = null;
         private Vector2 previousPosition;
@@ -143,6 +144,7 @@ namespace ARChess
                 chessPieces["white_king"].setMasqueradesAs(state.white.king.masquerading_as);
 
                 mMyColor = GameStateManager.getInstance().getCurrentPlayer();
+                mSelectedPiece = null;
                 setPieceMoves();
             }
         }
@@ -386,6 +388,16 @@ namespace ARChess
             return mMyColor;
         }
 
+        public ChessPiece getPawnToPromote()
+        {
+            return pawnToPromote;
+        }
+
+        public void setPawnToPromote(ChessPiece promo)
+        {
+            pawnToPromote = promo;
+        }
+
         public void setSelected(Vector2 position)
         {
             int x = (int) position.X;
@@ -416,7 +428,7 @@ namespace ARChess
             }
             else
             {
-                // Piece already selected
+                // Piece already selected - place at position
                 ChessBoard.BoardSquare[,] squares = mSelectedPiece.getMoves();
                 
                 if (mSelectedPiece.getPosition() == newPosition) 
@@ -458,6 +470,12 @@ namespace ARChess
                     System.Diagnostics.Debug.WriteLine("Invalid Move");
                     System.Diagnostics.Debug.WriteLine(new Vector2(x, y));
                     throw new Exception("Move is not Valid");
+                }
+
+                if (mSelectedPiece.getType() == ChessPiece.Piece.PAWN)
+                {
+                    System.Diagnostics.Debug.WriteLine("Placed Pawn");
+                    pawnToPromote = mSelectedPiece;
                 }
             }
         }
