@@ -236,7 +236,6 @@ namespace ARChess
 
             //Cache current state
             mCurrentState = toCurrentGameState();
-            //ChessPiece.Color opponentColor = (mMyColor == ChessPiece.Color.BLACK ? ChessPiece.Color.WHITE : ChessPiece.Color.BLACK);
             ChessPiece kingPiece = chessPieces[(opponentColor == ChessPiece.Color.BLACK ? "black" : "white") + "_king"];
             Vector2 kingPos = kingPiece.getPosition();
 
@@ -248,12 +247,10 @@ namespace ARChess
 
             for (int i = 0; i < 8; ++i)
             {
-                System.Diagnostics.Debug.WriteLine("Check # " + i);
-                
-                //mSelectedPiece = kingPiece;
+                //System.Diagnostics.Debug.WriteLine("Check # " + i);
 
                 Vector2 potentialMove = kingPos + new Vector2(cardinalDir[2 * i], cardinalDir[2 * i + 1]);
-                System.Diagnostics.Debug.WriteLine(potentialMove);
+                //System.Diagnostics.Debug.WriteLine(potentialMove);
                 try
                 {
 
@@ -262,7 +259,7 @@ namespace ARChess
                     if (!inCheck(opponentColor))
                     {
                         // Valid move out of check exists
-                        System.Diagnostics.Debug.WriteLine("CheckMate Check - Valid Move :)");
+                        //System.Diagnostics.Debug.WriteLine("CheckMate Check - Valid Move :)");
                         resetTurn();
                         return false;
                     }
@@ -271,12 +268,12 @@ namespace ARChess
                 catch (Exception ex)
                 {
                     // Not valid move
-                    System.Diagnostics.Debug.WriteLine("CheckMate Check - Exception");
+                    //System.Diagnostics.Debug.WriteLine("CheckMate Check - Exception");
                 }
                 // Reset and try new move
                 resetTurn();
-                System.Diagnostics.Debug.WriteLine("CheckMate Check - Invalid Move");
-                System.Diagnostics.Debug.WriteLine("");
+                //System.Diagnostics.Debug.WriteLine("CheckMate Check - Invalid Move");
+                //System.Diagnostics.Debug.WriteLine("");
             }
             // All moves have been checked, king is stuck.
 
@@ -299,7 +296,10 @@ namespace ARChess
 
             foreach (KeyValuePair<string, ChessPiece> entry in chessPieces)
             {
-                if ((!entry.Value.isTaken()) && (entry.Value.getPlayer() == opponentColor))
+                // Only check pieces in play AND opponents color AND not the king
+                if ( (!entry.Value.isTaken()) && 
+                     (entry.Value.getPlayer() == opponentColor) &&
+                     (entry.Value.getType() == ChessPiece.Piece.KING) )
                 {
                     ChessBoard.BoardSquare[,] moves = entry.Value.getMoves();
                     // Check if piece can be taken or blocked if sliding
@@ -311,8 +311,8 @@ namespace ARChess
                         if (!inCheck(opponentColor))
                         {
                             // Move does not result in another check
-                            System.Diagnostics.Debug.WriteLine("CheckMate Check - Potential Taking Piece");
-                            System.Diagnostics.Debug.WriteLine("CheckMate Check - " + entry.Value.getPosition());
+                            //System.Diagnostics.Debug.WriteLine("CheckMate Check - Potential Taking Piece");
+                            //System.Diagnostics.Debug.WriteLine("CheckMate Check - " + entry.Value.getPosition());
 
                             resetTurn();
                             return false;
@@ -342,8 +342,8 @@ namespace ARChess
                                 if (!inCheck(opponentColor))
                                 {
                                     // Move does not result in another check
-                                    System.Diagnostics.Debug.WriteLine("CheckMate Check - Potential Blocking Piece");
-                                    System.Diagnostics.Debug.WriteLine("CheckMate Check - " + entry.Value.getPosition());
+                                    //System.Diagnostics.Debug.WriteLine("CheckMate Check - Potential Blocking Piece");
+                                    //System.Diagnostics.Debug.WriteLine("CheckMate Check - " + entry.Value.getPosition());
 
                                     resetTurn();
                                     return false;
@@ -353,16 +353,15 @@ namespace ARChess
                                     // Move results in check
                                     resetTurn();
                                 }
-
                             }
+                            // Else cannot block checking piece
                         }
                     }
-
+                    // Else piece is not a blockable piece
                 }
             }
 
             // Otherwise, in checkmate
-
             return true;
         }
 
