@@ -34,7 +34,7 @@ namespace ARChess
         private static GameState mInstance = null;
         private Vector2 previousPosition;
         private Vector2 moveAlongPosition;
-        private Vector2 chosenPosition = Vector2.Zero;
+        private Vector2 chosenPosition = new Vector2(-1,-1);
         private Vector2 velocity = Vector2.Zero;
 
         public static GameState getInstance(bool createIfNotExistent = true)
@@ -374,6 +374,7 @@ namespace ARChess
                 mSelectedPiece.setPosition(previousPosition);
                 mSelectedPiece.setMasqueradesAs(selectedPieceMasqueradingAs);
                 mSelectedPiece = null;
+                chosenPosition = new Vector2(-1,-1)
             }
             mBoard.clearBoardSquares();
             loadState(mCurrentState);
