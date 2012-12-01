@@ -308,7 +308,26 @@ namespace ARChess
                 //check to see if pawn promotion is needed
                 if (false)
                 {
+                    messageBox = new CustomMessageBox()
+                    {
+                        ContentTemplate = (DataTemplate)this.Resources["PawnPromoteTemplate"],
+                        IsLeftButtonEnabled = false,
+                        IsRightButtonEnabled = false,
+                        IsFullScreen = true 
+                    };
 
+                    messageBox.Dismissed += (s1, e1) =>
+                    {
+                        switch (e1.Result)
+                        {
+                            case CustomMessageBoxResult.None:
+                                break;
+                            default:
+                                break;
+                        }
+                    };
+
+                    messageBox.Show();
                 }
                 else
                 {
@@ -331,16 +350,7 @@ namespace ARChess
                             MessageBox.Show("But can you finish him off?", "You have placed your opponent in check.", MessageBoxButton.OK);
                         }
                         // Send result to server
-                        var bw = new BackgroundWorker();
-                        bw.DoWork += (s, args) =>
-                        {
-                            new NetworkTask().sendGameState(GameState.getInstance().toCurrentGameState());
-                        };
-                        bw.RunWorkerCompleted += (s, args) =>
-                        {
-                            GameStateManager.getInstance().setShouldWait(true);
-                        };
-                        bw.RunWorkerAsync();
+                        sendMove();
                     }
                     else
                     {
@@ -349,6 +359,20 @@ namespace ARChess
                     }
                 }
             }
+        }
+
+        private void sendMove()
+        {
+            var bw = new BackgroundWorker();
+            bw.DoWork += (s, args) =>
+            {
+                new NetworkTask().sendGameState(GameState.getInstance().toCurrentGameState());
+            };
+            bw.RunWorkerCompleted += (s, args) =>
+            {
+                GameStateManager.getInstance().setShouldWait(true);
+            };
+            bw.RunWorkerAsync();
         }
 
         private void waitForOpponent()
@@ -544,6 +568,34 @@ namespace ARChess
                 speechRecognitionClient.RecognizeSpeechAsync(microphoneMemoryStream.ToArray(), microphone.SampleRate);
             };
             bw.RunWorkerAsync();
+        }
+
+        private void QueenClick(object sender, RoutedEventArgs e)
+        {
+            GameState.getInstance().getSelectedPiece().setMasqueradesAs("queen");
+            hidePopup();
+            sendMove();
+        }
+
+        private void RookClick(object sender, RoutedEventArgs e)
+        {
+            GameState.getInstance().getSelectedPiece().setMasqueradesAs("rook");
+            hidePopup();
+            sendMove();
+        }
+
+        private void BishopClick(object sender, RoutedEventArgs e)
+        {
+            GameState.getInstance().getSelectedPiece().setMasqueradesAs("bishop");
+            hidePopup();
+            sendMove();
+        }
+
+        private void KnightClick(object sender, RoutedEventArgs e)
+        {
+            GameState.getInstance().getSelectedPiece().setMasqueradesAs("knight");
+            hidePopup();
+            sendMove();
         }
     }
 }

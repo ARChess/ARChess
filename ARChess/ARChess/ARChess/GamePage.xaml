@@ -67,8 +67,20 @@
                 </controls:PivotItem>
             </controls:Pivot>
         </DataTemplate>
+        <DataTemplate x:Key="PawnPromoteTemplate">
+            <StackPanel Margin="12,0,0,0">
+                <TextBlock Text="Promote your pawn." FontSize="30" Margin="0,0,0,20" TextWrapping="Wrap"/>
+                <TextBlock Margin="0,0,0,12" TextWrapping="Wrap">
+               Your pawn has reached the end of the board and must be promoted.  Please choose which piece your pawn will be promoted to.
+                </TextBlock>
+                <Button x:Name="queenButton" Margin="5,0,0,0" HorizontalAlignment="Left" Height="80" Width="225" Click="QueenClick" Content="Queen" />
+                <Button x:Name="rookButton" Margin="0,-80,5,0" HorizontalAlignment="Right" Height="80" Width="225" Click="RookClick" Content="Rook" />
+                <Button x:Name="bishopButton" Margin="5,0,0,0" HorizontalAlignment="Left" Height="80" Width="225" Click="BishopClick" Content="Bishop" />
+                <Button x:Name="KnightButton" Margin="0,-80,5,0" HorizontalAlignment="Right" Height="80" Width="225" Click="KnightClick" Content="Knight" />
+            </StackPanel>
+        </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
-    
+
     <Rectangle Width="800"  Height="480" Margin="12,0,0,0">
         <Rectangle.Fill>
             <VideoBrush x:Name="ViewFinderBrush" />
