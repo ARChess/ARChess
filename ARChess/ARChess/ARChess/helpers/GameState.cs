@@ -30,7 +30,6 @@ namespace ARChess
         private PieceSelector mSelector;
         private bool mMoveMade = false;
         private CurrentGameState mCurrentState;
-        private ChessPiece pawnToPromote;
 
         private static GameState mInstance = null;
         private Vector2 previousPosition;
