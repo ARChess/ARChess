@@ -388,16 +388,6 @@ namespace ARChess
             return mMyColor;
         }
 
-        public ChessPiece getPawnToPromote()
-        {
-            return pawnToPromote;
-        }
-
-        public void setPawnToPromote(ChessPiece promo)
-        {
-            pawnToPromote = promo;
-        }
-
         public void setSelected(Vector2 position)
         {
             int x = (int) position.X;

@@ -348,15 +348,6 @@ namespace ARChess
             }
             else
             {
-
-                // Check for Pawn Promotion
-                ChessPiece pawnToPromote = GameState.getInstance().getPawnToPromote();
-                if (pawnToPromote != null)
-                {
-                    showPopup("Pawn Promote");
-                    //GameState.getInstance().setPawnToPromote(null);
-                }
-
                 // Self not in check - Proceed
                 MessageBoxResult result = MessageBox.Show("Once done, this move cannot be undone.", "Are you sure?", MessageBoxButton.OKCancel);
                 if (result == MessageBoxResult.OK)
