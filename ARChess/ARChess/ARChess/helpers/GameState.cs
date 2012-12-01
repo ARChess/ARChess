@@ -35,7 +35,7 @@ namespace ARChess
         private Vector2 previousPosition;
         private Vector2 moveAlongPosition;
         private Vector2 chosenPosition = new Vector2(-1,-1);
-        private Vector2 velocity = Vector2.Zero;
+        private Vector2 velocity = new Vector2(-1, -1);
 
         public static GameState getInstance(bool createIfNotExistent = true)
         {
@@ -374,7 +374,7 @@ namespace ARChess
                 mSelectedPiece.setPosition(previousPosition);
                 mSelectedPiece.setMasqueradesAs(selectedPieceMasqueradingAs);
                 mSelectedPiece = null;
-                chosenPosition = new Vector2(-1,-1)
+                chosenPosition = new Vector2(-1, -1);
             }
             mBoard.clearBoardSquares();
             loadState(mCurrentState);
@@ -540,7 +540,7 @@ namespace ARChess
                 }
                 else if (entry.Value == mSelectedPiece && mSelectedPiece.getPosition() != chosenPosition)
                 {
-                    if (velocity == Vector2.Zero)
+                    if (velocity.X == -1 && velocity.Y == -1)
                     {
                         Vector2 startPosition = previousPosition;
                         startPosition -= new Vector2(4, 4);
@@ -562,7 +562,7 @@ namespace ARChess
                     if ((int)(Vector2.Distance(moveAlongPosition, (chosenPosition - new Vector2(4,4)) * ModelDrawer.SCALE)) < ModelDrawer.SCALE / 10)
                     {
                         entry.Value.setPosition(chosenPosition);
-                        velocity = Vector2.Zero;
+                        velocity = new Vector2(-1, -1);
                     }
                 }
                 else
