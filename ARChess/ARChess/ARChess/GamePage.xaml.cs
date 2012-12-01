@@ -515,78 +515,7 @@ namespace ARChess
 
         private void showPopup(string text)
         {
-            switch (text)
-            {
-                case "Pawn Promote":
-                    messageBox = new CustomMessageBox()
-                    {
-                        ContentTemplate = (DataTemplate)this.Resources["PawnPromoteTemplate"],
-                        IsLeftButtonEnabled = false,
-                        IsRightButtonEnabled = false,
-                        IsFullScreen = true
-                    };
-
-                    messageBox.Dismissed += (s1, e1) =>
-                    {
-                        switch (e1.Result)
-                        {
-                            case CustomMessageBoxResult.None:
-                                break;
-                            default:
-                                break;
-                        }
-                    };
-                    break;
-                case "Processing Dictation":
-                    messageBox = new CustomMessageBox()
-                    {
-                        Caption = "Processing",
-                        Message = "We're processing your command.  Please wait.",
-                        IsLeftButtonEnabled = false,
-                        IsRightButtonEnabled = false,
-                        IsFullScreen = false
-                    };
-                    break;
-                case "Waiting":
-                    messageBox = new CustomMessageBox()
-                    {
-                        Caption = "Please Wait",
-                        Message = "Your opponent is making a move.",
-                        IsLeftButtonEnabled = false,
-                        IsRightButtonEnabled = false,
-                        IsFullScreen = false
-                    };
-                    break;
-                case "Listening":
-                    messageBox = new CustomMessageBox()
-                    {
-                        Caption = "Say a Command",
-                        Message = "We're listening.",
-                        LeftButtonContent = "Process",
-                        IsRightButtonEnabled = false,
-                        IsFullScreen = false
-                    };
-
-                    messageBox.Dismissed += (s1, e1) =>
-                    {
-                        switch (e1.Result)
-                        {
-                            case CustomMessageBoxResult.LeftButton:
-                                showPopup("Processing Dictation");
-                                break;
-                            case CustomMessageBoxResult.None:
-                                break;
-                            default:
-                                break;
-                        }
-                    };
-                    break;
-                default:
-                    break;
-            }
-            messageBox.Show();
-
-            /*Deployment.Current.Dispatcher.BeginInvoke(() =>
+            Deployment.Current.Dispatcher.BeginInvoke(() =>
             {
                 switch (text)
                 {
@@ -662,7 +591,7 @@ namespace ARChess
             Deployment.Current.Dispatcher.BeginInvoke(() =>
             {
                 messageBox.Show();
-            });*/
+            });
         }
 
         private void hidePopup()
