@@ -117,9 +117,6 @@
     <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WaitForOpponentPage.xaml.cs">
-      <DependentUpon>WaitForOpponentPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="WonPage.xaml.cs">
       <DependentUpon>WonPage.xaml</DependentUpon>
     </Compile>
@@ -152,10 +149,6 @@
     <Page Include="SettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="WaitForOpponentPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="WonPage.xaml">
       <Generator>MSBuild:Compile</Generator>

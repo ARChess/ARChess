@@ -229,14 +229,14 @@ namespace ARChess
             return inCheck;
         }
 
-        public bool checkmate()
+        public bool checkmate(ChessPiece.Color opponentColor)
         {
             // Assume inCheck() has been called,
             // therefore all piece moves have been calculated
 
             //Cache current state
             mCurrentState = toCurrentGameState();
-            ChessPiece.Color opponentColor = (mMyColor == ChessPiece.Color.BLACK ? ChessPiece.Color.WHITE : ChessPiece.Color.BLACK);
+            //ChessPiece.Color opponentColor = (mMyColor == ChessPiece.Color.BLACK ? ChessPiece.Color.WHITE : ChessPiece.Color.BLACK);
             ChessPiece kingPiece = chessPieces[(opponentColor == ChessPiece.Color.BLACK ? "black" : "white") + "_king"];
             Vector2 kingPos = kingPiece.getPosition();
 
