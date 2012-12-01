@@ -31,9 +31,9 @@
             <TextBlock Margin="60,20,0,0" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}">
                 ARChess is an application developed by Jordan Gestring and Ethan McGee in partial fulfillments of the requirements of Clemson University CPSC 611: Virtual Reality Systems Fall 2012.
             </TextBlock>
-            <Image Margin="-200,-175,0,0" Source="images/nuance.png" Height="100" Width="100" />
+            <Image Margin="-200,-175,0,0" Source="images/microsoft.png" Height="100" Width="100" />
             <TextBlock Margin="200,180,0,0" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}">
-               Voice Recognition provided by Nuance from Dragon.
+               Voice Recognition provided by TellMe from Microsoft.
             </TextBlock>
             <Image Margin="-200,60,0,0" Source="images/slartoolkit.jpg" Height="100" Width="100" />
             <TextBlock Margin="200,277,0,0" TextWrapping="Wrap" Style="{StaticResource PhoneTextNormalStyle}">
