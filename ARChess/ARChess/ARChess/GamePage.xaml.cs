@@ -84,6 +84,7 @@ namespace ARChess
                 GameState.getInstance().resetTurn();
             }
 
+            //setup microphone and configure delegates that handle events 
             microphone.BufferDuration = TimeSpan.FromSeconds(1);
             microphoneBuffer = new byte[microphone.GetSampleSizeInBytes(microphone.BufferDuration)];
 
@@ -101,12 +102,14 @@ namespace ARChess
 
         ~GamePage()
         {
+            //remove delegates from microphone object, prevents memory leaks
             speechRecognitionClient.RecognizeSpeechCompleted -= _client_RecognizeSpeechCompleted;
             microphone.BufferReady -= null;
         }
 
         public void SetupPage()
         {
+            //turn on the display of the board and models
             SharedGraphicsDeviceManager.Current.GraphicsDevice.SetSharingMode(true);
 
             //Run the detection separate from the update
@@ -115,11 +118,13 @@ namespace ARChess
             // Create a timer for this page
             timer.Start();
 
+            //see if user was placed into check
             if ((GameStateManager.getInstance().getGameState().black.in_check && GameStateManager.getInstance().getCurrentPlayer() == ChessPiece.Color.BLACK) || (GameStateManager.getInstance().getGameState().white.in_check && GameStateManager.getInstance().getCurrentPlayer() == ChessPiece.Color.WHITE))
             {
                 handleError("You have been placed into check by your opponent.");
             }
 
+            //if the state of the game has not yet been loaded, load it now before displaying board
             if (!stateHasBeenLoaded)
             {
                 GameState.getInstance().loadState(GameStateManager.getInstance().getGameState());
@@ -140,8 +145,10 @@ namespace ARChess
             bool good = false;
             try
             {
+                //attempt to process voice recognition
                 VoiceCommandFuzzyProcessing.process(e.Result);
 
+                //determine if there is a pawn that needs promotion
                 bool doesAPawnNeedPromotion = false;
 
                 string color = GameStateManager.getInstance().getCurrentPlayer().ToString().ToLower();
@@ -180,13 +187,15 @@ namespace ARChess
             isInitialized = false;
             isDetecting = false;
 
+            //turn off camera
             photoCamera.Dispose();
             photoCamera.Initialized -= photoCamera_Initialized;
 
             // Stop the timer
             timer.Stop();
 
-            // Set the sharing mode of the graphics device to turn off XNA rendering
+            //pass control to the asynchronous background thread and turn off the camera
+            //and models so that popups display correctly.
             SharedGraphicsDeviceManager.Current.GraphicsDevice.SetSharingMode(false);
         }
 
@@ -325,6 +334,7 @@ namespace ARChess
                 handleError(ex.Message);
             }
 
+            //we have made our move, now wait for the opponent to make theirs
             if (GameStateManager.getInstance().getShouldWait() && setupFinished && !alreadyCalledWait)
             {
                 Deployment.Current.Dispatcher.BeginInvoke(() =>
@@ -339,6 +349,7 @@ namespace ARChess
         {
             GameState.getInstance().resetTurn();
             VibrateController vibrate = VibrateController.Default;
+            //vibrate the phone for 2 seconds
             vibrate.Start(TimeSpan.FromMilliseconds(2000));
             MessageBox.Show(error, "Error", MessageBoxButton.OK);
         }
@@ -396,6 +407,7 @@ namespace ARChess
 
         private void sendMove()
         {
+            //send the move to the central server so that it can be sent to the opponents phone
             var bw = new BackgroundWorker();
             bw.DoWork += (s, args) =>
             {
@@ -617,10 +629,12 @@ namespace ARChess
         private void getCommand()
         {
             showPopup("Listening");
-
+            
+            //start the microphone to catch a command from the user
             microphone.Start();
             microphoneMemoryStream = new MemoryStream();
 
+            //automatically parse the command if microphone is on longer than 8 seconds
             var bw = new BackgroundWorker();
             bw.DoWork += (s, args) =>
             {
@@ -635,6 +649,8 @@ namespace ARChess
             };
             bw.RunWorkerAsync();
         }
+
+        // the following methods are what facilitate pawn promotion.
 
         private void QueenClick(object sender, RoutedEventArgs e)
         {
