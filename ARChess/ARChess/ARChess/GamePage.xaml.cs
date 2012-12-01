@@ -60,6 +60,7 @@ namespace ARChess
         private bool setupFinished = false;
         private bool alreadyCalledWait = false;
         private bool alreadyCalledPromote = false;
+        private bool stateHasBeenLoaded = false;
 
         public GamePage()
         {
@@ -111,11 +112,15 @@ namespace ARChess
             // Create a timer for this page
             timer.Start();
 
-            GameState.getInstance().loadState(GameStateManager.getInstance().getGameState());
-
             if ((GameStateManager.getInstance().getGameState().black.in_check && GameStateManager.getInstance().getCurrentPlayer() == ChessPiece.Color.BLACK) || (GameStateManager.getInstance().getGameState().white.in_check && GameStateManager.getInstance().getCurrentPlayer() == ChessPiece.Color.WHITE))
             {
                 handleError("You have been placed into check by your opponent.");
+            }
+
+            if (!stateHasBeenLoaded)
+            {
+                GameState.getInstance().loadState(GameStateManager.getInstance().getGameState());
+                stateHasBeenLoaded = true;
             }
             
             //Initialize the camera
@@ -420,15 +425,12 @@ namespace ARChess
                 {
                     GameStateManager.getInstance().setShouldWait(false);
                     GameStateManager.getInstance().setGameState(response.game_state);
+                    stateHasBeenLoaded = false;
                     SetupPage();
                     hidePopup();
                 }
                 else
                 {
-                    //hidePopup();
-                    //System.Diagnostics.Debug.WriteLine("Response: >");
-                    //System.Diagnostics.Debug.WriteLine("Winner: >" + response.winner + "<");
-                    //System.Diagnostics.Debug.WriteLine("Current Player: >" + response.current_player + "<");
                     string myColor = GameState.getInstance().getMyColor() == ChessPiece.Color.BLACK ?
                         "black" : "white";
 
