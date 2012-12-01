@@ -320,6 +320,15 @@ namespace ARChess
             }
             else
             {
+
+                // Check for Pawn Promotion
+                ChessPiece pawnToPromote = GameState.getInstance().getPawnToPromote();
+                if (pawnToPromote != null)
+                {
+                    showPopup("Pawn Promote");
+                    //GameState.getInstance().setPawnToPromote(null);
+                }
+
                 // Self not in check - Proceed
                 MessageBoxResult result = MessageBox.Show("Once done, this move cannot be undone.", "Are you sure?", MessageBoxButton.OKCancel);
                 if (result == MessageBoxResult.OK)
@@ -387,6 +396,7 @@ namespace ARChess
             bw.RunWorkerCompleted += (s, args) =>
             {
                 alreadyCalledWait = false;
+                
                 if (response.is_game_over == false)
                 {
                     GameStateManager.getInstance().setShouldWait(false);
@@ -396,8 +406,14 @@ namespace ARChess
                 }
                 else
                 {
-                    hidePopup();
-                    if (response.winner == response.current_player)
+                    //hidePopup();
+                    //System.Diagnostics.Debug.WriteLine("Response: >");
+                    //System.Diagnostics.Debug.WriteLine("Winner: >" + response.winner + "<");
+                    //System.Diagnostics.Debug.WriteLine("Current Player: >" + response.current_player + "<");
+                    string myColor = GameState.getInstance().getMyColor() == ChessPiece.Color.BLACK ?
+                        "black" : "white";
+
+                    if (response.winner == myColor)
                     {
                         NavigationService.Navigate(new Uri("/WonPage.xaml", UriKind.Relative));
                     }
@@ -474,7 +490,78 @@ namespace ARChess
 
         private void showPopup(string text)
         {
-            Deployment.Current.Dispatcher.BeginInvoke(() =>
+            switch (text)
+            {
+                case "Pawn Promote":
+                    messageBox = new CustomMessageBox()
+                    {
+                        ContentTemplate = (DataTemplate)this.Resources["PawnPromoteTemplate"],
+                        IsLeftButtonEnabled = false,
+                        IsRightButtonEnabled = false,
+                        IsFullScreen = true
+                    };
+
+                    messageBox.Dismissed += (s1, e1) =>
+                    {
+                        switch (e1.Result)
+                        {
+                            case CustomMessageBoxResult.None:
+                                break;
+                            default:
+                                break;
+                        }
+                    };
+                    break;
+                case "Processing Dictation":
+                    messageBox = new CustomMessageBox()
+                    {
+                        Caption = "Processing",
+                        Message = "We're processing your command.  Please wait.",
+                        IsLeftButtonEnabled = false,
+                        IsRightButtonEnabled = false,
+                        IsFullScreen = false
+                    };
+                    break;
+                case "Waiting":
+                    messageBox = new CustomMessageBox()
+                    {
+                        Caption = "Please Wait",
+                        Message = "Your opponent is making a move.",
+                        IsLeftButtonEnabled = false,
+                        IsRightButtonEnabled = false,
+                        IsFullScreen = false
+                    };
+                    break;
+                case "Listening":
+                    messageBox = new CustomMessageBox()
+                    {
+                        Caption = "Say a Command",
+                        Message = "We're listening.",
+                        LeftButtonContent = "Process",
+                        IsRightButtonEnabled = false,
+                        IsFullScreen = false
+                    };
+
+                    messageBox.Dismissed += (s1, e1) =>
+                    {
+                        switch (e1.Result)
+                        {
+                            case CustomMessageBoxResult.LeftButton:
+                                showPopup("Processing Dictation");
+                                break;
+                            case CustomMessageBoxResult.None:
+                                break;
+                            default:
+                                break;
+                        }
+                    };
+                    break;
+                default:
+                    break;
+            }
+            messageBox.Show();
+
+            /*Deployment.Current.Dispatcher.BeginInvoke(() =>
             {
                 switch (text)
                 {
@@ -550,7 +637,7 @@ namespace ARChess
             Deployment.Current.Dispatcher.BeginInvoke(() =>
             {
                 messageBox.Show();
-            });
+            });*/
         }
 
         private void hidePopup()
@@ -559,6 +646,7 @@ namespace ARChess
             {
                 messageBox.Dismiss();
             });
+            
         }
 
         private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)

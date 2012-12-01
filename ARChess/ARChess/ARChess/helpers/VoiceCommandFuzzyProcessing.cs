@@ -48,6 +48,7 @@ namespace ARChess
             {
                 throw new Exception(command);
             }
+
             if (r1 != null && r2 != null)
             {
                 GameState.getInstance().resetTurn();
