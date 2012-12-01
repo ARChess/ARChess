@@ -154,6 +154,7 @@ namespace ARChess
                 if (doesAPawnNeedPromotion && !alreadyCalledPromote)
                 {
                     showPopup("Pawn Promote");
+                    alreadyCalledPromote = true;
                 }
                 else
                 {
