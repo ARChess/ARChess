@@ -59,6 +59,7 @@ namespace ARChess
         private GameResponse response;
         private bool setupFinished = false;
         private bool alreadyCalledWait = false;
+        private bool alreadyCalledPromote = false;
 
         public GamePage()
         {
@@ -128,7 +129,7 @@ namespace ARChess
         void _client_RecognizeSpeechCompleted(object sender, RecognizeSpeechCompletedEventArgs e)
         {
             hidePopup();
-            SetupPage();
+            bool good = false;
             try
             {
                 VoiceCommandFuzzyProcessing.process(e.Result);
@@ -136,21 +137,32 @@ namespace ARChess
                 bool doesAPawnNeedPromotion = false;
 
                 string color = GameStateManager.getInstance().getCurrentPlayer().ToString().ToLower();
-                bool white_and_end = color == "white" && GameState.getInstance().getSelectedPiece() != null && GameState.getInstance().getSelectedPiece().getType() == ChessPiece.Piece.PAWN && GameState.getInstance().getChosenPosition().X == 7;
-                bool black_and_end = color == "black" && GameState.getInstance().getSelectedPiece() != null && GameState.getInstance().getSelectedPiece().getType() == ChessPiece.Piece.PAWN && GameState.getInstance().getChosenPosition().X == 0;
+                bool white_and_end = color == "white" && GameState.getInstance().getSelectedPiece() != null && GameState.getInstance().getSelectedPiece().getMasqueradeType() == "pawn" && GameState.getInstance().getChosenPosition().X == 7;
+                bool black_and_end = color == "black" && GameState.getInstance().getSelectedPiece() != null && GameState.getInstance().getSelectedPiece().getMasqueradeType() == "pawn" && GameState.getInstance().getChosenPosition().X == 0;
 
                 doesAPawnNeedPromotion = (white_and_end || black_and_end);
 
                 //check to see if pawn promotion is needed
-                if (doesAPawnNeedPromotion)
+                if (doesAPawnNeedPromotion && !alreadyCalledPromote)
                 {
-                    TeardownPage();
                     showPopup("Pawn Promote");
                 }
+                else
+                {
+                    SetupPage();
+                }
+                good = true;
             }
             catch (Exception ex)
             {
                 handleError(ex.Message);
+            }
+            finally
+            {
+                if (!good)
+                {
+                    SetupPage();
+                }
             }
         }
 
@@ -283,6 +295,22 @@ namespace ARChess
             try
             {
                 GameState.getInstance().Draw();
+
+                bool doesAPawnNeedPromotion = false;
+
+                string color = GameStateManager.getInstance().getCurrentPlayer().ToString().ToLower();
+                bool white_and_end = color == "white" && GameState.getInstance().getSelectedPiece() != null && GameState.getInstance().getSelectedPiece().getMasqueradeType() == "pawn" && GameState.getInstance().getChosenPosition().X == 7;
+                bool black_and_end = color == "black" && GameState.getInstance().getSelectedPiece() != null && GameState.getInstance().getSelectedPiece().getMasqueradeType() == "pawn" && GameState.getInstance().getChosenPosition().X == 0;
+
+                doesAPawnNeedPromotion = (white_and_end || black_and_end);
+
+                //check to see if pawn promotion is needed
+                if (doesAPawnNeedPromotion && !alreadyCalledPromote)
+                {
+                    TeardownPage();
+                    showPopup("Pawn Promote");
+                    alreadyCalledPromote = true;
+                }
             }
             catch (Exception ex)
             {
@@ -399,11 +427,17 @@ namespace ARChess
                     hidePopup();
                     if (response.winner == response.current_player)
                     {
-                        NavigationService.Navigate(new Uri("/WonPage.xaml", UriKind.Relative));
+                        Deployment.Current.Dispatcher.BeginInvoke(() =>
+                        {
+                            NavigationService.Navigate(new Uri("/WonPage.xaml", UriKind.Relative));
+                        });
                     }
                     else
                     {
-                        NavigationService.Navigate(new Uri("/LostPage.xaml", UriKind.Relative));
+                        Deployment.Current.Dispatcher.BeginInvoke(() =>
+                        {
+                            NavigationService.Navigate(new Uri("/LostPage.xaml", UriKind.Relative));
+                        });
                     }
                 }
             };
@@ -580,6 +614,8 @@ namespace ARChess
             };
             bw.RunWorkerCompleted += (s, args) =>
             {
+                hidePopup();
+                showPopup("Processing Dictation");
                 microphone.Stop();
                 speechRecognitionClient.RecognizeSpeechAsync(microphoneMemoryStream.ToArray(), microphone.SampleRate);
             };
@@ -591,6 +627,7 @@ namespace ARChess
             GameState.getInstance().getSelectedPiece().setMasqueradesAs("queen");
             hidePopup();
             SetupPage();
+            alreadyCalledPromote = false;
         }
 
         private void RookClick(object sender, RoutedEventArgs e)
@@ -598,6 +635,7 @@ namespace ARChess
             GameState.getInstance().getSelectedPiece().setMasqueradesAs("rook");
             hidePopup();
             SetupPage();
+            alreadyCalledPromote = false;
         }
 
         private void BishopClick(object sender, RoutedEventArgs e)
@@ -605,6 +643,7 @@ namespace ARChess
             GameState.getInstance().getSelectedPiece().setMasqueradesAs("bishop");
             hidePopup();
             SetupPage();
+            alreadyCalledPromote = false;
         }
 
         private void KnightClick(object sender, RoutedEventArgs e)
@@ -612,6 +651,7 @@ namespace ARChess
             GameState.getInstance().getSelectedPiece().setMasqueradesAs("knight");
             hidePopup();
             SetupPage();
+            alreadyCalledPromote = false;
         }
     }
 }

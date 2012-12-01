@@ -441,7 +441,7 @@ namespace ARChess
                         if ((mMyColor != entry.Value.getPlayer()) && (newPosition == entry.Value.getPosition()))
                         {
                             // Remove Enemy Piece
-                            entry.Value.remove();
+                            chessPieces[entry.Key].remove();
                             break;
                         }
                     }
