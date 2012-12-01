@@ -145,6 +145,7 @@ namespace ARChess
 
                 mMyColor = GameStateManager.getInstance().getCurrentPlayer();
                 mSelectedPiece = null;
+                mMoveMade = false;
                 setPieceMoves();
             }
         }
@@ -462,11 +463,11 @@ namespace ARChess
                     throw new Exception("Move is not Valid");
                 }
 
-                if (mSelectedPiece.getType() == ChessPiece.Piece.PAWN)
-                {
-                    System.Diagnostics.Debug.WriteLine("Placed Pawn");
-                    pawnToPromote = mSelectedPiece;
-                }
+                //if (mSelectedPiece.getType() == ChessPiece.Piece.PAWN)
+                //{
+                //    System.Diagnostics.Debug.WriteLine("Placed Pawn");
+                //    pawnToPromote = mSelectedPiece;
+                //}
             }
         }
 

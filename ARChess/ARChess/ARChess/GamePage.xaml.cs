@@ -367,7 +367,7 @@ namespace ARChess
                         {
                             // Checkmate
                             // Take King to signify End Game
-                            MessageBox.Show("You have placed your opponent in checkmate.", "Winner! It works!!!", MessageBoxButton.OK);
+                            //MessageBox.Show("You have placed your opponent in checkmate.", "Winner! It works!!!", MessageBoxButton.OK);
                             //pageToGo = "/WonPage.xaml";
                         }
                         else
